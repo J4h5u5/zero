@@ -15,6 +15,11 @@ It does not expose live execution, order placement, approval, wallet, secret, or
 venue-write tools. The server is for inspection and local development until live
 operator capabilities have passed the public readiness gates.
 
+Unsafe or unknown requests fail with `zero.mcp.refusal.v1`, a machine-readable
+refusal payload that restates the public safety boundary (`read_only_public`,
+`paper_only=true`, `canPlaceOrders=false`, `canChangeRuntimeState=false`) without
+echoing raw tool arguments, prompt-injection text, or secret-shaped material.
+
 ## Run
 
 From a source checkout, the server reads the checked-in scenario and proof-pack
@@ -55,7 +60,8 @@ inspect paper-only research reports, inspect the lens/layer/modifier decision
 stack, inspect production-parity OODA reports, inspect
 journal/rejection/immune/evidence/backtest surfaces, list resources, and read
 the proof pack and contributor docs without gaining any live execution
-capability.
+capability. It also includes hostile mutation probes and verifies their
+`zero.mcp.refusal.v1` responses do not echo adversarial request text.
 
 ## Registry Packet
 
@@ -146,6 +152,8 @@ All tools declare `canPlaceOrders=false`, `canChangeRuntimeState=false`, and
 - Decision-stack output never grants live execution authority.
 - The demo and Network proof packs do not claim live trading or paper/live correlation.
 - The public source checkout contains the bundled proof and paper artifacts.
+- Unknown methods, unavailable tools, and unavailable resources return
+  `zero.mcp.refusal.v1` instead of exposing any write-capable surface.
 
 The smoke command is part of the public readiness gates so this agent surface
 cannot silently drift into a write-capable trading interface.

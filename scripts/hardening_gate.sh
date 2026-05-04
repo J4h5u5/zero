@@ -230,6 +230,10 @@ contains "zero://proof/network" docs/mcp/transcript.jsonl
 contains "zero://memory/snapshot" docs/mcp/transcript.jsonl
 contains "zero://mcp/safety" docs/mcp/transcript.jsonl
 contains "zero://runtime/parity" docs/mcp/transcript.jsonl
+contains "zero.mcp.refusal.v1" docs/mcp.md
+contains "zero.mcp.refusal.v1" docs/mcp/transcript.jsonl
+contains "test_mcp_refuses_mutating_methods_without_echoing_raw_arguments" docs/failure-modes-autonomous-loop.md
+contains "test_mcp_refuses_unknown_resource_without_echoing_prompt_injection" docs/failure-modes-autonomous-loop.md
 contains "zero.memory.entry.v1" docs/memory-core.md
 contains "zero.runtime.production_parity.v1" docs/runtime-bus.md
 contains "Machine-readable entrypoints" README.md

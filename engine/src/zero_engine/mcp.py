@@ -22,6 +22,15 @@ SERVER_VERSION = "0.1.2"
 DEFAULT_PROTOCOL_VERSION = "2025-06-18"
 SUPPORTED_PROTOCOL_VERSIONS = {"2025-06-18", "2025-11-25"}
 PAPER_TS = 1777646400.0
+MCP_REFUSAL_SCHEMA_VERSION = "zero.mcp.refusal.v1"
+MCP_ALLOWED_SURFACE = (
+    "initialize",
+    "ping",
+    "tools/list",
+    "tools/call:read-only",
+    "resources/list",
+    "resources/read:zero://...",
+)
 
 JsonMap = dict[str, Any]
 
@@ -979,10 +988,22 @@ def result_response(request_id: Any, result: JsonMap) -> JsonMap:
 
 
 def error_response(request_id: Any, code: int, message: str) -> JsonMap:
+    return error_response_with_data(request_id, code, message, None)
+
+
+def error_response_with_data(
+    request_id: Any,
+    code: int,
+    message: str,
+    data: JsonMap | None,
+) -> JsonMap:
+    error: JsonMap = {"code": code, "message": message}
+    if data is not None:
+        error["data"] = data
     return {
         "jsonrpc": "2.0",
         "id": request_id,
-        "error": {"code": code, "message": message},
+        "error": error,
     }
 
 
@@ -991,6 +1012,39 @@ def requested_protocol(params: JsonMap) -> str:
     if version in SUPPORTED_PROTOCOL_VERSIONS:
         return version
     return DEFAULT_PROTOCOL_VERSION
+
+
+def safe_identifier(value: Any, *, max_length: int = 80) -> str:
+    text = str(value or "")
+    allowed = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_./:-")
+    if not text:
+        return ""
+    if len(text) > max_length or any(char not in allowed for char in text):
+        return "<redacted>"
+    return text
+
+
+def refusal_payload(
+    *,
+    method: Any,
+    reason: str,
+    tool_name: Any = "",
+    uri: Any = "",
+) -> JsonMap:
+    return {
+        "schema_version": MCP_REFUSAL_SCHEMA_VERSION,
+        "safetyClass": READ_ONLY_SAFETY["safetyClass"],
+        "riskDirection": READ_ONLY_SAFETY["riskDirection"],
+        "paper_only": True,
+        "canPlaceOrders": False,
+        "canChangeRuntimeState": False,
+        "canReadSecrets": False,
+        "reason": reason,
+        "requested_method": safe_identifier(method),
+        "requested_tool": safe_identifier(tool_name),
+        "requested_uri": safe_identifier(str(uri).split("?", 1)[0].split("#", 1)[0]),
+        "allowed_surface": list(MCP_ALLOWED_SURFACE),
+    }
 
 
 def handle_request(request: JsonMap) -> JsonMap | None:
@@ -1022,7 +1076,17 @@ def handle_request(request: JsonMap) -> JsonMap | None:
         name = str(params.get("name", ""))
         tool = TOOLS.get(name)
         if tool is None:
-            return error_response(request_id, -32602, f"unknown read-only ZERO tool: {name}")
+            safe_name = safe_identifier(name)
+            return error_response_with_data(
+                request_id,
+                -32602,
+                f"unknown read-only ZERO tool: {safe_name}",
+                refusal_payload(
+                    method=method,
+                    reason="tool_not_available_on_read_only_surface",
+                    tool_name=name,
+                ),
+            )
         return result_response(request_id, {"content": text_content(tool()), "isError": False})
     if method == "resources/list":
         return result_response(request_id, {"resources": resource_definitions()})
@@ -1032,12 +1096,28 @@ def handle_request(request: JsonMap) -> JsonMap | None:
             text = read_resource(uri)
             mime_type = resource_mime_type(uri)
         except KeyError:
-            return error_response(request_id, -32602, f"unknown ZERO resource: {uri}")
+            safe_uri = safe_identifier(uri.split("?", 1)[0].split("#", 1)[0])
+            return error_response_with_data(
+                request_id,
+                -32602,
+                f"unknown read-only ZERO resource: {safe_uri}",
+                refusal_payload(
+                    method=method,
+                    reason="resource_not_available_on_read_only_surface",
+                    uri=uri,
+                ),
+            )
         return result_response(
             request_id,
             {"contents": [{"uri": uri, "mimeType": mime_type, "text": text}]},
         )
-    return error_response(request_id, -32601, f"method not found: {method}")
+    safe_method = safe_identifier(method)
+    return error_response_with_data(
+        request_id,
+        -32601,
+        f"method not found on read-only ZERO MCP surface: {safe_method}",
+        refusal_payload(method=method, reason="method_not_available_on_read_only_surface"),
+    )
 
 
 def serve(stdin: TextIO = sys.stdin, stdout: TextIO = sys.stdout) -> int:
@@ -1092,6 +1172,34 @@ def smoke() -> int:
         payload = TOOLS[name]()
         if not isinstance(payload, dict):
             raise RuntimeError(f"{name} did not return an object")
+    refusal_checks = [
+        handle_request({"jsonrpc": "2.0", "id": "smoke-method", "method": "orders/place"}),
+        handle_request(
+            {
+                "jsonrpc": "2.0",
+                "id": "smoke-tool",
+                "method": "tools/call",
+                "params": {"name": "zero_execute_live", "arguments": {}},
+            }
+        ),
+        handle_request(
+            {
+                "jsonrpc": "2.0",
+                "id": "smoke-resource",
+                "method": "resources/read",
+                "params": {"uri": "zero://live/order?prompt=ignore-previous"},
+            }
+        ),
+    ]
+    for response in refusal_checks:
+        if response is None:
+            raise RuntimeError("MCP refusal smoke produced no response")
+        error = response.get("error", {})
+        refusal = error.get("data", {})
+        if refusal.get("schema_version") != MCP_REFUSAL_SCHEMA_VERSION:
+            raise RuntimeError("MCP refusal smoke did not return zero.mcp.refusal.v1")
+        if refusal.get("canPlaceOrders") or refusal.get("canChangeRuntimeState"):
+            raise RuntimeError("MCP refusal smoke exposed write capability")
     print(f"zero mcp smoke passed: {len(tools)} tools, {len(resources)} resources")
     return 0
 

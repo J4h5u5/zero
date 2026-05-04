@@ -222,6 +222,10 @@ file_contains "registryBaseUrl" server.json
 file_contains "runtimeHint" server.json
 file_contains "ready_after_pypi_publication" contracts/distribution/mcp-registry.json
 file_contains "mcp-name: io.github.zero-intel/zero" engine/README.md
+file_contains "zero.mcp.refusal.v1" docs/mcp.md
+file_contains "zero.mcp.refusal.v1" docs/mcp/transcript.jsonl
+file_contains "test_mcp_refuses_mutating_methods_without_echoing_raw_arguments" docs/failure-modes-autonomous-loop.md
+file_contains "test_mcp_refuses_unknown_resource_without_echoing_prompt_injection" docs/failure-modes-autonomous-loop.md
 
 echo "-- contributor issue board"
 if scripts/contributor_board_check.py; then

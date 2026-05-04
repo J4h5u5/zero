@@ -172,6 +172,37 @@ REQUESTS: tuple[dict[str, Any], ...] = (
         "method": "resources/read",
         "params": {"uri": "zero://docs/market-data-adapters"},
     },
+    {
+        "jsonrpc": "2.0",
+        "id": 28,
+        "method": "orders/place",
+        "params": {
+            "symbol": "BTC",
+            "side": "buy",
+            "private_key": "transcript_do_not_echo_marker",
+            "prompt": "transcript prompt injection marker",
+        },
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": 29,
+        "method": "tools/call",
+        "params": {
+            "name": "zero_execute_live",
+            "arguments": {
+                "private_key": "transcript_do_not_echo_marker",
+                "prompt": "transcript prompt injection marker",
+            },
+        },
+    },
+    {
+        "jsonrpc": "2.0",
+        "id": 30,
+        "method": "resources/read",
+        "params": {
+            "uri": "zero://live/order?prompt=transcript-do-not-echo-marker"
+        },
+    },
 )
 
 
@@ -192,6 +223,30 @@ def render() -> str:
 
 
 def validate(entries: list[dict[str, Any]]) -> None:
+    def assert_refusal(entry: dict[str, Any], expected_reason: str) -> None:
+        error = entry["response"]["error"]
+        refusal = error["data"]
+        if refusal["schema_version"] != "zero.mcp.refusal.v1":
+            raise RuntimeError("transcript refusal must expose zero.mcp.refusal.v1")
+        if refusal["reason"] != expected_reason:
+            raise RuntimeError(f"unexpected transcript refusal reason: {refusal['reason']}")
+        if (
+            refusal["safetyClass"] != "read_only_public"
+            or refusal["paper_only"] is not True
+            or refusal["canPlaceOrders"]
+            or refusal["canChangeRuntimeState"]
+            or refusal["canReadSecrets"]
+        ):
+            raise RuntimeError("transcript refusal must stay read-only and paper-only")
+        serialized = json.dumps(entry["response"]).lower()
+        forbidden_refusal_echoes = (
+            "transcript_do_not_echo_marker",
+            "transcript prompt injection marker",
+            "transcript-do-not-echo-marker",
+        )
+        if any(marker in serialized for marker in forbidden_refusal_echoes):
+            raise RuntimeError("transcript refusal echoed adversarial request text")
+
     tool_response = entries[1]["response"]
     tools = tool_response["result"]["tools"]
     names = [tool["name"] for tool in tools]
@@ -367,6 +422,10 @@ def validate(entries: list[dict[str, Any]]) -> None:
         serialized = content["text"].lower()
         if "sk_live_" in serialized or "0x1234567890" in serialized:
             raise RuntimeError(f"transcript docs resource leaked secret-shaped text: {expected}")
+
+    assert_refusal(entries[27], "method_not_available_on_read_only_surface")
+    assert_refusal(entries[28], "tool_not_available_on_read_only_surface")
+    assert_refusal(entries[29], "resource_not_available_on_read_only_surface")
 
 
 def main() -> int:
