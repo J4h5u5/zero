@@ -76,6 +76,7 @@ jobs:
           test -f docs/cli-quickstart.md
           test -f docs/api.md
           test -f docs/mcp.md
+          test -f docs/mcp-registry.md
           test -f docs/mcp/transcript.jsonl
           test -f docs/api-compatibility.md
           test -f docs/runtime-bus.md
@@ -120,6 +121,8 @@ jobs:
           test -f contracts/intelligence/snapshot.json
           test -f contracts/intelligence/catalog.json
           test -f contracts/distribution/registry-launch.json
+          test -f contracts/distribution/mcp-registry.json
+          test -f server.json
           test -f examples/strategy-plugin/README.md
           test -f examples/strategy-plugin/plugin.py
           test -f examples/strategy-plugin/run.py
@@ -166,6 +169,7 @@ jobs:
           test -x scripts/package_dry_run.sh
           test -x scripts/registry_readiness.py
           test -x scripts/registry_launch_packet.py
+          test -x scripts/mcp_registry_packet.py
           test -x scripts/homebrew_formula.py
           test -x scripts/homebrew_formula_check.py
           test -x scripts/release_provenance.py
@@ -222,7 +226,10 @@ jobs:
           python-version: "3.12"
           cache: pip
       - name: Check package registry readiness without publishing
-        run: scripts/registry_readiness.py
+        run: |
+          scripts/registry_readiness.py
+          scripts/registry_launch_packet.py --check
+          scripts/mcp_registry_packet.py --check
 
   strategy-plugin-example:
     runs-on: ubuntu-latest

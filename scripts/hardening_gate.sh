@@ -46,6 +46,7 @@ required_files=(
   "docs/incident-postmortems/TEMPLATE.md"
   "docs/distribution.md"
   "docs/registry-launch.md"
+  "docs/mcp-registry.md"
   "docs/safety-model.md"
   "docs/release.md"
   "docs/releases/v0.1.1-evidence.md"
@@ -70,6 +71,8 @@ required_files=(
   "contracts/network/empty-profile.html"
   "contracts/network/stale-profile.html"
   "contracts/distribution/registry-launch.json"
+  "contracts/distribution/mcp-registry.json"
+  "server.json"
   "examples/network-empty-profile/README.md"
   "examples/network-empty-profile/build.py"
   "examples/network-empty-profile/empty-profile.json"
@@ -124,6 +127,11 @@ contains "Homebrew Formula Requirements" docs/distribution.md
 contains "Registry Launch Packet" docs/distribution.md
 contains "scripts/homebrew_formula.py" docs/distribution.md
 contains "zero.registry_launch_packet.v1" docs/registry-launch.md
+contains "zero.mcp_registry_packet.v1" docs/mcp-registry.md
+contains "io.github.zero-intel/zero" docs/mcp-registry.md
+contains "ready_after_pypi_publication" contracts/distribution/mcp-registry.json
+contains "io.modelcontextprotocol.registry/publisher-provided" server.json
+contains "mcp-name: io.github.zero-intel/zero" engine/README.md
 contains "package_registries_enabled" contracts/distribution/registry-launch.json
 contains "\"status\": \"blocked\"" contracts/distribution/registry-launch.json
 contains "brew tap zero-intel/zero" docs/distribution.md
@@ -296,6 +304,7 @@ python3 -m py_compile scripts/deployment_rollback_rehearsal.py
 python3 -m py_compile scripts/release_verify.py
 python3 -m py_compile scripts/release_evidence.py
 python3 -m py_compile scripts/registry_readiness.py
+python3 -m py_compile scripts/mcp_registry_packet.py
 python3 -m py_compile scripts/release_provenance.py
 python3 -m py_compile scripts/homebrew_formula.py
 python3 -m py_compile scripts/homebrew_formula_check.py
@@ -325,6 +334,7 @@ python3 -m py_compile scripts/live_cockpit_drill_tamper_rehearsal.py
 python3 -m py_compile scripts/live_canary_policy.py
 rm -rf scripts/__pycache__
 scripts/registry_readiness.py >/dev/null
+scripts/mcp_registry_packet.py --check
 PYTHONPATH="$PWD/engine/src" scripts/mcp_transcript.py --check
 scripts/generate_llms_full.py --check
 PYTHONPATH="$PWD/engine/src" scripts/proof_pack.py --check

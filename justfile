@@ -159,6 +159,7 @@ package-dry-run:
 registry-readiness:
     scripts/registry_readiness.py
     scripts/registry_launch_packet.py --check
+    scripts/mcp_registry_packet.py --check
 
 release-rehearsal:
     scripts/release_rehearsal.sh
@@ -307,6 +308,7 @@ docs-check:
     test -f docs/api.md
     test -f docs/agent-architecture.md
     test -f docs/mcp.md
+    test -f docs/mcp-registry.md
     test -f docs/mcp/transcript.jsonl
     test -f docs/api-compatibility.md
     test -f docs/runtime-bus.md
@@ -426,6 +428,8 @@ docs-check:
     test -f contracts/intelligence/model_gateway_health.json
     test -f contracts/intelligence/model_gateway_audit.json
     test -f contracts/distribution/registry-launch.json
+    test -f contracts/distribution/mcp-registry.json
+    test -f server.json
     test -f openapi/zero-paper-api.v1.yaml
     test -x scripts/assemble_release_assets.sh
     test -x scripts/install.sh
@@ -441,6 +445,7 @@ docs-check:
     test -x scripts/package_dry_run.sh
     test -x scripts/registry_readiness.py
     test -x scripts/registry_launch_packet.py
+    test -x scripts/mcp_registry_packet.py
     test -x scripts/homebrew_formula.py
     test -x scripts/homebrew_formula_check.py
     test -x scripts/release_provenance.py

@@ -26,6 +26,7 @@ Use this bundle for retrieval and coding agents. It is not evidence of live trad
 - `docs/research.md`
 - `docs/evolve.md`
 - `docs/mcp.md`
+- `docs/mcp-registry.md`
 - `docs/mcp/transcript.jsonl`
 - `docs/api-compatibility.md`
 - `docs/runtime-bus.md`
@@ -627,6 +628,7 @@ Machine-readable entrypoints:
 - [Decision Stack](docs/decision-stack.md)
 - [Evolve Harness](docs/evolve.md)
 - [MCP Server](docs/mcp.md)
+- [MCP Registry Packet](docs/mcp-registry.md)
 - [MCP Transcript](docs/mcp/transcript.jsonl)
 
 ## Documentation
@@ -645,6 +647,7 @@ Machine-readable entrypoints:
 - [Research Command Chain](docs/research.md)
 - [Decision Stack](docs/decision-stack.md)
 - [MCP Server](docs/mcp.md)
+- [MCP Registry Packet](docs/mcp-registry.md)
 - [OpenAPI Contract](openapi/zero-paper-api.v1.yaml)
 - [API Compatibility](docs/api-compatibility.md)
 - [Failure Modes](docs/failure-modes-autonomous-loop.md)
@@ -837,7 +840,7 @@ The controlling plan is `docs/autonomous-os-plan.md`.
 The current trust-hardening priorities are:
 
 1. external timestamp anchoring for journal heads;
-2. MCP registry submission and listing evidence;
+2. MCP registry publication after PyPI or remote-server enablement;
 3. property-based tests for safety gates and malformed venue responses;
 4. postmortem publication when live safety, journal integrity, privacy, or
    release integrity is affected.
@@ -1172,6 +1175,7 @@ Out of scope:
 - [Evolve Harness](evolve.md)
 - [API](api.md)
 - [MCP Server](mcp.md)
+- [MCP Registry Packet](mcp-registry.md)
 - [MCP Transcript](mcp/transcript.jsonl)
 - [API Compatibility](api-compatibility.md)
 - [OpenAPI v1](../openapi/zero-paper-api.v1.yaml)
@@ -3179,6 +3183,22 @@ journal/rejection/immune/evidence/backtest surfaces, list resources, and read
 the proof pack and contributor docs without gaining any live execution
 capability.
 
+## Registry Packet
+
+ZERO ships a committed Official MCP Registry manifest at
+[`server.json`](../server.json) and a machine-readable submission packet at
+[`contracts/distribution/mcp-registry.json`](../contracts/distribution/mcp-registry.json).
+
+```bash
+scripts/mcp_registry_packet.py --check
+```
+
+The packet is `ready_after_pypi_publication`, not listed. The Official MCP
+Registry points metadata at a public package or public remote server; ZERO's
+package registries remain intentionally blocked until ownership, tokenless
+publishing, and rollback evidence are recorded. See
+[MCP Registry Submission Packet](mcp-registry.md).
+
 ## Tools
 
 | Tool | Safety class | Purpose |
@@ -3254,6 +3274,102 @@ All tools declare `canPlaceOrders=false`, `canChangeRuntimeState=false`, and
 
 The smoke command is part of the public readiness gates so this agent surface
 cannot silently drift into a write-capable trading interface.
+````
+
+
+## Source: `docs/mcp-registry.md`
+
+````markdown
+# MCP Registry Submission Packet
+
+ZERO has a public-safe MCP server and a committed MCP Registry manifest, but it
+is not listed in the Official MCP Registry yet.
+
+The blocker is intentional: the Official MCP Registry metadata points to a
+public package or public remote server, and ZERO package registries remain
+blocked until ownership, tokenless publishing, and rollback evidence are
+recorded.
+
+Machine-readable files:
+
+- [server.json](../server.json)
+- [contracts/distribution/mcp-registry.json](../contracts/distribution/mcp-registry.json)
+
+Schemas:
+
+- `zero.mcp_registry_packet.v1`
+- `https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json`
+
+Regenerate and verify:
+
+```bash
+scripts/mcp_registry_packet.py --output
+scripts/mcp_registry_packet.py --check
+PYTHONPATH="$PWD/engine/src" python3 -m zero_engine.mcp --smoke
+PYTHONPATH="$PWD/engine/src" scripts/mcp_transcript.py --check
+```
+
+## Registry Identity
+
+| Field | Value |
+|---|---|
+| Server name | `io.github.zero-intel/zero` |
+| Title | `ZERO MCP` |
+| Package | `zero-engine` |
+| Transport | `stdio` |
+| Auth path | GitHub OIDC from `zero-intel/zero` |
+| Safety class | `read-only-public` |
+
+The PyPI package README carries the MCP package proof string:
+
+```html
+<!-- mcp-name: io.github.zero-intel/zero -->
+```
+
+## Current Listing Evidence
+
+As of `2026-05-04T05:08:00Z`, the Official MCP Registry query returns no ZERO
+server:
+
+```bash
+curl -fsS 'https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.zero-intel/zero'
+```
+
+```json
+{"servers":[],"metadata":{"count":0}}
+```
+
+That is the expected state until `zero-engine` is published on PyPI and the MCP
+publisher run records a successful listing.
+
+## Publish Runbook
+
+Only run this after package-registry publication is deliberately enabled for a
+release:
+
+```bash
+just registry-readiness
+just package-dry-run
+mcp-publisher login github-oidc
+mcp-publisher publish
+curl -fsS 'https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.zero-intel/zero'
+```
+
+Record the command output in the release evidence before calling the MCP
+registry gap closed.
+
+## Safety Boundary
+
+The public MCP server remains read-only:
+
+- no order placement;
+- no live control;
+- no wallet or secret access;
+- no runtime mutation.
+
+Every public tool reports `canPlaceOrders=false`,
+`canChangeRuntimeState=false`, and `canReadSecrets=false`; the transcript and
+smoke test are committed gates.
 ````
 
 
@@ -3767,7 +3883,8 @@ ZERO reaches the autonomous trust bar only when:
   public chain;
 - failures that touch live safety, journal integrity, or public privacy produce
   redacted postmortems in `docs/incident-postmortems/`;
-- the MCP server is submitted before launch and tracked until registry listing.
+- the MCP server has a committed registry packet before launch and is tracked
+  until package or remote publication produces a live registry listing.
 
 ## Operating Rule
 
@@ -4146,16 +4263,17 @@ packet.
 
 **Full ZERO operating-system contract readiness: 100/100.**
 
-**Autonomous trust readiness: 95/100.**
+**Autonomous trust readiness: 96/100.**
 
 The stricter trust bar is intentionally higher than contract completeness. The
 repo now documents autonomous-loop bounds, a failure-mode taxonomy, and a
 postmortem publication policy. Decision journals are hash-chained, locally
 signable, and verifier-backed. ZERO should not claim the final autonomous trust
 moat until journal heads are periodically anchored to an external trusted
-timestamp service or public chain; MCP registry submission/listing evidence is
-public; and every safety gate has deterministic or property-based coverage for
-the failure modes in
+timestamp service or public chain; the MCP Registry submission packet is
+manifest-ready but intentionally unlisted until PyPI or a public remote MCP
+endpoint is enabled; and every safety gate has deterministic or property-based
+coverage for the failure modes in
 [Failure Modes Of The Autonomous Loop](failure-modes-autonomous-loop.md).
 
 It is still not a hosted custody product, and real capital operation remains
@@ -4222,9 +4340,10 @@ ZERO is 100/100 when a new serious operator can:
 Forecast after Cycle 41: **0 major public-repo product cycles remain before the
 repo can be treated as a complete ZERO autonomous operating-system launch
 artifact. 3 trust-moat cycles remain before the autonomous trust score should
-return to 100/100:** external journal-head anchoring, MCP registry listing
-evidence, and property-based safety-gate coverage. External work still includes
-third-party review, package registry ownership, hosted Network, paid
+return to 100/100:** external journal-head anchoring, live MCP registry listing
+evidence after package or remote publication, and property-based safety-gate
+coverage. External work still includes third-party review, package registry
+ownership, hosted Network, paid
 Intelligence deployment, and optional raw exchange disclosure for commercial
 diligence.
 
@@ -4845,7 +4964,7 @@ speed, scale, history, and reliability.
 
 | Dimension | Current | 100/100 Gap |
 |---|---:|---|
-| Public repo hygiene | 100 | registry ownership evidence and external review remain business/process tasks |
+| Public repo hygiene | 100 | MCP registry packet exists; live registry listing, package ownership evidence, and external review remain business/process tasks |
 | Product narrative | 99 | keep narrative aligned as hosted Network and Intelligence launch |
 | CLI readiness | 100 | five-mode terminal with full-screen live cockpit exists; raw exchange records remain operator-owned proof |
 | Engine runtime | 100 | public production-parity OODA report plus redacted live trading evidence exist; raw exchange records remain operator-owned external proof |
@@ -4857,7 +4976,7 @@ speed, scale, history, and reliability.
 | Security and custody | 91 | external review, key-handling drill evidence |
 | ZERO Network | 82 | deterministic public proof-chain pack plus profile identity verifier exist; hosted identity service, public pages, and production ingestion service remain |
 | ZERO Intelligence | 70 | production hosted service persistence, billing provider, history storage, terms |
-| Release and distribution | 100 | public Homebrew repo tap exists; external registry ownership evidence remains outside the public runtime |
+| Release and distribution | 100 | public Homebrew repo tap and MCP registry packet exist; external registry ownership/listing evidence remains outside the public runtime |
 | Operator docs | 98 | third-party review and optional raw exchange disclosure |
 
 ## Execution Cycles
@@ -7528,7 +7647,8 @@ just package-dry-run
 `just registry-readiness` checks PyPI metadata, Cargo registry metadata,
 per-crate publish metadata inheritance, optional live dependencies, and
 documentation guardrails. It also verifies the registry launch packet at
-`contracts/distribution/registry-launch.json`, which records which channels are
+`contracts/distribution/registry-launch.json` and the MCP Registry packet at
+`contracts/distribution/mcp-registry.json`, which record which channels are
 published, ready, or blocked. It is intentionally non-publishing. `just
 package-dry-run` then builds the Python engine wheel and source distribution
 into a temporary directory, and runs `cargo package --workspace --no-verify`

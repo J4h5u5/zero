@@ -156,7 +156,7 @@ The controlling plan is `docs/autonomous-os-plan.md`.
 The current trust-hardening priorities are:
 
 1. external timestamp anchoring for journal heads;
-2. MCP registry submission and listing evidence;
+2. MCP registry publication after PyPI or remote-server enablement;
 3. property-based tests for safety gates and malformed venue responses;
 4. postmortem publication when live safety, journal integrity, privacy, or
    release integrity is affected.

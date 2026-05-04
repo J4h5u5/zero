@@ -57,6 +57,22 @@ journal/rejection/immune/evidence/backtest surfaces, list resources, and read
 the proof pack and contributor docs without gaining any live execution
 capability.
 
+## Registry Packet
+
+ZERO ships a committed Official MCP Registry manifest at
+[`server.json`](../server.json) and a machine-readable submission packet at
+[`contracts/distribution/mcp-registry.json`](../contracts/distribution/mcp-registry.json).
+
+```bash
+scripts/mcp_registry_packet.py --check
+```
+
+The packet is `ready_after_pypi_publication`, not listed. The Official MCP
+Registry points metadata at a public package or public remote server; ZERO's
+package registries remain intentionally blocked until ownership, tokenless
+publishing, and rollback evidence are recorded. See
+[MCP Registry Submission Packet](mcp-registry.md).
+
 ## Tools
 
 | Tool | Safety class | Purpose |

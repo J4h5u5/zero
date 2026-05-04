@@ -75,7 +75,7 @@ speed, scale, history, and reliability.
 
 | Dimension | Current | 100/100 Gap |
 |---|---:|---|
-| Public repo hygiene | 100 | registry ownership evidence and external review remain business/process tasks |
+| Public repo hygiene | 100 | MCP registry packet exists; live registry listing, package ownership evidence, and external review remain business/process tasks |
 | Product narrative | 99 | keep narrative aligned as hosted Network and Intelligence launch |
 | CLI readiness | 100 | five-mode terminal with full-screen live cockpit exists; raw exchange records remain operator-owned proof |
 | Engine runtime | 100 | public production-parity OODA report plus redacted live trading evidence exist; raw exchange records remain operator-owned external proof |
@@ -87,7 +87,7 @@ speed, scale, history, and reliability.
 | Security and custody | 91 | external review, key-handling drill evidence |
 | ZERO Network | 82 | deterministic public proof-chain pack plus profile identity verifier exist; hosted identity service, public pages, and production ingestion service remain |
 | ZERO Intelligence | 70 | production hosted service persistence, billing provider, history storage, terms |
-| Release and distribution | 100 | public Homebrew repo tap exists; external registry ownership evidence remains outside the public runtime |
+| Release and distribution | 100 | public Homebrew repo tap and MCP registry packet exist; external registry ownership/listing evidence remains outside the public runtime |
 | Operator docs | 98 | third-party review and optional raw exchange disclosure |
 
 ## Execution Cycles

@@ -33,6 +33,7 @@ SOURCES = (
     "docs/research.md",
     "docs/evolve.md",
     "docs/mcp.md",
+    "docs/mcp-registry.md",
     "docs/mcp/transcript.jsonl",
     "docs/api-compatibility.md",
     "docs/runtime-bus.md",

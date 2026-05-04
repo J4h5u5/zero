@@ -61,12 +61,20 @@ Regenerate and verify it with:
 ```bash
 scripts/registry_launch_packet.py --output contracts/distribution/registry-launch.json
 scripts/registry_launch_packet.py --check
+scripts/mcp_registry_packet.py --output
+scripts/mcp_registry_packet.py --check
 ```
 
 `just registry-readiness` runs this check. The release workflow must not add
 PyPI, crates.io, Docker Hub, or GHCR publication until this packet and the
 release notes include namespace ownership, tokenless or least-privilege
 publishing, clean install evidence, rollback steps, and support expectations.
+
+The MCP Registry packet is separate from package registries because it is
+metadata for agents, not an artifact host. ZERO commits `server.json` and
+`contracts/distribution/mcp-registry.json`, but the Official MCP Registry
+listing remains blocked until the referenced `zero-engine` PyPI package or a
+public remote MCP endpoint exists.
 
 ## Ownership Proof Requirements
 

@@ -1,0 +1,88 @@
+{
+  "checks": {
+    "mcp_docs_state_read_only": true,
+    "package_identifier_matches_pyproject": true,
+    "package_registry_publication_still_blocked": true,
+    "package_transport_is_stdio": true,
+    "package_version_matches_server": true,
+    "pypi_readme_has_mcp_name": true,
+    "pyproject_exposes_zero_mcp": true,
+    "schema_version": "zero.mcp_registry_packet.v1",
+    "server_json_schema_current": true,
+    "server_name_matches_registry_pattern": true,
+    "server_name_uses_github_org_namespace": true,
+    "server_version_matches_engine_package": true,
+    "transcript_has_no_order_placing_tool": true,
+    "transcript_has_safety_catalog": true
+  },
+  "generated_at": "2026-05-04T00:00:00Z",
+  "official_registry": {
+    "api": "https://registry.modelcontextprotocol.io",
+    "last_query_evidence": {
+      "checked_at": "2026-05-04T05:08:00Z",
+      "interpretation": "not listed yet; expected until the PyPI package is publicly published",
+      "response": {
+        "metadata": {
+          "count": 0
+        },
+        "servers": []
+      }
+    },
+    "query_command": "curl -fsS 'https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.zero-intel/zero'",
+    "server_name": "io.github.zero-intel/zero",
+    "server_schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json"
+  },
+  "schema_version": "zero.mcp_registry_packet.v1",
+  "server_json": {
+    "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+    "_meta": {
+      "io.modelcontextprotocol.registry/publisher-provided": {
+        "defaultMode": "paper",
+        "safetyClass": "read-only-public",
+        "sourceCommitPolicy": "release-tagged",
+        "submissionState": "ready-after-pypi-publication",
+        "verificationCommands": [
+          "PYTHONPATH=$PWD/engine/src python3 -m zero_engine.mcp --smoke",
+          "PYTHONPATH=$PWD/engine/src scripts/mcp_transcript.py --check",
+          "scripts/mcp_registry_packet.py --check"
+        ]
+      }
+    },
+    "description": "Read-only MCP inspection for ZERO paper autonomous onchain operations.",
+    "name": "io.github.zero-intel/zero",
+    "packages": [
+      {
+        "identifier": "zero-engine",
+        "registryType": "pypi",
+        "transport": {
+          "type": "stdio"
+        },
+        "version": "0.1.2"
+      }
+    ],
+    "repository": {
+      "id": "1226608140",
+      "source": "github",
+      "url": "https://github.com/zero-intel/zero"
+    },
+    "title": "ZERO MCP",
+    "version": "0.1.2",
+    "websiteUrl": "https://getzero.dev"
+  },
+  "submission": {
+    "auth_method": "github-oidc",
+    "blocked_until": [
+      "zero-engine is published on PyPI with the engine README carrying the mcp-name proof",
+      "release workflow explicitly enables package publication for the target release",
+      "maintainer-owned GitHub OIDC publish run records registry output"
+    ],
+    "package_identifier": "zero-engine",
+    "package_registry": "pypi",
+    "publish_commands": [
+      "mcp-publisher login github-oidc",
+      "mcp-publisher publish"
+    ],
+    "server_json": "server.json",
+    "status": "ready_after_pypi_publication"
+  }
+}

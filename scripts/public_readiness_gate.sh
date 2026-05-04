@@ -74,6 +74,7 @@ required=(
   docs/private-engine-capability-gap-audit.md
   docs/label-taxonomy.md
   docs/registry-launch.md
+  docs/mcp-registry.md
   docs/proof/README.md
   docs/proof/demo/README.md
   docs/proof/demo/proof-pack.json
@@ -109,6 +110,7 @@ required=(
   scripts/contributor_board_check.py
   scripts/codeowners_check.py
   scripts/homebrew_formula_check.py
+  scripts/mcp_registry_packet.py
   scripts/journal_verify.py
   scripts/stale_artifact_check.sh
   scripts/live_trading_evidence.py
@@ -121,6 +123,8 @@ required=(
   contracts/network/empty-profile.html
   contracts/network/stale-profile.html
   contracts/distribution/registry-launch.json
+  contracts/distribution/mcp-registry.json
+  server.json
   examples/network-empty-profile/README.md
   examples/network-empty-profile/build.py
   examples/network-empty-profile/empty-profile.json
@@ -158,7 +162,7 @@ file_contains "Autonomous operating system for self-custodial onchain operations
 file_contains "paper mode" README.md
 file_contains "Self-evolution" docs/private-engine-capability-gap-audit.md
 file_contains "Full ZERO operating-system contract readiness: 100/100" docs/production-readiness.md
-file_contains "Autonomous trust readiness: 95/100" docs/production-readiness.md
+file_contains "Autonomous trust readiness: 96/100" docs/production-readiness.md
 file_contains "Failure Modes Of The Autonomous Loop" docs/failure-modes-autonomous-loop.md
 file_contains "FM-AUTO-004" docs/failure-modes-autonomous-loop.md
 file_contains "zero.decision_journal.entry.v1" docs/journal-integrity.md
@@ -194,6 +198,10 @@ file_contains "Add a deterministic funding-rate adapter fixture" docs/contributo
 file_contains "Add Homebrew rollback verification docs" docs/contributor-issue-board.md
 file_contains "zero.registry_launch_packet.v1" contracts/distribution/registry-launch.json
 file_contains "package_registries_enabled" contracts/distribution/registry-launch.json
+file_contains "zero.mcp_registry_packet.v1" contracts/distribution/mcp-registry.json
+file_contains "io.github.zero-intel/zero" server.json
+file_contains "ready_after_pypi_publication" contracts/distribution/mcp-registry.json
+file_contains "mcp-name: io.github.zero-intel/zero" engine/README.md
 
 echo "-- contributor issue board"
 if scripts/contributor_board_check.py; then

@@ -34,7 +34,10 @@ jobs:
           python-version: "3.12"
           cache: pip
       - name: Check package registry readiness without publishing
-        run: scripts/registry_readiness.py
+        run: |
+          scripts/registry_readiness.py
+          scripts/registry_launch_packet.py --check
+          scripts/mcp_registry_packet.py --check
 
   python-package:
     needs: [registry-readiness]

@@ -5,17 +5,22 @@ public Homebrew tap. PyPI, crates.io, Docker Hub, and GHCR publication remain
 blocked until ownership, tokenless publishing, and rollback evidence are
 recorded.
 
-The machine-readable packet is:
+The machine-readable packets are:
 
 - [contracts/distribution/registry-launch.json](../contracts/distribution/registry-launch.json)
+- [contracts/distribution/mcp-registry.json](../contracts/distribution/mcp-registry.json)
 
 Schema: `zero.registry_launch_packet.v1`
+
+MCP Registry schema: `zero.mcp_registry_packet.v1`
 
 Regenerate and verify it with:
 
 ```bash
 scripts/registry_launch_packet.py --output contracts/distribution/registry-launch.json
 scripts/registry_launch_packet.py --check
+scripts/mcp_registry_packet.py --output
+scripts/mcp_registry_packet.py --check
 ```
 
 ## Current Channel State
@@ -27,6 +32,7 @@ scripts/registry_launch_packet.py --check
 | PyPI | blocked | `zero-engine` |
 | crates.io | blocked | `zero`, `zero-*` workspace crates |
 | Container registry | blocked | `zero-intel/zero-paper` |
+| MCP Registry | ready after PyPI publication | `io.github.zero-intel/zero` |
 
 ## Enablement Rule
 

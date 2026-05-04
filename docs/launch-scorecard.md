@@ -10,13 +10,13 @@ reserved for ZERO Intelligence.
 
 ## Current Autonomous Trust Score
 
-**95/100**
+**96/100**
 
 The launch repository is ready for serious contributors. The stricter
 autonomous-systems trust bar is not complete until journal heads are externally
-timestamp-anchored; the MCP server is submitted and tracked through registry
-listing; and every safety gate has deterministic or property-based coverage for
-the documented failure modes.
+timestamp-anchored; the MCP server has a live registry listing after package or
+remote publication; and every safety gate has deterministic or property-based
+coverage for the documented failure modes.
 
 ## Ready
 

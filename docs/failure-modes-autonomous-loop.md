@@ -65,7 +65,8 @@ ZERO reaches the autonomous trust bar only when:
   public chain;
 - failures that touch live safety, journal integrity, or public privacy produce
   redacted postmortems in `docs/incident-postmortems/`;
-- the MCP server is submitted before launch and tracked until registry listing.
+- the MCP server has a committed registry packet before launch and is tracked
+  until package or remote publication produces a live registry listing.
 
 ## Operating Rule
 

@@ -183,7 +183,8 @@ just package-dry-run
 `just registry-readiness` checks PyPI metadata, Cargo registry metadata,
 per-crate publish metadata inheritance, optional live dependencies, and
 documentation guardrails. It also verifies the registry launch packet at
-`contracts/distribution/registry-launch.json`, which records which channels are
+`contracts/distribution/registry-launch.json` and the MCP Registry packet at
+`contracts/distribution/mcp-registry.json`, which record which channels are
 published, ready, or blocked. It is intentionally non-publishing. `just
 package-dry-run` then builds the Python engine wheel and source distribution
 into a temporary directory, and runs `cargo package --workspace --no-verify`

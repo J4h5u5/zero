@@ -565,6 +565,7 @@ Machine-readable entrypoints:
 - [Decision Stack](docs/decision-stack.md)
 - [Evolve Harness](docs/evolve.md)
 - [MCP Server](docs/mcp.md)
+- [MCP Registry Packet](docs/mcp-registry.md)
 - [MCP Transcript](docs/mcp/transcript.jsonl)
 
 ## Documentation
@@ -583,6 +584,7 @@ Machine-readable entrypoints:
 - [Research Command Chain](docs/research.md)
 - [Decision Stack](docs/decision-stack.md)
 - [MCP Server](docs/mcp.md)
+- [MCP Registry Packet](docs/mcp-registry.md)
 - [OpenAPI Contract](openapi/zero-paper-api.v1.yaml)
 - [API Compatibility](docs/api-compatibility.md)
 - [Failure Modes](docs/failure-modes-autonomous-loop.md)

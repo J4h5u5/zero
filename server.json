@@ -1,0 +1,36 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "_meta": {
+    "io.modelcontextprotocol.registry/publisher-provided": {
+      "defaultMode": "paper",
+      "safetyClass": "read-only-public",
+      "sourceCommitPolicy": "release-tagged",
+      "submissionState": "ready-after-pypi-publication",
+      "verificationCommands": [
+        "PYTHONPATH=$PWD/engine/src python3 -m zero_engine.mcp --smoke",
+        "PYTHONPATH=$PWD/engine/src scripts/mcp_transcript.py --check",
+        "scripts/mcp_registry_packet.py --check"
+      ]
+    }
+  },
+  "description": "Read-only MCP inspection for ZERO paper autonomous onchain operations.",
+  "name": "io.github.zero-intel/zero",
+  "packages": [
+    {
+      "identifier": "zero-engine",
+      "registryType": "pypi",
+      "transport": {
+        "type": "stdio"
+      },
+      "version": "0.1.2"
+    }
+  ],
+  "repository": {
+    "id": "1226608140",
+    "source": "github",
+    "url": "https://github.com/zero-intel/zero"
+  },
+  "title": "ZERO MCP",
+  "version": "0.1.2",
+  "websiteUrl": "https://getzero.dev"
+}

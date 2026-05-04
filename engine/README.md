@@ -1,5 +1,7 @@
 # ZERO Engine
 
+<!-- mcp-name: io.github.zero-intel/zero -->
+
 Paper-first runtime for ZERO self-custodial onchain operations.
 
 This package is the public seed of the open-core engine. It starts with a
