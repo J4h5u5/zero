@@ -399,6 +399,15 @@ uvx zero-engine --smoke
 uvx --from zero-engine zero-mcp --smoke
 ```
 
+The Rust operator terminal is prepared as `zero-os` on crates.io. The package
+name is `zero-os` because `zero` is already taken on crates.io; the installed
+binary remains `zero` after publication:
+
+```bash
+cargo install zero-os
+zero --version
+```
+
 Container users can run the paper runtime directly from source:
 
 ```bash
@@ -406,8 +415,9 @@ docker build -t zero-paper .
 docker run --rm -p 8765:8765 -e PORT=8765 zero-paper
 ```
 
-crates.io, Docker Hub, and GHCR remain unpublished until ownership and rollback
-evidence are recorded in [docs/registry-launch.md](docs/registry-launch.md).
+crates.io publication is blocked until the crates.io account email is verified.
+Docker Hub and GHCR remain unpublished until ownership and rollback evidence are
+recorded in [docs/registry-launch.md](docs/registry-launch.md).
 
 ## No-Install Contributor Path
 

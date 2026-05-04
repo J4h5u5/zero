@@ -40,7 +40,7 @@
 - Public examples
 - Hosted public profile and leaderboard pages
 - Hosted ZERO Intelligence billing, terms, and warehouse backend
-- Optional crates.io/container publication after ownership and rollback gates
+- Optional container publication after ownership and rollback gates
 - Good-first-issue backlog
 
 See [ZERO Autonomous OS Completion Plan](autonomous-os-plan.md) for the

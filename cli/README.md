@@ -33,8 +33,16 @@ cargo install --path crates/zero --profile release-small
 
 This builds the size-optimised binary (~4.2 MB on
 darwin-arm64) and puts it on your `PATH` at
-`~/.cargo/bin/zero`. Homebrew and package-registry installs
-are not published yet.
+`~/.cargo/bin/zero`.
+
+**From crates.io:**
+
+```bash
+cargo install zero-os
+```
+
+The crates.io package is `zero-os` because `zero` is already occupied. The
+installed binary is still `zero`.
 
 Rust toolchain: `rustc` 1.88+ (pinned in `rust-toolchain.toml`).
 

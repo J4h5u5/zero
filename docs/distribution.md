@@ -21,18 +21,17 @@ support commitments are stable.
 
 ## Not Yet Published
 
-- crates.io
 - Docker Hub or GHCR package
 
-These channels require maintainer-owned package names, least-privilege tokens,
-rollback procedure, and support expectations before enablement.
+Container channels require maintainer-owned package names, provenance, rollback
+procedure, and support expectations before enablement.
 
 ## Package Name Candidates
 
 | Channel | Candidate | Gate |
 |---|---|---|
 | PyPI | `zero-engine` | name ownership, Trusted Publishing, signed release dry run |
-| crates.io | `zero`, `zero-*` crates | namespace review, README/license metadata, tokenless publishing plan, `cargo owner` review |
+| crates.io | `zero-os`, `zero-*` crates | namespace review, README/license metadata, least-privilege token, `cargo owner` review |
 | Homebrew | `zero-intel/zero` public repo tap | `Formula/zero.rb` update from release checksums |
 | Container | `zero-intel/zero-paper` | registry ownership, provenance, paper-only labeling |
 | Railway template | `ZERO Paper Runtime` | marketplace publish from verified Railway project |
@@ -88,8 +87,10 @@ launch packet.
 The checked launch packet is
 [`contracts/distribution/registry-launch.json`](../contracts/distribution/registry-launch.json).
 It records the current channel state: GitHub Releases are published, the public
-Homebrew tap is ready, `zero-engine` is published on PyPI, and crates.io,
-Docker Hub, and GHCR remain blocked.
+Homebrew tap is ready, `zero-engine` is published on PyPI, `zero-os` and the
+workspace crates are ready for crates.io, and Docker Hub/GHCR remain blocked.
+crates.io publication is currently blocked by crates.io account email
+verification.
 
 Regenerate and verify it with:
 
@@ -102,10 +103,12 @@ scripts/mcp_registry_listing_check.py --json
 ```
 
 `just registry-readiness` runs this check. The release workflow must not add
-crates.io, Docker Hub, or GHCR publication until this packet and the release
-notes include namespace ownership, tokenless or least-privilege publishing,
-clean install evidence, rollback steps, and support expectations. PyPI
-publication for `zero-engine` is already enabled through Trusted Publishing.
+automated crates.io, Docker Hub, or GHCR publication until this packet and the
+release notes include namespace ownership, least-privilege publishing, clean
+install evidence, rollback steps, and support expectations. PyPI publication
+for `zero-engine` is already enabled through Trusted Publishing. crates.io
+publication uses `CRATESIO_API_TOKEN` manually until tokenless publishing is
+available.
 
 The MCP Registry packet is separate from package registries because it is
 metadata for agents, not an artifact host. ZERO commits `server.json` and
@@ -122,7 +125,8 @@ Package channels must be proven before use:
   Actions, not a long-lived API token.
 - crates.io: every intended crate has a clear owner list, `cargo owner --list`
   evidence after publication or reservation, and no crate name implies custody,
-  guaranteed returns, or hosted execution.
+  guaranteed returns, or hosted execution. The CLI package is `zero-os` because
+  `zero` is already occupied on crates.io; its installed binary remains `zero`.
 - Homebrew: the tap repository is public, formula review is linked, and the
   formula points to a tagged GitHub Release asset plus its checksum.
 - Container registry: the package namespace is maintainer-controlled, the image
@@ -218,8 +222,8 @@ from the release checksum manifest and remains public-safe. `just
 release-evidence <tag>` goes further: it downloads the release, verifies
 `SHA256SUMS`, verifies release metadata and attestations, rerenders the formula
 from the clean download, and fails if the committed formula has drifted. These
-checks name the already-published PyPI `zero-engine` package but do not claim
-crates.io, Docker Hub, or GHCR publication.
+checks name the already-published PyPI `zero-engine` package and crates.io
+`zero-os` target but do not claim crates.io, Docker Hub, or GHCR publication.
 
 ## Draft Release Rollback Rehearsal
 

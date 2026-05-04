@@ -245,7 +245,7 @@ Current package-name assumptions:
 
 - PyPI candidate: `zero-engine`
 - PyPI published package: `zero-engine`
-- crates.io candidates: the `zero-*` workspace crates plus the `zero` binary crate
+- crates.io packages: the `zero-*` workspace crates plus the `zero-os` CLI package
 - Homebrew: `zero-intel/zero` public repo tap with `Formula/zero.rb`
 
 ## Release Rehearsal
@@ -324,9 +324,10 @@ executable attestations, then deletes the draft release and temporary tag. Use
 The workflow uploads artifacts to the GitHub Actions run and attaches the
 assembled release bundle to a draft GitHub Release. It does not publish to any
 package registry. PyPI publication for `zero-engine` is handled by
-`python-release.yml` through Trusted Publishing; crates.io, Docker Hub, and
-GHCR publishing should be added only after repository ownership, package names,
-signing, rollback, and token permissions are finalized.
+`python-release.yml` through Trusted Publishing. crates.io publication for
+`zero-os` is manual with least-privilege `CRATESIO_API_TOKEN`; Docker Hub and
+GHCR publishing should be added only after repository ownership, provenance,
+rollback, and token permissions are finalized.
 
 ## Homebrew Formula
 
@@ -360,6 +361,6 @@ ZERO also ships local provenance metadata:
   not claimed, and release-bundle generation does not publish package-registry
   artifacts.
 
-Do not add crates.io, Docker Hub, or GHCR publishing until the registry channel
-has an owner, rollback path, least-privilege token plan, and documented support
-expectation in [distribution.md](distribution.md).
+Do not add automated crates.io, Docker Hub, or GHCR publishing until the
+registry channel has an owner, rollback path, least-privilege token plan, and
+documented support expectation in [distribution.md](distribution.md).

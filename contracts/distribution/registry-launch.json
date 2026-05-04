@@ -37,21 +37,21 @@
       "status": "published"
     },
     {
-      "candidate": "zero,zero-commands,zero-config,zero-doctor,zero-engine-client,zero-headless,zero-onboarding,zero-operator-state,zero-session,zero-testkit,zero-tui",
+      "candidate": "zero-os,zero-commands,zero-config,zero-doctor,zero-engine-client,zero-headless,zero-onboarding,zero-operator-state,zero-session,zero-testkit,zero-tui",
       "channel": "crates_io",
       "current_release": null,
       "evidence": [
-        "cli/Cargo.toml",
-        "cli/crates/*/Cargo.toml",
+        "zero-os namespace availability checked",
+        "CRATESIO_API_TOKEN GitHub secret",
+        "docs/registry-launch.md",
         "docs/distribution.md"
       ],
       "required_before_enablement": [
-        "crate namespace review completed",
-        "cargo owner evidence recorded after reservation/publication",
-        "publish order documented for the workspace crate graph",
-        "rollback/yank procedure documented in release notes"
+        "verify crates.io account email address",
+        "rerun cargo publish order",
+        "record cargo owner evidence after publication"
       ],
-      "status": "blocked"
+      "status": "ready_blocked_external"
     },
     {
       "candidate": "zero-intel/zero-paper",
@@ -98,6 +98,6 @@
     "current_release": "v0.1.2",
     "default_distribution": "GitHub Release, public Homebrew tap, and PyPI zero-engine",
     "package_registries_enabled": true,
-    "policy": "PyPI zero-engine is published through Trusted Publishing; crates.io, Docker Hub, and GHCR stay blocked until ownership, tokenless publishing, and rollback evidence are recorded."
+    "policy": "PyPI zero-engine is published through Trusted Publishing; crates.io zero-os is wired and publish-ready but blocked on crates.io account email verification; Docker Hub and GHCR stay blocked until ownership, provenance, and rollback evidence are recorded."
   }
 }

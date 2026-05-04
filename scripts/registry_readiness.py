@@ -212,10 +212,10 @@ def check_cargo() -> list[Finding]:
             )
         )
 
-    if "zero" not in crate_names:
-        findings.append(fail("crates.zero_binary", "workspace must include the zero binary crate", crates=crate_names))
+    if "zero-os" not in crate_names:
+        findings.append(fail("crates.zero_binary", "workspace must include the zero-os CLI crate", crates=crate_names))
     else:
-        findings.append(ok("crates.zero_binary", "zero binary crate is present"))
+        findings.append(ok("crates.zero_binary", "zero-os CLI crate is present"))
 
     return findings
 
@@ -242,7 +242,7 @@ def check_docs() -> list[Finding]:
         ".github/RELEASE_TEMPLATE.md": [
             "just registry-readiness",
             "PyPI `zero-engine` release",
-            "crates.io, Docker Hub, and GHCR publication remains disabled",
+            "crates.io `zero-os` publication",
         ],
     }
     sources = {

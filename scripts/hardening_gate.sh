@@ -219,7 +219,7 @@ contains "/live/canary-policy" docs/live-evidence.md
 contains "scripts/live_canary_policy.py" docs/live-canary-operator.md
 contains "shasum -a 256 -c SHA256SUMS" .github/RELEASE_TEMPLATE.md
 contains "PyPI \`zero-engine\` release" .github/RELEASE_TEMPLATE.md
-contains "crates.io, Docker Hub, and GHCR publication remains disabled" .github/RELEASE_TEMPLATE.md
+contains "crates.io \`zero-os\` publication" .github/RELEASE_TEMPLATE.md
 contains "gh attestation verify zero-linux" .github/RELEASE_TEMPLATE.md
 contains "scripts/release_evidence.py <tag>" .github/RELEASE_TEMPLATE.md
 contains "scripts/homebrew_formula_check.py" .github/RELEASE_TEMPLATE.md
