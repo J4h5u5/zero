@@ -25,6 +25,9 @@ strategy-runner-example:
 market-data-adapter-example:
     PYTHONPATH="$PWD/engine/src:$PWD/examples/market-data-adapter" python3 examples/market-data-adapter/run.py
 
+funding-rate-adapter-example:
+    PYTHONPATH="$PWD/examples/funding-rate-adapter" python3 examples/funding-rate-adapter/run.py
+
 network-leaderboard-example:
     PYTHONPATH="$PWD/engine/src" python3 examples/network-leaderboard/build.py
 
@@ -382,6 +385,10 @@ docs-check:
     test -f examples/market-data-adapter/adapter.py
     test -f examples/market-data-adapter/candles.jsonl
     test -f examples/market-data-adapter/run.py
+    test -f examples/funding-rate-adapter/README.md
+    test -f examples/funding-rate-adapter/adapter.py
+    test -f examples/funding-rate-adapter/funding_rates.jsonl
+    test -f examples/funding-rate-adapter/run.py
     test -f examples/runtime-loop/README.md
     test -x examples/runtime-loop/run.py
     test -f examples/memory-core/README.md
@@ -524,4 +531,4 @@ container-smoke:
     docker run --rm zero-public:local
     docker run --rm zero-public:local python /app/examples/paper-trading/run.py
 
-ci: lint test paper-api-smoke fresh-clone-rehearsal example strategy-example strategy-plugin-example momentum-strategy-plugin-example strategy-runner-example market-data-adapter-example runtime-loop-example memory-core-example genesis-example evolve-example research-example decision-stack-example network-leaderboard-example network-profile-page-example network-stale-profile-example network-empty-profile-example network-leaderboard-page-example network-index-page-example network-pages-smoke registry-readiness package-dry-run release-rehearsal draft-release-rehearsal public-readiness
+ci: lint test paper-api-smoke fresh-clone-rehearsal example strategy-example strategy-plugin-example momentum-strategy-plugin-example strategy-runner-example market-data-adapter-example funding-rate-adapter-example runtime-loop-example memory-core-example genesis-example evolve-example research-example decision-stack-example network-leaderboard-example network-profile-page-example network-stale-profile-example network-empty-profile-example network-leaderboard-page-example network-index-page-example network-pages-smoke registry-readiness package-dry-run release-rehearsal draft-release-rehearsal public-readiness
