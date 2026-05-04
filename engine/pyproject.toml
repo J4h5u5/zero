@@ -1,6 +1,6 @@
 [project]
 name = "zero-engine"
-version = "0.1.3"
+version = "0.1.4"
 description = "Paper-first runtime for ZERO's self-custodial onchain operations system"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -28,6 +28,9 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Application Frameworks",
   "Typing :: Typed",
 ]
+dependencies = [
+  "cryptography>=42",
+]
 
 [project.urls]
 Homepage = "https://getzero.dev"
@@ -48,6 +51,11 @@ zero-decision-stack = "zero_engine.decision:main"
 zero-engine = "zero_engine.mcp:main"
 zero-mcp = "zero_engine.mcp:main"
 zero-journal = "zero_engine.journal:main"
+zero-journal-chain = "zero_engine.journal_chain:main"
+zero-journal-sidecar = "zero_engine.journal_sidecar:main"
+zero-journal-root = "zero_engine.journal_root:main"
+zero-journal-anchor = "zero_engine.journal_anchor:main"
+zero-journal-proof = "zero_engine.journal_proof_pack:main"
 
 [project.optional-dependencies]
 dev = [

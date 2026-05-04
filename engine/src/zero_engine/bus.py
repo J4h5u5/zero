@@ -255,6 +255,20 @@ def append_jsonl(path: Path, payload: dict[str, Any]) -> None:
         handle.write(line)
         handle.flush()
         os.fsync(handle.fileno())
+    append_sidecar_for_known_stream(path, payload)
+
+
+def append_sidecar_for_known_stream(path: Path, payload: dict[str, Any]) -> None:
+    """Best-effort tamper-evidence sidecar for public runtime JSONL streams."""
+    stream = path.stem
+    if stream not in {"events", "decisions", "rejections", "near_misses"}:
+        return
+    try:
+        from zero_engine.journal_sidecar import append_sidecar_best_effort
+
+        append_sidecar_best_effort(path, payload, stream=stream)
+    except (ImportError, OSError, RuntimeError, TypeError, ValueError):
+        return
 
 
 def write_json_atomic(path: Path, payload: dict[str, Any]) -> None:

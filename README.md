@@ -226,12 +226,15 @@ ZERO should earn trust through behavior that another engineer can verify:
    transcript together.
 3. Verify `docs/proof/network/network-proof-pack.json` against its profile,
    leaderboard, deployment identity, and ingestion artifacts.
-4. Inspect runtime, risk, live cockpit, immune, account, and reconciliation
+4. Generate a signed journal root from local JSONL streams with
+   `zero-journal-root`, attach anchor metadata with `zero-journal-anchor`, and
+   export a redacted proof pack with `zero-journal-proof`.
+5. Inspect runtime, risk, live cockpit, immune, account, and reconciliation
    packets through the CLI/API.
-5. Rehearse a live canary in fail-closed mode.
-6. Attach public-safe exchange-side evidence when an operator-owned live canary
+6. Rehearse a live canary in fail-closed mode.
+7. Attach public-safe exchange-side evidence when an operator-owned live canary
    is ready.
-7. Verify the bundle, recursive checksums, privacy flags, live canary policy,
+8. Verify the bundle, recursive checksums, privacy flags, live canary policy,
    and report with local scripts before publishing anything.
 
 That flow is implemented for refusal-mode rehearsal and redacted live-evidence
