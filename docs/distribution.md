@@ -45,16 +45,17 @@ just registry-readiness
 
 The gate checks PyPI metadata, Cargo workspace metadata, per-crate publish
 metadata inheritance, optional live dependencies, and documentation guardrails.
-It does not contact PyPI, crates.io, Homebrew, Docker Hub, GHCR, or any private
-registry. A passing result means the repo is structured for registry review; it
-does not mean any channel has been published.
+It does not publish to PyPI, crates.io, Homebrew, Docker Hub, GHCR, or any
+private registry. A passing result means the repo is structured for registry
+review; publication state is recorded in the registry launch packet.
 
 ## Registry Launch Packet
 
 The checked launch packet is
 [`contracts/distribution/registry-launch.json`](../contracts/distribution/registry-launch.json).
 It records the current channel state: GitHub Releases are published, the public
-Homebrew tap is ready, and PyPI, crates.io, Docker Hub, and GHCR remain blocked.
+Homebrew tap is ready, `zero-engine` is published on PyPI, and crates.io,
+Docker Hub, and GHCR remain blocked.
 
 Regenerate and verify it with:
 
@@ -67,25 +68,24 @@ scripts/mcp_registry_listing_check.py --json
 ```
 
 `just registry-readiness` runs this check. The release workflow must not add
-PyPI, crates.io, Docker Hub, or GHCR publication until this packet and the
-release notes include namespace ownership, tokenless or least-privilege
-publishing, clean install evidence, rollback steps, and support expectations.
+crates.io, Docker Hub, or GHCR publication until this packet and the release
+notes include namespace ownership, tokenless or least-privilege publishing,
+clean install evidence, rollback steps, and support expectations. PyPI
+publication for `zero-engine` is already enabled through Trusted Publishing.
 
 The MCP Registry packet is separate from package registries because it is
 metadata for agents, not an artifact host. ZERO commits `server.json` and
-`contracts/distribution/mcp-registry.json`, but the Official MCP Registry
-listing remains blocked until the referenced `zero-engine` PyPI package or a
-public remote MCP endpoint exists. The manual `.github/workflows/mcp-registry.yml`
-workflow is present and uses GitHub OIDC, but it fails closed unless the PyPI
-package is already public and carries the required `mcp-name` marker.
+`contracts/distribution/mcp-registry.json`; the Official MCP Registry listing
+is live for `io.github.zero-intel/zero`. The manual
+`.github/workflows/mcp-registry.yml` workflow uses GitHub OIDC and fails closed
+unless the PyPI package is public and carries the required `mcp-name` marker.
 
 ## Ownership Proof Requirements
 
 Package channels must be proven before use:
 
-- PyPI: `zero-engine` exists under a maintainer-controlled project or the
-  maintainer has a documented name-claim path. Publishing should use PyPI
-  Trusted Publishing from GitHub Actions, not a long-lived API token.
+- PyPI: `zero-engine` is published through PyPI Trusted Publishing from GitHub
+  Actions, not a long-lived API token.
 - crates.io: every intended crate has a clear owner list, `cargo owner --list`
   evidence after publication or reservation, and no crate name implies custody,
   guaranteed returns, or hosted execution.

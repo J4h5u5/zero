@@ -74,10 +74,8 @@ scripts/mcp_registry_packet.py --check
 scripts/mcp_registry_listing_check.py --json
 ```
 
-The packet is `ready_after_pypi_publication`, not listed. The Official MCP
-Registry points metadata at a public package or public remote server; ZERO's
-package registries remain intentionally blocked until ownership, tokenless
-publishing, and rollback evidence are recorded. See
+The packet is `listed`. The Official MCP Registry points metadata at the public
+`zero-engine` PyPI package and uses stdio with `uvx`. See
 [MCP Registry Submission Packet](mcp-registry.md).
 
 ## Tools

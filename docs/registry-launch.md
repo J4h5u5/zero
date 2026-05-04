@@ -1,9 +1,9 @@
 # Registry Launch Packet
 
-ZERO currently distributes the public runtime through GitHub Releases and the
-public Homebrew tap. PyPI, crates.io, Docker Hub, and GHCR publication remain
-blocked until ownership, tokenless publishing, and rollback evidence are
-recorded.
+ZERO currently distributes the public runtime through GitHub Releases, the
+public Homebrew tap, and `zero-engine` on PyPI. crates.io, Docker Hub, and GHCR
+publication remain blocked until ownership, tokenless publishing, and rollback
+evidence are recorded.
 
 The machine-readable packets are:
 
@@ -30,15 +30,15 @@ scripts/mcp_registry_listing_check.py --json
 |---|---:|---|
 | GitHub Release | published | `zero-intel/zero` |
 | Homebrew tap | ready | `zero-intel/zero` |
-| PyPI | blocked | `zero-engine` |
+| PyPI | published | `zero-engine` |
 | crates.io | blocked | `zero`, `zero-*` workspace crates |
 | Container registry | blocked | `zero-intel/zero-paper` |
-| MCP Registry | workflow ready after PyPI publication | `io.github.zero-intel/zero` |
+| MCP Registry | listed | `io.github.zero-intel/zero` |
 
 ## Enablement Rule
 
-A package registry can only move from `blocked` to `ready` when the release PR
-records:
+A package registry can only move from `blocked` to `ready` or `published` when
+the release PR records:
 
 - maintainer-controlled namespace evidence;
 - tokenless or least-privilege publishing configuration;
@@ -46,6 +46,7 @@ records:
 - rollback, yank, delete, or deprecation procedure for that channel;
 - support expectation and safety wording for paper-first operation.
 
-The release workflow must not grow `pypa/gh-action-pypi-publish`,
-`cargo publish`, `docker push`, or GHCR/Docker login steps until this packet and
-the release notes include that evidence.
+The release workflow must not grow `cargo publish`, `docker push`, or
+GHCR/Docker login steps until this packet and the release notes include that
+evidence. PyPI `zero-engine` publication is already handled through Trusted
+Publishing.

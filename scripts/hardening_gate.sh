@@ -144,13 +144,14 @@ contains "zero.registry_launch_packet.v1" docs/registry-launch.md
 contains "zero.mcp_registry_packet.v1" docs/mcp-registry.md
 contains "zero.mcp_registry_listing_check.v1" docs/mcp-registry.md
 contains "io.github.zero-intel/zero" docs/mcp-registry.md
-contains "ready_after_pypi_publication" contracts/distribution/mcp-registry.json
+contains "\"status\": \"listed\"" contracts/distribution/mcp-registry.json
 contains "io.modelcontextprotocol.registry/publisher-provided" server.json
 contains "registryBaseUrl" server.json
 contains "runtimeHint" server.json
 contains "mcp-name: io.github.zero-intel/zero" engine/README.md
 contains "package_registries_enabled" contracts/distribution/registry-launch.json
-contains "\"status\": \"blocked\"" contracts/distribution/registry-launch.json
+contains "\"channel\": \"crates_io\"" contracts/distribution/registry-launch.json
+contains "\"channel\": \"container_registry\"" contracts/distribution/registry-launch.json
 contains "brew tap zero-intel/zero" docs/distribution.md
 contains "brew tap zero-intel/zero" docs/release.md
 contains "brew tap zero-intel/zero" README.md

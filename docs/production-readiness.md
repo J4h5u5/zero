@@ -47,7 +47,7 @@ packet.
 
 **Full ZERO operating-system contract readiness: 100/100.**
 
-**Autonomous trust readiness: 99/100.**
+**Autonomous trust readiness: 100/100.**
 
 The stricter trust bar is intentionally higher than contract completeness. The
 repo now documents autonomous-loop bounds, a failure-mode taxonomy, and a
@@ -63,11 +63,9 @@ untrusted, or risk-increasing external claims into non-raw quarantine metadata
 before they can influence genesis or evolve context. Journal-head anchoring now
 has a periodic operation that creates or reuses external anchor packets, fails
 closed when live evidence requires an external receipt, and verifies cadence
-state. ZERO should not claim the final autonomous trust moat until the MCP
-Registry submission packet is live-listed after PyPI or a public remote MCP
-endpoint is enabled. The manual GitHub OIDC MCP Registry workflow and listing
-verifier now exist, but they fail closed while `zero-engine` is absent from
-PyPI. The tracked failure modes are documented in
+state. The manual GitHub OIDC MCP Registry workflow and listing verifier now
+prove the live listing for `io.github.zero-intel/zero` after `zero-engine`
+PyPI publication. The tracked failure modes are documented in
 [Failure Modes Of The Autonomous Loop](failure-modes-autonomous-loop.md).
 
 It is still not a hosted custody product, and real capital operation remains
@@ -131,13 +129,10 @@ ZERO is 100/100 when a new serious operator can:
 
 ## Execution Cycles
 
-Forecast after Cycle 45: **0 major public-repo product cycles remain before the
+Forecast after Cycle 46: **0 major public-repo product cycles remain before the
 repo can be treated as a complete ZERO autonomous operating-system launch
-artifact. 1 external trust-moat action remains before the autonomous trust score
-should return to 100/100:** publish `zero-engine` on PyPI or enable a public
-remote MCP endpoint, run the MCP Registry publication workflow, and record live
-listing evidence. External work still includes third-party review, package registry
-ownership, hosted Network, paid
+artifact.** External work still includes third-party review, crates/container
+package ownership, hosted Network, paid
 Intelligence deployment, and optional raw exchange disclosure for commercial
 diligence.
 

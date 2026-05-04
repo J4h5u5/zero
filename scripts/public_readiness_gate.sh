@@ -167,7 +167,7 @@ file_contains "Autonomous operating system for self-custodial onchain operations
 file_contains "paper mode" README.md
 file_contains "Self-evolution" docs/private-engine-capability-gap-audit.md
 file_contains "Full ZERO operating-system contract readiness: 100/100" docs/production-readiness.md
-file_contains "Autonomous trust readiness: 99/100" docs/production-readiness.md
+file_contains "Autonomous trust readiness: 100/100" docs/production-readiness.md
 file_contains "Failure Modes Of The Autonomous Loop" docs/failure-modes-autonomous-loop.md
 file_contains "FM-AUTO-004" docs/failure-modes-autonomous-loop.md
 file_contains "zero.decision_journal.entry.v1" docs/journal-integrity.md
@@ -220,7 +220,7 @@ file_contains "zero.mcp_registry_listing_check.v1" docs/mcp-registry.md
 file_contains "io.github.zero-intel/zero" server.json
 file_contains "registryBaseUrl" server.json
 file_contains "runtimeHint" server.json
-file_contains "ready_after_pypi_publication" contracts/distribution/mcp-registry.json
+file_contains '"status": "listed"' contracts/distribution/mcp-registry.json
 file_contains "mcp-name: io.github.zero-intel/zero" engine/README.md
 file_contains "zero.mcp.refusal.v1" docs/mcp.md
 file_contains "zero.mcp.refusal.v1" docs/mcp/transcript.jsonl

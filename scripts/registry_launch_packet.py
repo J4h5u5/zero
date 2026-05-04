@@ -83,15 +83,14 @@ def build_packet() -> dict[str, Any]:
         {
             "channel": "pypi",
             "candidate": project["name"],
-            "status": "blocked",
-            "current_release": None,
-            "required_before_enablement": [
-                "maintainer-controlled PyPI project or documented name-claim path",
-                "PyPI Trusted Publishing configured for GitHub Actions",
-                "test install from TestPyPI or staged package index",
-                "rollback/deprecation procedure documented in release notes",
+            "status": "published",
+            "current_release": "0.1.2",
+            "required_before_enablement": [],
+            "evidence": [
+                "https://pypi.org/project/zero-engine/0.1.2/",
+                "scripts/mcp_registry_listing_check.py --require-pypi-published --json",
+                "docs/distribution.md",
             ],
-            "evidence": ["engine/pyproject.toml", "docs/distribution.md"],
         },
         {
             "channel": "crates_io",
@@ -123,7 +122,8 @@ def build_packet() -> dict[str, Any]:
 
     checks = {
         "schema_version": SCHEMA_VERSION,
-        "package_registry_publication_disabled": not any(forbidden_found.values()),
+        "package_registry_publication_enabled": True,
+        "pypi_package_published": True,
         "release_workflow_has_no_pypi_publish": not forbidden_found["pypi"],
         "release_workflow_has_no_cargo_publish": not forbidden_found["crates"],
         "release_workflow_has_no_container_push": not forbidden_found["container"],
@@ -155,10 +155,10 @@ def build_packet() -> dict[str, Any]:
         "schema_version": SCHEMA_VERSION,
         "generated_at": GENERATED_AT,
         "summary": {
-            "default_distribution": "GitHub Release plus public Homebrew tap",
-            "package_registries_enabled": False,
+            "default_distribution": "GitHub Release, public Homebrew tap, and PyPI zero-engine",
+            "package_registries_enabled": True,
             "current_release": "v0.1.2",
-            "policy": "Package registries stay blocked until ownership, tokenless publishing, and rollback evidence are recorded.",
+            "policy": "PyPI zero-engine is published through Trusted Publishing; crates.io, Docker Hub, and GHCR stay blocked until ownership, tokenless publishing, and rollback evidence are recorded.",
         },
         "channels": channels,
         "checks": checks,

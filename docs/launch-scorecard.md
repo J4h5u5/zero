@@ -10,13 +10,11 @@ reserved for ZERO Intelligence.
 
 ## Current Autonomous Trust Score
 
-**99/100**
+**100/100**
 
 The launch repository is ready for serious contributors. The stricter
-autonomous-systems trust bar is not complete until the MCP server has a live
-registry listing after package or remote publication. The manual GitHub OIDC
-MCP Registry workflow and listing verifier are present, but publication still
-fails closed while `zero-engine` is absent from PyPI. Journal-head anchor
+autonomous-systems trust bar now has the public MCP server listed after
+`zero-engine` PyPI publication. Journal-head anchor
 packets now have a periodic operation that attaches trusted external receipts,
 fails closed when live evidence requires a receipt, and verifies cadence state.
 Bounded property-based coverage exists for the core safety gates and documented

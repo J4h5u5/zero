@@ -27,18 +27,14 @@
     {
       "candidate": "zero-engine",
       "channel": "pypi",
-      "current_release": null,
+      "current_release": "0.1.2",
       "evidence": [
-        "engine/pyproject.toml",
+        "https://pypi.org/project/zero-engine/0.1.2/",
+        "scripts/mcp_registry_listing_check.py --require-pypi-published --json",
         "docs/distribution.md"
       ],
-      "required_before_enablement": [
-        "maintainer-controlled PyPI project or documented name-claim path",
-        "PyPI Trusted Publishing configured for GitHub Actions",
-        "test install from TestPyPI or staged package index",
-        "rollback/deprecation procedure documented in release notes"
-      ],
-      "status": "blocked"
+      "required_before_enablement": [],
+      "status": "published"
     },
     {
       "candidate": "zero,zero-commands,zero-config,zero-doctor,zero-engine-client,zero-headless,zero-onboarding,zero-operator-state,zero-session,zero-testkit,zero-tui",
@@ -82,8 +78,9 @@
     "docs_name_trusted_publishing": true,
     "docs_release_states_no_registry_publish": true,
     "homebrew_formula_tracks_current_release": true,
-    "package_registry_publication_disabled": true,
+    "package_registry_publication_enabled": true,
     "pypi_candidate_matches_pyproject": true,
+    "pypi_package_published": true,
     "release_evidence_current": true,
     "release_workflow_has_no_cargo_publish": true,
     "release_workflow_has_no_container_push": true,
@@ -99,8 +96,8 @@
   "schema_version": "zero.registry_launch_packet.v1",
   "summary": {
     "current_release": "v0.1.2",
-    "default_distribution": "GitHub Release plus public Homebrew tap",
-    "package_registries_enabled": false,
-    "policy": "Package registries stay blocked until ownership, tokenless publishing, and rollback evidence are recorded."
+    "default_distribution": "GitHub Release, public Homebrew tap, and PyPI zero-engine",
+    "package_registries_enabled": true,
+    "policy": "PyPI zero-engine is published through Trusted Publishing; crates.io, Docker Hub, and GHCR stay blocked until ownership, tokenless publishing, and rollback evidence are recorded."
   }
 }

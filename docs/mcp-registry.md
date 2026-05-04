@@ -1,13 +1,12 @@
 # MCP Registry Submission Packet
 
 ZERO has a public-safe MCP server, a committed MCP Registry manifest, and a
-manual GitHub OIDC publication workflow. It is not listed in the Official MCP
-Registry yet.
+manual GitHub OIDC publication workflow. It is listed in the Official MCP
+Registry as `io.github.zero-intel/zero`.
 
-The blocker is intentional: the Official MCP Registry metadata points to a
-public package or public remote server, and ZERO package registries remain
-blocked until ownership, tokenless publishing, and rollback evidence are
-recorded.
+The listing points to the public `zero-engine` PyPI package and uses stdio with
+`uvx`. crates.io, Docker Hub, and GHCR remain blocked until ownership,
+tokenless publishing, and rollback evidence are recorded.
 
 Machine-readable files:
 
@@ -52,8 +51,8 @@ The PyPI package README carries the MCP package proof string:
 
 ## Current Listing Evidence
 
-As of `2026-05-04T05:59:55Z`, the Official MCP Registry query returns no ZERO
-server and PyPI returns no `zero-engine` package:
+As of `2026-05-04T15:15:58Z`, the Official MCP Registry query returns the ZERO
+server and PyPI serves `zero-engine==0.1.2`:
 
 ```bash
 curl -fsS 'https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.zero-intel/zero'
@@ -61,16 +60,15 @@ curl -fsS 'https://pypi.org/pypi/zero-engine/json'
 ```
 
 ```json
-{"servers":[],"metadata":{"count":0}}
+{"servers":[{"name":"io.github.zero-intel/zero","version":"0.1.2"}],"metadata":{"count":1}}
 ```
 
-That is the expected state until `zero-engine` is published on PyPI and the MCP
-publisher run records a successful listing.
+The MCP Registry Publication workflow `25327160576` published `server.json`
+with GitHub OIDC and verified the listing.
 
 ## Publish Runbook
 
-Only run this after package-registry publication is deliberately enabled for a
-release:
+Run this after changing `server.json` or package metadata:
 
 ```bash
 just registry-readiness
@@ -84,15 +82,14 @@ curl -fsS 'https://registry.modelcontextprotocol.io/v0.1/servers?search=io.githu
 The preferred path is the manual
 [`MCP Registry Publication`](../.github/workflows/mcp-registry.yml) workflow.
 Run it first with `publish=false` to verify local MCP surfaces, server metadata,
-and current listing state. After the `zero-engine` PyPI package is public and
-its README description contains `mcp-name: io.github.zero-intel/zero`, rerun the
-workflow with `publish=true` and confirmation text
-`publish io.github.zero-intel/zero`. The workflow uses GitHub OIDC, installs
-the official `mcp-publisher`, publishes `server.json`, and then requires
+and current listing state. For a metadata update, rerun the workflow with
+`publish=true` and confirmation text `publish io.github.zero-intel/zero`. The
+workflow uses GitHub OIDC, installs the official `mcp-publisher`, publishes
+`server.json`, and then requires
 `scripts/mcp_registry_listing_check.py --expect-listed` to pass.
 
-Record the workflow URL and listing JSON in the release evidence before calling
-the MCP registry gap closed.
+Record the workflow URL and listing JSON in release evidence for every metadata
+change.
 
 ## Upstream Requirements
 

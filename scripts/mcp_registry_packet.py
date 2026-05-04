@@ -44,7 +44,7 @@ def build_server_json() -> dict[str, Any]:
         "_meta": {
             "io.modelcontextprotocol.registry/publisher-provided": {
                 "defaultMode": "paper",
-                "submissionState": "ready-after-pypi-publication",
+                "submissionState": "listed",
                 "safetyClass": "read-only-public",
                 "sourceCommitPolicy": "release-tagged",
                 "verificationCommands": [
@@ -104,7 +104,7 @@ def _server_json_findings(server: dict[str, Any]) -> dict[str, bool | str]:
         "mcp_docs_state_read_only": "read-only" in mcp_docs and "canPlaceOrders=false" in mcp_docs,
         "transcript_has_safety_catalog": "zero_get_safety_catalog" in transcript,
         "transcript_has_no_order_placing_tool": '"canPlaceOrders":true' not in transcript,
-        "package_registry_publication_still_blocked": not distribution_packet["summary"]["package_registries_enabled"],
+        "package_registry_publication_enabled": distribution_packet["summary"]["package_registries_enabled"],
     }
 
 
@@ -124,13 +124,13 @@ def build_packet() -> dict[str, Any]:
             ),
             "listing_check_command": "scripts/mcp_registry_listing_check.py --json",
             "last_query_evidence": {
-                "checked_at": "2026-05-04T05:59:55Z",
-                "response": {"servers": [], "metadata": {"count": 0}},
-                "interpretation": "not listed yet; expected until the PyPI package is publicly published",
+                "checked_at": "2026-05-04T15:15:58Z",
+                "response": {"servers": [{"name": SERVER_NAME}], "metadata": {"count": 1}},
+                "interpretation": "listed; verified after zero-engine 0.1.2 PyPI publication",
             },
         },
         "submission": {
-            "status": "ready_after_pypi_publication",
+            "status": "listed",
             "server_json": "server.json",
             "package_registry": "pypi",
             "package_identifier": "zero-engine",
@@ -142,9 +142,7 @@ def build_packet() -> dict[str, Any]:
                 "scripts/mcp_registry_listing_check.py --expect-listed --json",
             ],
             "blocked_until": [
-                "zero-engine is published on PyPI with the engine README carrying the mcp-name proof",
-                "release workflow explicitly enables package publication for the target release",
-                "maintainer-owned GitHub OIDC publish run records registry output",
+                "next server.json metadata change requires rerunning the MCP Registry Publication workflow",
             ],
         },
         "server_json": server,

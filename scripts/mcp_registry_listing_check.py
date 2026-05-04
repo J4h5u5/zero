@@ -22,6 +22,7 @@ ENGINE_README = ROOT / "engine" / "README.md"
 SCHEMA_VERSION = "zero.mcp_registry_listing_check.v1"
 REGISTRY_API = "https://registry.modelcontextprotocol.io/v0.1/servers"
 PYPI_API = "https://pypi.org/pypi/{package}/json"
+PYPI_VERSION_API = "https://pypi.org/pypi/{package}/{version}/json"
 
 
 def load_toml(path: Path) -> dict[str, Any]:
@@ -78,6 +79,10 @@ def build_report(timeout: float) -> dict[str, Any]:
 
     registry_response, registry_http = fetch_json(registry_url(server_name), timeout)
     pypi_response, pypi_http = fetch_json(PYPI_API.format(package=package_name), timeout)
+    pypi_version_response, pypi_version_http = fetch_json(
+        PYPI_VERSION_API.format(package=package_name, version=package_version),
+        timeout,
+    )
 
     servers = []
     if isinstance(registry_response, dict) and isinstance(registry_response.get("servers"), list):
@@ -91,11 +96,18 @@ def build_report(timeout: float) -> dict[str, Any]:
     listed_package = package_from_server(listed_server)
 
     pypi_description = ""
-    if isinstance(pypi_response, dict) and isinstance(pypi_response.get("info"), dict):
+    if isinstance(pypi_version_response, dict) and isinstance(
+        pypi_version_response.get("info"), dict
+    ):
+        pypi_description = str(pypi_version_response["info"].get("description", ""))
+    elif isinstance(pypi_response, dict) and isinstance(pypi_response.get("info"), dict):
         pypi_description = str(pypi_response["info"].get("description", ""))
     local_readme = ENGINE_README.read_text(encoding="utf-8")
     mcp_name_marker = f"mcp-name: {server_name}"
-    pypi_published = bool(pypi_response)
+    release_files = []
+    if isinstance(pypi_response, dict) and isinstance(pypi_response.get("releases"), dict):
+        release_files = pypi_response["releases"].get(package_version, [])
+    pypi_published = bool(pypi_version_response) or bool(release_files)
 
     checks = {
         "server_json_name_matches_expected": server_name == "io.github.zero-intel/zero",
@@ -107,10 +119,7 @@ def build_report(timeout: float) -> dict[str, Any]:
         "server_json_transport_is_stdio": package.get("transport") == {"type": "stdio"},
         "local_readme_has_pypi_mcp_name_marker": mcp_name_marker in local_readme,
         "pypi_package_published": pypi_published,
-        "pypi_version_matches_pyproject": (
-            bool(pypi_response)
-            and pypi_response.get("info", {}).get("version") == package_version
-        ),
+        "pypi_version_matches_pyproject": pypi_published,
         "pypi_description_has_mcp_name_marker": (
             bool(pypi_description) and mcp_name_marker in pypi_description
         ),
@@ -153,9 +162,16 @@ def build_report(timeout: float) -> dict[str, Any]:
         "pypi": {
             "api": PYPI_API.format(package=package_name),
             "http": pypi_http,
+            "version_api": PYPI_VERSION_API.format(
+                package=package_name,
+                version=package_version,
+            ),
+            "version_http": pypi_version_http,
             "published": pypi_published,
             "version": (
-                pypi_response.get("info", {}).get("version")
+                pypi_version_response.get("info", {}).get("version")
+                if isinstance(pypi_version_response, dict)
+                else pypi_response.get("info", {}).get("version")
                 if isinstance(pypi_response, dict)
                 else None
             ),
