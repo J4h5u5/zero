@@ -175,6 +175,8 @@ file_contains "zero.decision_journal.external_anchor.v1" docs/journal-integrity.
 file_contains "zero.decision_journal.anchor_cadence.v1" docs/journal-integrity.md
 file_contains "zero.decision_journal.external_anchor.verification.v1" docs/failure-modes-autonomous-loop.md
 file_contains "zero.decision_journal.verification.v1" docs/failure-modes-autonomous-loop.md
+file_contains "test_decision_journal_serializes_concurrent_writer_processes" docs/failure-modes-autonomous-loop.md
+file_contains "exclusive append lock" docs/journal-integrity.md
 file_contains "scripts/journal_anchor_cadence.py run" docs/journal-integrity.md
 file_contains "engine/tests/test_property_safety.py" docs/failure-modes-autonomous-loop.md
 file_contains "engine/tests/test_journal_anchor_cadence.py" docs/failure-modes-autonomous-loop.md

@@ -116,6 +116,8 @@ contains "zero.decision_journal.verification.v1" docs/failure-modes-autonomous-l
 contains "zero.decision_journal.entry.v1" docs/journal-integrity.md
 contains "zero.decision_journal.external_anchor.v1" docs/journal-integrity.md
 contains "zero.decision_journal.external_anchor.verification.v1" docs/failure-modes-autonomous-loop.md
+contains "test_decision_journal_serializes_concurrent_writer_processes" docs/failure-modes-autonomous-loop.md
+contains "exclusive append lock" docs/journal-integrity.md
 contains "scripts/journal_verify.py verify" docs/journal-integrity.md
 contains "scripts/journal_verify.py verify-anchor" docs/journal-integrity.md
 contains "scripts/journal_anchor_cadence.py run" docs/journal-integrity.md

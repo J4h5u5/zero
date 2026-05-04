@@ -5,11 +5,17 @@ import hashlib
 import hmac
 import json
 import os
+from contextlib import contextmanager
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterator
+
+try:
+    import fcntl
+except ImportError:  # pragma: no cover - Windows fallback keeps the module importable.
+    fcntl = None  # type: ignore[assignment]
 
 JOURNAL_ENTRY_SCHEMA_VERSION = "zero.decision_journal.entry.v1"
 JOURNAL_SIGNATURE_SCHEMA_VERSION = "zero.decision_journal.signature.v1"
@@ -337,20 +343,21 @@ class DecisionJournal:
 
     def append(self, record: Mapping[str, Any]) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        entries = self.read_entries()
-        previous_hash = entries[-1].entry_hash if entries else None
-        entry = JournalEntry.create(
-            sequence=len(entries) + 1,
-            payload=record,
-            previous_hash=previous_hash,
-            signer=self.signer,
-        )
-        line = canonical_json(entry.to_dict()) + "\n"
-        fd = os.open(self.path, os.O_APPEND | os.O_CREAT | os.O_WRONLY, 0o600)
-        with os.fdopen(fd, "a", encoding="utf-8") as handle:
-            handle.write(line)
-            handle.flush()
-            os.fsync(handle.fileno())
+        with _exclusive_append_lock(self.path):
+            entries = self.read_entries()
+            previous_hash = entries[-1].entry_hash if entries else None
+            entry = JournalEntry.create(
+                sequence=len(entries) + 1,
+                payload=record,
+                previous_hash=previous_hash,
+                signer=self.signer,
+            )
+            line = canonical_json(entry.to_dict()) + "\n"
+            fd = os.open(self.path, os.O_APPEND | os.O_CREAT | os.O_WRONLY, 0o600)
+            with os.fdopen(fd, "a", encoding="utf-8") as handle:
+                handle.write(line)
+                handle.flush()
+                os.fsync(handle.fileno())
 
     def tail(self, limit: int = 50) -> list[dict[str, Any]]:
         if limit <= 0:
@@ -625,6 +632,24 @@ def _external_anchor_fail(
         externally_anchored=externally_anchored,
         findings=[{"status": "fail", "name": "external_anchor", "detail": reason}],
     )
+
+
+@contextmanager
+def _exclusive_append_lock(journal_path: Path) -> Iterator[None]:
+    """Serialize journal head reads and appends across writer processes."""
+
+    lock_path = journal_path.with_name(f".{journal_path.name}.lock")
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    fd = os.open(lock_path, os.O_CREAT | os.O_RDWR, 0o600)
+    with os.fdopen(fd, "a+", encoding="utf-8") as handle:
+        if fcntl is not None:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            if fcntl is not None:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
 
 def _journal_fail(
     reason: str,

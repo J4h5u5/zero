@@ -73,6 +73,51 @@ def test_decision_journal_detects_deleted_middle_entry(tmp_path: Path) -> None:
     assert verification.reason == "sequence mismatch at entry 2"
 
 
+def test_decision_journal_serializes_concurrent_writer_processes(tmp_path: Path) -> None:
+    journal_path = tmp_path / "decisions.jsonl"
+    writer = """
+import sys
+from zero_engine.journal import DecisionJournal
+
+idx = int(sys.argv[2])
+DecisionJournal(sys.argv[1]).append({
+    "as_of": 123.0 + idx,
+    "source": "concurrency-test",
+    "symbol": f"BTC-{idx}",
+    "side": "buy",
+    "quantity": 0.01,
+    "price": 40000 + idx,
+    "notional_usd": 400.0,
+    "confidence": 0.9,
+    "reduce_only": False,
+    "allowed": True,
+    "reason": "allowed",
+})
+"""
+    env = {**os.environ, "PYTHONPATH": str(Path(__file__).resolve().parents[1] / "src")}
+    processes = [
+        subprocess.Popen(
+            [sys.executable, "-c", writer, str(journal_path), str(idx)],
+            env=env,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        for idx in range(16)
+    ]
+
+    for process in processes:
+        _stdout, stderr = process.communicate(timeout=10)
+        assert process.returncode == 0, stderr
+
+    journal = DecisionJournal(journal_path)
+    verification = journal.verify_integrity()
+    records = journal.read_all()
+
+    assert verification.ok is True
+    assert verification.entries == 16
+    assert {record["symbol"] for record in records} == {f"BTC-{idx}" for idx in range(16)}
+
+
 def test_signed_decision_journal_verifies_with_operator_key(tmp_path: Path) -> None:
     signer = JournalSigner(secret="local-test-secret", key_id="operator-test")
     journal = DecisionJournal(tmp_path / "decisions.jsonl", signer=signer)
