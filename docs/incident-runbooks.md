@@ -156,3 +156,14 @@ Every P0/P1 incident should preserve:
 - relevant trace IDs and idempotency keys;
 - exchange-side fill/order records when live mode is involved;
 - remediation commit and verification commands.
+
+## Public Postmortem Gate
+
+Use [incident-postmortems/TEMPLATE.md](incident-postmortems/TEMPLATE.md) for
+any incident that affects autonomous-loop trust, live safety, journal integrity,
+public privacy, or release integrity.
+
+Publish a redacted postmortem within 7 days when public users, public
+artifacts, or live-safety claims are affected. If publication would expose
+secrets or an active exploit, publish a delayed notice and complete the
+postmortem after containment.

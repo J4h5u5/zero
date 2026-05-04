@@ -14,8 +14,10 @@ Before editing, read:
 
 - `README.md`
 - `docs/architecture.md`
+- `docs/agent-architecture.md`
 - `docs/open-core-boundary.md`
 - `docs/safety-model.md`
+- `docs/failure-modes-autonomous-loop.md`
 - `docs/autonomous-os-plan.md`
 - `docs/agentic-contribution.md`
 - `docs/llms.txt`
@@ -38,6 +40,10 @@ Before editing, read:
 - Product copy must not claim live trading capability, latency, win rate,
   paper/live correlation, or exchange support unless the repo contains current
   reproducible evidence for that claim.
+- New autonomous-loop capabilities must update
+  `docs/failure-modes-autonomous-loop.md` when they introduce a new failure
+  mode or change detection, blast radius, rollback, journal evidence, alerting,
+  or test coverage.
 
 ## Product Boundary
 
@@ -143,14 +149,13 @@ decorative.
 
 The controlling plan is `docs/autonomous-os-plan.md`.
 
-The next implementation priorities are:
+The current trust-hardening priorities are:
 
-1. autonomous runtime OODA loop;
-2. durable runtime bus;
-3. Hyperliquid account reconciliation;
-4. live execution certification harness;
-5. immune system and circuit breakers;
-6. operator terminal live cockpit.
+1. hash-chained, signed, and timestamp-anchored decision journals;
+2. MCP registry submission and listing evidence;
+3. property-based tests for safety gates and malformed venue responses;
+4. postmortem publication when live safety, journal integrity, privacy, or
+   release integrity is affected.
 
 Each cycle should update tests, docs, and scorecards with the behavior it
 actually lands.

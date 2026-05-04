@@ -305,6 +305,7 @@ docs-check:
     test -f docs/cli-quickstart.md
     test -f docs/cli-doctor-troubleshooting.md
     test -f docs/api.md
+    test -f docs/agent-architecture.md
     test -f docs/mcp.md
     test -f docs/mcp/transcript.jsonl
     test -f docs/api-compatibility.md
@@ -322,7 +323,10 @@ docs-check:
     test -f docs/network-freshness.md
     test -f docs/zero-intelligence.md
     test -f docs/threat-model.md
+    test -f docs/failure-modes-autonomous-loop.md
     test -f docs/incident-runbooks.md
+    test -f docs/incident-postmortems/README.md
+    test -f docs/incident-postmortems/TEMPLATE.md
     test -f docs/dependency-policy.md
     test -f docs/distribution.md
     test -f docs/registry-launch.md

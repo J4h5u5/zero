@@ -39,7 +39,10 @@ required_files=(
   "docs/proof/live/README.md"
   "docs/proof/live/live-trading-evidence.json"
   "docs/threat-model.md"
+  "docs/failure-modes-autonomous-loop.md"
   "docs/incident-runbooks.md"
+  "docs/incident-postmortems/README.md"
+  "docs/incident-postmortems/TEMPLATE.md"
   "docs/distribution.md"
   "docs/registry-launch.md"
   "docs/safety-model.md"
@@ -54,6 +57,7 @@ required_files=(
   "docs/backlog.md"
   "docs/mcp.md"
   "docs/mcp/transcript.jsonl"
+  "docs/agent-architecture.md"
   "docs/memory-core.md"
   "docs/genesis.md"
   "docs/evolve.md"
@@ -97,6 +101,17 @@ contains "Private key committed or logged" docs/threat-model.md
 contains "Public Packet Privacy Regression" docs/incident-runbooks.md
 contains "Unexpected Live Order" docs/incident-runbooks.md
 contains "Bad Release Artifact" docs/incident-runbooks.md
+contains "Failure Modes Of The Autonomous Loop" docs/failure-modes-autonomous-loop.md
+contains "FM-AUTO-004" docs/failure-modes-autonomous-loop.md
+contains "Detection" docs/failure-modes-autonomous-loop.md
+contains "Blast radius" docs/failure-modes-autonomous-loop.md
+contains "Rollback" docs/failure-modes-autonomous-loop.md
+contains "Journal entry" docs/failure-modes-autonomous-loop.md
+contains "Alerting" docs/failure-modes-autonomous-loop.md
+contains "Agent Architecture" docs/agent-architecture.md
+contains "Protected Paths" docs/agent-architecture.md
+contains "Publication Policy" docs/incident-postmortems/README.md
+contains "Failure Mode" docs/incident-postmortems/TEMPLATE.md
 contains "Dependency And Supply Chain Policy" docs/dependency-policy.md
 contains "Vulnerability Response" docs/dependency-policy.md
 contains "Homebrew Formula Requirements" docs/distribution.md

@@ -451,7 +451,10 @@ ZERO is built around operational discipline, not activity.
 
 Read the full model in [docs/safety-model.md](docs/safety-model.md),
 [docs/threat-model.md](docs/threat-model.md), and
-[docs/incident-runbooks.md](docs/incident-runbooks.md).
+[docs/failure-modes-autonomous-loop.md](docs/failure-modes-autonomous-loop.md).
+Incident response is covered by
+[docs/incident-runbooks.md](docs/incident-runbooks.md) and the public
+[postmortem policy](docs/incident-postmortems/README.md).
 
 ## Trust
 
@@ -554,6 +557,7 @@ Machine-readable entrypoints:
 - [Contributor Issue Board](docs/contributor-issue-board.md)
 - [Issue Templates](.github/ISSUE_TEMPLATE/agent_task.yml)
 - [OpenAPI Contract](openapi/zero-paper-api.v1.yaml)
+- [Agent Architecture](docs/agent-architecture.md)
 - [Memory Core](docs/memory-core.md)
 - [Genesis](docs/genesis.md)
 - [Research Command Chain](docs/research.md)
@@ -565,6 +569,7 @@ Machine-readable entrypoints:
 ## Documentation
 
 - [Architecture](docs/architecture.md)
+- [Agent Architecture](docs/agent-architecture.md)
 - [Positioning](docs/positioning.md)
 - [First 10 Minutes](docs/first-10-minutes.md)
 - [Demo Terminal](docs/demo-terminal.md)
@@ -578,6 +583,8 @@ Machine-readable entrypoints:
 - [MCP Server](docs/mcp.md)
 - [OpenAPI Contract](openapi/zero-paper-api.v1.yaml)
 - [API Compatibility](docs/api-compatibility.md)
+- [Failure Modes](docs/failure-modes-autonomous-loop.md)
+- [Incident Postmortems](docs/incident-postmortems/README.md)
 - [Operator Context](docs/operator-context.md)
 - [Deployment Identity](docs/deployment-identity.md)
 - [Live Evidence](docs/live-evidence.md)

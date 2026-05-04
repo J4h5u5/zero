@@ -17,6 +17,7 @@ Use this bundle for retrieval and coding agents. It is not evidence of live trad
 - `docs/local-development.md`
 - `docs/proof/README.md`
 - `docs/architecture.md`
+- `docs/agent-architecture.md`
 - `docs/cli-quickstart.md`
 - `docs/cli-doctor-troubleshooting.md`
 - `docs/api.md`
@@ -30,7 +31,9 @@ Use this bundle for retrieval and coding agents. It is not evidence of live trad
 - `docs/runtime-bus.md`
 - `docs/safety-model.md`
 - `docs/threat-model.md`
+- `docs/failure-modes-autonomous-loop.md`
 - `docs/incident-runbooks.md`
+- `docs/incident-postmortems/README.md`
 - `docs/open-core-boundary.md`
 - `docs/production-readiness.md`
 - `docs/public-upgrade.md`
@@ -509,7 +512,10 @@ ZERO is built around operational discipline, not activity.
 
 Read the full model in [docs/safety-model.md](docs/safety-model.md),
 [docs/threat-model.md](docs/threat-model.md), and
-[docs/incident-runbooks.md](docs/incident-runbooks.md).
+[docs/failure-modes-autonomous-loop.md](docs/failure-modes-autonomous-loop.md).
+Incident response is covered by
+[docs/incident-runbooks.md](docs/incident-runbooks.md) and the public
+[postmortem policy](docs/incident-postmortems/README.md).
 
 ## Trust
 
@@ -612,6 +618,7 @@ Machine-readable entrypoints:
 - [Contributor Issue Board](docs/contributor-issue-board.md)
 - [Issue Templates](.github/ISSUE_TEMPLATE/agent_task.yml)
 - [OpenAPI Contract](openapi/zero-paper-api.v1.yaml)
+- [Agent Architecture](docs/agent-architecture.md)
 - [Memory Core](docs/memory-core.md)
 - [Genesis](docs/genesis.md)
 - [Research Command Chain](docs/research.md)
@@ -623,6 +630,7 @@ Machine-readable entrypoints:
 ## Documentation
 
 - [Architecture](docs/architecture.md)
+- [Agent Architecture](docs/agent-architecture.md)
 - [Positioning](docs/positioning.md)
 - [First 10 Minutes](docs/first-10-minutes.md)
 - [Demo Terminal](docs/demo-terminal.md)
@@ -636,6 +644,8 @@ Machine-readable entrypoints:
 - [MCP Server](docs/mcp.md)
 - [OpenAPI Contract](openapi/zero-paper-api.v1.yaml)
 - [API Compatibility](docs/api-compatibility.md)
+- [Failure Modes](docs/failure-modes-autonomous-loop.md)
+- [Incident Postmortems](docs/incident-postmortems/README.md)
 - [Operator Context](docs/operator-context.md)
 - [Deployment Identity](docs/deployment-identity.md)
 - [Live Evidence](docs/live-evidence.md)
@@ -682,8 +692,10 @@ Before editing, read:
 
 - `README.md`
 - `docs/architecture.md`
+- `docs/agent-architecture.md`
 - `docs/open-core-boundary.md`
 - `docs/safety-model.md`
+- `docs/failure-modes-autonomous-loop.md`
 - `docs/autonomous-os-plan.md`
 - `docs/agentic-contribution.md`
 - `docs/llms.txt`
@@ -706,6 +718,10 @@ Before editing, read:
 - Product copy must not claim live trading capability, latency, win rate,
   paper/live correlation, or exchange support unless the repo contains current
   reproducible evidence for that claim.
+- New autonomous-loop capabilities must update
+  `docs/failure-modes-autonomous-loop.md` when they introduce a new failure
+  mode or change detection, blast radius, rollback, journal evidence, alerting,
+  or test coverage.
 
 ## Product Boundary
 
@@ -811,14 +827,13 @@ decorative.
 
 The controlling plan is `docs/autonomous-os-plan.md`.
 
-The next implementation priorities are:
+The current trust-hardening priorities are:
 
-1. autonomous runtime OODA loop;
-2. durable runtime bus;
-3. Hyperliquid account reconciliation;
-4. live execution certification harness;
-5. immune system and circuit breakers;
-6. operator terminal live cockpit.
+1. hash-chained, signed, and timestamp-anchored decision journals;
+2. MCP registry submission and listing evidence;
+3. property-based tests for safety gates and malformed venue responses;
+4. postmortem publication when live safety, journal integrity, privacy, or
+   release integrity is affected.
 
 Each cycle should update tests, docs, and scorecards with the behavior it
 actually lands.
@@ -1140,6 +1155,7 @@ Out of scope:
 ## Architecture And Contracts
 
 - [Architecture](architecture.md)
+- [Agent Architecture](agent-architecture.md)
 - [Runtime Bus](runtime-bus.md)
 - [Memory Core](memory-core.md)
 - [Genesis](genesis.md)
@@ -1158,7 +1174,9 @@ Out of scope:
 
 - [Safety Model](safety-model.md)
 - [Threat Model](threat-model.md)
+- [Failure Modes Of The Autonomous Loop](failure-modes-autonomous-loop.md)
 - [Incident Runbooks](incident-runbooks.md)
+- [Incident Postmortems](incident-postmortems/README.md)
 - [Dependency Policy](dependency-policy.md)
 - [Hyperliquid Read-only](hyperliquid-readonly.md)
 - [Live Evidence](live-evidence.md)
@@ -1733,6 +1751,119 @@ The commercial product is advantaged access to verified autonomous behavior at
 speed, scale, and history. Basic runtime use, self-custody, public profiles, and
 public leaderboards, and delayed public intelligence snapshots remain public
 surfaces.
+````
+
+
+## Source: `docs/agent-architecture.md`
+
+````markdown
+# Agent Architecture
+
+ZERO is an autonomous operating system for self-custodial onchain operations.
+This document defines what the agentic loop can do, what it cannot do, and
+where humans remain mandatory.
+
+## Authority Model
+
+| Surface | Agent authority | Human authority |
+|---|---|---|
+| Memory | Extract public-safe lessons from local outcomes and redacted fixtures. | Delete, correct, or quarantine misleading memories. |
+| Genesis | Classify proposals and produce plan-only candidates. | Approve which proposal class deserves paper canary work. |
+| Research | Produce paper-only reports with source quality labels. | Decide whether research is trusted enough to influence policy. |
+| Decision stack | Explain lenses, layers, modifiers, rejections, and consensus. | Change live-risk thresholds and protected policy. |
+| Evolve | Generate sandbox candidates, paper canaries, promotion plans, rollback plans, and exact apply receipts. | Apply protected changes, approve live-code changes, and own rollback. |
+| Runtime OODA | Observe, orient, decide, act in paper mode, and learn from accepted/rejected decisions. | Enable self-custodial live mode only after local custody, preflight, reconciliation, journal, and kill-switch checks pass. |
+| MCP | Expose read-only inspection tools and resources. | No order placement through public MCP. |
+
+## Loop Shape
+
+```text
+runtime OODA
+  observe -> orient -> decide -> act -> learn
+
+self-evolution
+  memory -> research -> genesis -> evolve candidate -> paper canary
+         -> calibration -> promotion plan -> human apply -> rollback receipt
+```
+
+The runtime loop is the source of operational truth. The self-evolution loop is
+the source of candidate change. They are connected through journals and
+evidence, not through silent code mutation.
+
+## Bounds
+
+Agents may:
+
+- read public docs, fixtures, OpenAPI contracts, and redacted proof packets;
+- run paper examples, tests, and read-only MCP tools;
+- classify proposals and generate paper-only candidates;
+- write docs, examples, tests, and non-protected code in scoped changes;
+- propose rollback plans and incident follow-ups.
+
+Agents must not:
+
+- place live orders through MCP;
+- remove paper-first defaults;
+- read or emit secrets, wallet material, raw exchange order IDs, private
+  journals, private notes, or account-bearing payloads;
+- make live trading easier than paper trading;
+- bypass live preflight, reconciliation, durable journal checks, dead-man
+  controls, kill switches, or operator friction;
+- auto-apply protected live-code changes;
+- publish PnL, latency, paper/live correlation, or live-capability claims
+  without reproducible evidence in the repo.
+
+## Protected Paths
+
+Protected live-code evolution requires human review. Changes that touch these
+areas need safety review, tests, and explicit operator-visible refusal paths:
+
+- live execution adapters;
+- custody and key handling;
+- risk-increasing commands;
+- reconciliation gates;
+- immune breakers;
+- journal integrity;
+- public Network and Intelligence serializers;
+- MCP safety catalog;
+- release and distribution workflows.
+
+## State Ownership
+
+| State | Owner | Durability requirement |
+|---|---|---|
+| Decision journal | Operator runtime | Append-only now; hash-chained and signed in the next trust cycle. |
+| Runtime bus | Runtime | Checksum-chained and replayable from disk. |
+| Memory | Operator runtime | Local, redacted, and source-attributed. |
+| Genesis journal | Operator runtime | Append-only, reviewable, and plan-only. |
+| Evolve receipts | Operator runtime | Original hash, candidate hash, apply receipt, rollback receipt. |
+| Public proof packets | Publisher | Aggregate-only, privacy-checked, and hash-addressed. |
+
+## Failure-Mode Contract
+
+Every new autonomous capability must update
+[Failure Modes Of The Autonomous Loop](failure-modes-autonomous-loop.md) when it
+introduces a new way to fail. The failure-mode entry must define detection,
+blast radius, rollback, journal evidence, alerting, and test coverage.
+
+## Live Operation Boundary
+
+The public repo supports the contracts and operator surfaces needed for
+self-custodial live operation. It does not host custody, does not ship private
+operator records, and does not make live mode the default.
+
+Before live risk can increase, the local operator deployment must prove:
+
+- custody is configured locally;
+- live preflight passes;
+- reconciliation is fresh and safe;
+- journal durability is verified;
+- immune breakers allow the action;
+- dead-man and kill-switch controls are ready;
+- risk-increasing action has deliberate operator approval.
+
+If any proof is missing, ZERO must refuse risk increase and keep
+risk-reducing controls available.
 ````
 
 
@@ -3460,6 +3591,87 @@ guarantee.
 ````
 
 
+## Source: `docs/failure-modes-autonomous-loop.md`
+
+````markdown
+# Failure Modes Of The Autonomous Loop
+
+This document is the public safety taxonomy for ZERO's autonomous loop. It is
+written for maintainers, operators, reviewers, and coding agents.
+
+The rule is simple: if a failure mode is not documented with detection, blast
+radius, rollback, journal evidence, alerting, and test coverage, it is not
+ready for unattended operation.
+
+## Scope
+
+The public repository exposes paper-first autonomous components:
+
+- memory extraction from local outcomes;
+- genesis proposal classification;
+- paper-only research reports;
+- lens/layer/modifier decision-stack review;
+- paper-first evolve candidates;
+- runtime OODA reports;
+- read-only MCP inspection.
+
+Protected live-code evolution remains human-reviewed. The public MCP server is
+read-only and must not place orders, mutate runtime state, or read secrets.
+
+## Required Fields
+
+Every autonomous-loop failure mode must define:
+
+| Field | Required answer |
+|---|---|
+| Detection | Which check sees the problem first? |
+| Blast radius | What can be affected before containment? |
+| Rollback | What command, revert, kill, or policy change restores safety? |
+| Journal entry | Which journal/audit event proves what happened? |
+| Alerting | Which operator-visible signal fires? |
+| Test or evidence | Which deterministic test, property test, drill, or proof packet covers it? |
+
+Unknown answers mean fail closed.
+
+## Taxonomy
+
+| ID | Failure mode | Detection | Blast radius | Rollback | Journal entry | Alerting | Test or evidence |
+|---|---|---|---|---|---|---|---|
+| FM-AUTO-001 | Agent hallucinates a strategy and burns through paper budget. | Strategy registry rejects unknown runners; paper budget breaker sees order count, notional, or drawdown drift. | Paper budget for the local session. Live capital should be zero because paper-first is enforced. | Pause evolve, disable the strategy, revert the candidate config, reset paper budget after review. | `zero.evolve.run.v1`, `zero.immune.v1`, rejected `zero.paper.decision.v1`, rollback receipt. | CLI/TUI safety banner, `/immune`, metrics counter, optional operator notification. | `engine/tests/test_evolve.py`, `engine/tests/test_safety.py`; property budget fuzzing remains required before 100/100. |
+| FM-AUTO-002 | `evolve` produces a config that passes tests but fails at runtime. | Runtime health marks candidate as failed; production-parity OODA emits live-shadow mismatch or runtime exception. | Candidate branch and paper canary only. Protected paths must not auto-apply to live code. | `zero.evolve.rollback_receipt.v1`, restore original hash, mark proposal quarantined. | Apply receipt, rollback receipt, runtime cycle failure event. | `/runtime-parity`, `/evolve`, CI failure, operator terminal warning. | `engine/tests/test_evolve.py`, `engine/tests/test_runtime.py`; needs property tests for malformed candidate shapes. |
+| FM-AUTO-003 | Agent and human edit the journal concurrently. | Journal append detects non-monotonic offset, checksum break, lock failure, or replay mismatch. | Local audit trail for the affected runtime; execution must pause if journal integrity is unknown. | Stop writers, preserve both copies, replay from last good head, restore durable volume snapshot if needed. | `zero.journal.integrity_failure.v1` or incident audit export. | P1 journal anomaly alert, CLI refusal on live preflight, runbook escalation. | `engine/tests/test_bus.py`, `docs/runtime-bus.md`; decision-journal hash chain is the next implementation cycle. |
+| FM-AUTO-004 | Hyperliquid returns malformed response and the agent retries N times. | Adapter schema validation fails; retry budget reaches zero; rate-limit breaker opens. | Read-only market/account freshness or one blocked live submission. Order submissions must not retry blindly. | Mark venue degraded, fail risk-increasing actions, keep reduce-only controls available. | `exchange_error`, reconciliation packet, immune breaker event. | `/hl/reconcile`, `/immune`, `/live-cockpit`, metrics exchange-error counter. | `engine/tests/test_hyperliquid.py`, `engine/tests/test_live.py`, `engine/tests/test_reconciliation.py`; malformed-response fuzzing remains required before 100/100. |
+| FM-AUTO-005 | Stale memory promotes an outdated pattern. | Memory stats report stale source window; genesis confidence drops; proposal age exceeds policy. | Proposal quality and paper canary time, not live execution. | Retire stale memory, regenerate proposal from fresh outcomes, require a new paper canary. | `zero.memory.entry.v1`, `zero.genesis.proposal.v1`, research report. | `/memory`, `/genesis`, docs gap or safety-review issue. | `engine/tests/test_memory.py`, `engine/tests/test_genesis.py`; needs property tests for staleness thresholds. |
+| FM-AUTO-006 | Research command ingests prompt-injected or unsupported external claims. | Source classifier marks untrusted or unsupported evidence; research report carries evidence quality flags. | Paper-only research report and proposal queue. | Discard report, quarantine source, regenerate with trusted sources only. | `zero.research.report.v1` with rejected source metadata. | `/research`, safety-review issue when live policy would be affected. | `engine/tests/test_research.py`; adversarial source fixtures should be expanded. |
+| FM-AUTO-007 | Model gateway produces unsafe, expensive, or unavailable output. | Gateway budget, timeout, health, and audit checks fail closed. | Evaluation quality degradation; order path must not depend on unverified model output alone. | Fall back to local/mock provider, lower confidence, or reject decision. | Model gateway audit packet and decision rejection reason. | `/model-gateway/health`, metrics, operator warning. | `engine/tests/test_model_gateway.py`; cost-limit property tests remain required. |
+| FM-AUTO-008 | Paper/live shadow diverges during production-parity OODA. | `zero.runtime.production_parity.v1` reports mismatch or live-shadow fail-closed evidence. | Live promotion blocked; paper session continues. | Disable promotion, capture audit export, create regression fixture. | Runtime parity report, decision-stack packet, live-shadow refusal. | `/runtime-parity`, CLI red status, safety-review issue. | `engine/tests/test_runtime.py`, `engine/tests/test_live.py`. |
+| FM-AUTO-009 | MCP client asks ZERO to place an order or mutate state. | MCP safety catalog has no risk-increasing tools; unknown methods are rejected. | None if server remains read-only. | Keep server read-only, revoke unsafe registry submission, patch transcript. | MCP transcript refusal and safety catalog resource. | MCP smoke failure, CI failure. | `engine/tests/test_mcp.py`, `scripts/mcp_transcript.py --check`. |
+| FM-AUTO-010 | Public Network or Intelligence packet leaks private identifiers. | Privacy regression fixtures detect wallet-like, raw order ID, trace token, or private journal fields. | Public artifact exposure until publication is stopped. | Stop publishing, rotate unsafe packet, patch serializer, mark proof stale. | Public packet hash, privacy regression incident export. | P1 privacy regression alert, CI failure. | `engine/tests/test_proof_privacy.py`, `scripts/proof_privacy_regression.py`. |
+| FM-AUTO-011 | Kill switch, pause, flatten, or reduce-only path is unavailable. | Live certification drill fails; cockpit marks emergency controls not ready. | Live mode must refuse risk-increasing actions. Existing exchange positions may need manual exchange action. | Manual exchange close if needed; keep ZERO live disabled until certification passes. | `zero.live_certification.v1`, live cockpit packet, incident postmortem. | `/live-certification`, `/live-cockpit`, P0/P1 runbook. | `engine/tests/test_live_canary_policy.py`, `scripts/live_cockpit_drill_verify.py`. |
+| FM-AUTO-012 | Journal chain, signature, or timestamp anchor fails verification. | Journal verifier detects missing head, broken previous hash, invalid signature, or stale anchor. | Audit trust for the affected interval. Live mode must refuse if the decision journal is unverifiable. | Stop writers, preserve artifact, restore last verified head, publish redacted postmortem if live safety was affected. | `zero.journal.verification_failure.v1`, verifier report, incident postmortem. | CLI live-preflight refusal, incident alert. | Not complete: hash-chained signed journal and timestamp anchoring are the next trust-moat implementation cycle. |
+
+## Coverage Bar For 100/100
+
+ZERO reaches the autonomous trust bar only when:
+
+- every row above has at least one deterministic regression test;
+- safety gates have property-based tests for bounded random inputs;
+- decision journals are hash-chained, signed, and locally verifiable;
+- journal heads are periodically anchored through a trusted timestamp service or
+  public chain;
+- failures that touch live safety, journal integrity, or public privacy produce
+  redacted postmortems in `docs/incident-postmortems/`;
+- the MCP server is submitted before launch and tracked until registry listing.
+
+## Operating Rule
+
+Autonomy is allowed to suggest, classify, rehearse, and paper-canary changes.
+Autonomy is not allowed to silently expand live risk, bypass journals, bypass
+reconciliation, bypass kill switches, publish private records, or mutate
+protected live-code paths without human review.
+````
+
+
 ## Source: `docs/incident-runbooks.md`
 
 ````markdown
@@ -3621,6 +3833,87 @@ Every P0/P1 incident should preserve:
 - relevant trace IDs and idempotency keys;
 - exchange-side fill/order records when live mode is involved;
 - remediation commit and verification commands.
+
+## Public Postmortem Gate
+
+Use [incident-postmortems/TEMPLATE.md](incident-postmortems/TEMPLATE.md) for
+any incident that affects autonomous-loop trust, live safety, journal integrity,
+public privacy, or release integrity.
+
+Publish a redacted postmortem within 7 days when public users, public
+artifacts, or live-safety claims are affected. If publication would expose
+secrets or an active exploit, publish a delayed notice and complete the
+postmortem after containment.
+````
+
+
+## Source: `docs/incident-postmortems/README.md`
+
+````markdown
+# Incident Postmortems
+
+ZERO publishes redacted postmortems for incidents that affect autonomous-loop
+trust, live safety, journal integrity, public privacy, or release integrity.
+
+The goal is not performative transparency. The goal is to make autonomous
+operation auditable by showing what failed, how it was detected, how far it
+could spread, how it was rolled back, what the journal recorded, what alert
+fired, and which test now prevents recurrence.
+
+## Publication Policy
+
+Publish a redacted postmortem when any of the following occurs:
+
+- a P0/P1 incident from [Incident Runbooks](../incident-runbooks.md);
+- unexpected live order, failed canary, or emergency control failure;
+- safety-gate refusal that reveals a design gap;
+- journal anomaly, checksum break, signature failure, or timestamp-anchor
+  failure;
+- autonomous loop proposes, applies, or rehearses an unsafe change;
+- public Network or Intelligence packet leaks private identifiers;
+- MCP server exposes an unsafe tool, resource, or registry manifest;
+- release artifact, SBOM, provenance, or attestation is wrong.
+
+## Timing
+
+- Preserve evidence immediately.
+- Draft internally within 72 hours.
+- Publish a redacted version within 7 days when public users, public artifacts,
+  or live-safety claims are affected.
+- If publication would expose secrets or an active exploit, publish a delayed
+  notice and complete the postmortem after containment.
+
+## Redaction Rules
+
+Never publish:
+
+- private keys, seed phrases, API tokens, cookies, or auth headers;
+- wallet addresses unless the operator explicitly made them public;
+- raw exchange order IDs, raw private journals, trace tokens, or idempotency
+  tokens;
+- strategy labels or private notes that can identify an operator;
+- unredacted screenshots containing account state.
+
+Publish instead:
+
+- timestamps;
+- release tags and commit SHAs;
+- redacted trace IDs;
+- proof hashes;
+- verifier outputs;
+- aggregate counts;
+- remediation commits;
+- new or updated test names.
+
+## Index
+
+No public incident postmortems have been published yet.
+
+New postmortems should use [TEMPLATE.md](TEMPLATE.md) and be named:
+
+```text
+YYYY-MM-DD-short-slug.md
+```
 ````
 
 
@@ -3745,7 +4038,17 @@ feedback from at least one serious engineer, and optional raw exchange
 disclosure for parties that need custody proof beyond the public redacted
 packet.
 
-**Full ZERO operating-system readiness: 100/100.**
+**Full ZERO operating-system contract readiness: 100/100.**
+
+**Autonomous trust readiness: 92/100.**
+
+The stricter trust bar is intentionally higher than contract completeness. The
+repo now documents autonomous-loop bounds, a failure-mode taxonomy, and a
+postmortem publication policy, but it should not claim the final autonomous
+trust moat until the decision journal is hash-chained, signed, and periodically
+timestamp-anchored; MCP registry submission/listing evidence is public; and
+every safety gate has deterministic or property-based coverage for the failure
+modes in [Failure Modes Of The Autonomous Loop](failure-modes-autonomous-loop.md).
 
 It is still not a hosted custody product, and real capital operation remains
 self-custodial and operator-owned. The public repo must not imply that a new
@@ -3808,9 +4111,11 @@ ZERO is 100/100 when a new serious operator can:
 
 ## Execution Cycles
 
-Forecast after Cycle 39: **0 major public-repo cycles remain before the repo can
-be treated as the complete ZERO autonomous operating-system launch artifact.**
-The remaining work is external proof and hosted product operation: third-party
+Forecast after Cycle 40: **0 major public-repo product cycles remain before the
+repo can be treated as a complete ZERO autonomous operating-system launch
+artifact. 3 trust-moat cycles remain before the autonomous trust score should
+return to 100/100:** journal cryptography, MCP registry listing evidence, and
+property-based safety-gate coverage. External work still includes third-party
 review, package registry ownership, hosted Network, paid Intelligence
 deployment, and optional raw exchange disclosure for commercial diligence.
 
@@ -4435,11 +4740,11 @@ speed, scale, history, and reliability.
 | Product narrative | 99 | keep narrative aligned as hosted Network and Intelligence launch |
 | CLI readiness | 100 | five-mode terminal with full-screen live cockpit exists; raw exchange records remain operator-owned proof |
 | Engine runtime | 100 | public production-parity OODA report plus redacted live trading evidence exist; raw exchange records remain operator-owned external proof |
-| Self-evolution loop | 100 | public memory, research command chain, genesis proposal classification, production-parity OODA reports, local apply, rollback, and paper-first evolve gates exist; protected live-code evolution remains human-reviewed by design |
-| Safety and risk | 94 | real exchange chaos drills, external review |
+| Self-evolution loop | 98 | public memory, research command chain, genesis proposal classification, production-parity OODA reports, local apply, rollback, paper-first evolve gates, and agent architecture bounds exist; property-based failure-mode coverage remains |
+| Safety and risk | 96 | autonomous-loop failure taxonomy exists; real exchange chaos drills, property-based safety-gate tests, and external review remain |
 | API contracts | 100 | public runtime contracts are complete; hosted compatibility is commercial launch work |
 | Deployment | 96 | live Railway proof, external production log-drain evidence |
-| Observability and audit | 97 | signed bundles, metrics backend, log drains |
+| Observability and audit | 92 | checksum-chained runtime bus and signed evidence bundles exist; decision-journal hash chaining, signatures, timestamp anchoring, metrics backend, and log drains remain |
 | Security and custody | 91 | external review, key-handling drill evidence |
 | ZERO Network | 82 | deterministic public proof-chain pack plus profile identity verifier exist; hosted identity service, public pages, and production ingestion service remain |
 | ZERO Intelligence | 70 | production hosted service persistence, billing provider, history storage, terms |

@@ -64,6 +64,7 @@ required=(
   docs/llms-full.txt
   docs/mcp.md
   docs/mcp/transcript.jsonl
+  docs/agent-architecture.md
   docs/memory-core.md
   docs/genesis.md
   docs/evolve.md
@@ -86,6 +87,9 @@ required=(
   docs/proof/network/identity/SHA256SUMS
   docs/proof/live/README.md
   docs/proof/live/live-trading-evidence.json
+  docs/failure-modes-autonomous-loop.md
+  docs/incident-postmortems/README.md
+  docs/incident-postmortems/TEMPLATE.md
   .cursor/rules/global.mdc
   .github/PULL_REQUEST_TEMPLATE.md
   .github/ISSUE_TEMPLATE/agent_task.yml
@@ -151,7 +155,12 @@ echo "-- public product honesty"
 file_contains "Autonomous operating system for self-custodial onchain operations" README.md
 file_contains "paper mode" README.md
 file_contains "Self-evolution" docs/private-engine-capability-gap-audit.md
-file_contains "Full ZERO operating-system readiness: 100/100" docs/production-readiness.md
+file_contains "Full ZERO operating-system contract readiness: 100/100" docs/production-readiness.md
+file_contains "Autonomous trust readiness: 92/100" docs/production-readiness.md
+file_contains "Failure Modes Of The Autonomous Loop" docs/failure-modes-autonomous-loop.md
+file_contains "FM-AUTO-004" docs/failure-modes-autonomous-loop.md
+file_contains "Agent Architecture" docs/agent-architecture.md
+file_contains "Publication Policy" docs/incident-postmortems/README.md
 file_contains "zero.runtime.production_parity.v1" docs/production-readiness.md
 file_contains "zero.live_canary_policy.v1" docs/live-canary-operator.md
 file_contains "/live/canary-policy" docs/live-evidence.md

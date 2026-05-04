@@ -38,6 +38,7 @@
 ## Architecture And Contracts
 
 - [Architecture](architecture.md)
+- [Agent Architecture](agent-architecture.md)
 - [Runtime Bus](runtime-bus.md)
 - [Memory Core](memory-core.md)
 - [Genesis](genesis.md)
@@ -56,7 +57,9 @@
 
 - [Safety Model](safety-model.md)
 - [Threat Model](threat-model.md)
+- [Failure Modes Of The Autonomous Loop](failure-modes-autonomous-loop.md)
 - [Incident Runbooks](incident-runbooks.md)
+- [Incident Postmortems](incident-postmortems/README.md)
 - [Dependency Policy](dependency-policy.md)
 - [Hyperliquid Read-only](hyperliquid-readonly.md)
 - [Live Evidence](live-evidence.md)

@@ -4,9 +4,19 @@ This scorecard keeps the public repo honest before launch. It separates what is
 ready for open-source contributors from what is paper-only or intentionally
 reserved for ZERO Intelligence.
 
-## Current Score
+## Current Launch Repository Score
 
 **100/100**
+
+## Current Autonomous Trust Score
+
+**92/100**
+
+The launch repository is ready for serious contributors. The stricter
+autonomous-systems trust bar is not complete until decision journals are
+hash-chained, signed, and timestamp-anchored; the MCP server is submitted and
+tracked through registry listing; and every safety gate has deterministic or
+property-based coverage for the documented failure modes.
 
 ## Ready
 
@@ -47,6 +57,8 @@ reserved for ZERO Intelligence.
   certification, receipts, evidence, metrics, and audit packets, plus a local
   verifier and tamper rehearsal that replay packet-derived readiness
 - Threat model, incident runbooks, distribution policy, and hardening gate
+- Agent architecture bounds, autonomous-loop failure-mode taxonomy, and
+  incident-postmortem publication policy
 - Dependency and supply-chain policy with vulnerability response rules
 - One-line CLI install path with checksum and attestation verification
 - Registry-readiness gate for PyPI/Cargo metadata and package-channel guardrails

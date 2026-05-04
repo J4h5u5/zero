@@ -79,11 +79,11 @@ speed, scale, history, and reliability.
 | Product narrative | 99 | keep narrative aligned as hosted Network and Intelligence launch |
 | CLI readiness | 100 | five-mode terminal with full-screen live cockpit exists; raw exchange records remain operator-owned proof |
 | Engine runtime | 100 | public production-parity OODA report plus redacted live trading evidence exist; raw exchange records remain operator-owned external proof |
-| Self-evolution loop | 100 | public memory, research command chain, genesis proposal classification, production-parity OODA reports, local apply, rollback, and paper-first evolve gates exist; protected live-code evolution remains human-reviewed by design |
-| Safety and risk | 94 | real exchange chaos drills, external review |
+| Self-evolution loop | 98 | public memory, research command chain, genesis proposal classification, production-parity OODA reports, local apply, rollback, paper-first evolve gates, and agent architecture bounds exist; property-based failure-mode coverage remains |
+| Safety and risk | 96 | autonomous-loop failure taxonomy exists; real exchange chaos drills, property-based safety-gate tests, and external review remain |
 | API contracts | 100 | public runtime contracts are complete; hosted compatibility is commercial launch work |
 | Deployment | 96 | live Railway proof, external production log-drain evidence |
-| Observability and audit | 97 | signed bundles, metrics backend, log drains |
+| Observability and audit | 92 | checksum-chained runtime bus and signed evidence bundles exist; decision-journal hash chaining, signatures, timestamp anchoring, metrics backend, and log drains remain |
 | Security and custody | 91 | external review, key-handling drill evidence |
 | ZERO Network | 82 | deterministic public proof-chain pack plus profile identity verifier exist; hosted identity service, public pages, and production ingestion service remain |
 | ZERO Intelligence | 70 | production hosted service persistence, billing provider, history storage, terms |
