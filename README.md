@@ -43,6 +43,8 @@ use [docs/railway-template.md](docs/railway-template.md) as the marketplace
 configuration source of truth. The current Railway Template Publish Packet is
 tracked in
 [contracts/distribution/railway-template.json](contracts/distribution/railway-template.json).
+The Railway partner submission packet is tracked in
+[docs/railway-partner.md](docs/railway-partner.md).
 
 ```bash
 scripts/railway_doctor.py https://zero-production-5214.up.railway.app

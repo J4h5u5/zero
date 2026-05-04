@@ -144,11 +144,19 @@ contains "Vulnerability Response" docs/dependency-policy.md
 contains "Homebrew Formula Requirements" docs/distribution.md
 contains "Registry Launch Packet" docs/distribution.md
 contains "Railway Template Channel" docs/distribution.md
+contains "Railway Open Source Partner application packet" docs/distribution.md
 contains "Railway Template Publish Packet" docs/railway-template.md
+contains "Generate Template from Project" docs/railway-template.md
+contains "Marketplace Overview Copy" docs/railway-template.md
+contains "Railway Partner Application Packet" docs/railway-partner.md
+contains "https://railway.com/partners" docs/railway-partner.md
+contains "https://station.railway.com/my-template-queue" docs/railway-partner.md
 contains "scripts/homebrew_formula.py" docs/distribution.md
 contains "zero.registry_launch_packet.v1" docs/registry-launch.md
 contains "zero.railway_template_packet.v1" contracts/distribution/railway-template.json
 contains "ready_for_marketplace_publish" contracts/distribution/railway-template.json
+contains "prepared_not_submitted" contracts/distribution/railway-template.json
+contains "docs/assets/zero-template-icon.svg" contracts/distribution/railway-template.json
 contains "zero.mcp_registry_packet.v1" docs/mcp-registry.md
 contains "zero.mcp_registry_listing_check.v1" docs/mcp-registry.md
 contains "io.github.zero-intel/zero" docs/mcp-registry.md
@@ -165,6 +173,7 @@ contains "brew tap zero-intel/zero" docs/release.md
 contains "brew tap zero-intel/zero" README.md
 contains "https://zero-production-5214.up.railway.app" README.md
 contains "Open in GitHub Codespaces" README.md
+contains "docs/railway-partner.md" README.md
 contains "Trusted Publishing" docs/distribution.md
 contains "cargo owner" docs/distribution.md
 contains "GitHub artifact attestations" docs/release.md

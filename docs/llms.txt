@@ -33,6 +33,7 @@
 - [Proof Packs](proof/README.md)
 - [Railway Template](railway-template.md)
 - [Railway Deploy](railway-deploy.md)
+- [Railway Partner Packet](railway-partner.md)
 - [Railway Template Packet](../contracts/distribution/railway-template.json)
 - [Release](release.md)
 - [Release Verification](release-verification.md)

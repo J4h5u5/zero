@@ -17,6 +17,7 @@ support commitments are stable.
 - Homebrew formula in `Formula/zero.rb`
 - Published PyPI package `zero-engine`
 - Railway paper-runtime deployment path and template publish packet
+- Railway Open Source Partner application packet
 
 ## Not Yet Published
 
@@ -60,6 +61,11 @@ scripts/railway_template_packet.py --check
 The marketplace template should not include live exchange credentials. It must
 set `ZERO_MODE=paper`, mount `/data`, expose `/health`, and keep `/live/preflight`
 in `live_mode=refused`.
+
+The partner packet is
+[`docs/railway-partner.md`](railway-partner.md). It records the application URL,
+submission message, support queue commitment, update policy, and evidence links
+needed for Railway's Open Source Partner review.
 
 ## Registry Readiness Gate
 

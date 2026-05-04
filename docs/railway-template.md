@@ -51,6 +51,8 @@ doctor result, required variables, and marketplace publish steps.
 | --- | --- |
 | Template name | `ZERO Paper Runtime` |
 | Service name | `ZERO` |
+| Template icon | `docs/assets/zero-template-icon.svg` |
+| Service icon | `docs/assets/zero-template-icon.svg` |
 | Source | GitHub repository |
 | Repository | `zero-intel/zero` |
 | Branch | `main` |
@@ -61,6 +63,50 @@ doctor result, required variables, and marketplace publish steps.
 | Healthcheck timeout | `60` |
 | Public networking | HTTP enabled |
 | Volume mount | `/data` |
+
+### Marketplace Overview Copy
+
+Use this copy in Railway's template overview editor. It follows Railway's
+recommended H1/H2 structure and should stay in sync with this page.
+
+```md
+# Deploy and Host ZERO with Railway
+
+ZERO is an autonomous operating system for self-custodial onchain operations.
+This template runs the public paper runtime: live Hyperliquid prices are
+read-only, execution is simulated, journals persist on a Railway volume, and
+live-risk endpoints fail closed by default.
+
+## About Hosting ZERO
+
+Hosting ZERO on Railway gives operators a public paper runtime with a stable
+URL, logs, metrics, health checks, and a persistent journal volume. It does not
+custody funds and does not need exchange private keys. Use it for operator
+onboarding, public proof capture, agentic development, and first-run demos
+against a real HTTP runtime.
+
+## Common Use Cases
+
+- Paper-mode operator demos with live read-only Hyperliquid mids.
+- Public proof capture before sharing a profile or leaderboard claim.
+- Agentic development against a stable remote ZERO runtime.
+- Railway doctor, deployment evidence, and rollback rehearsal practice.
+
+## Dependencies for ZERO Hosting
+
+- Railway service sourced from `https://github.com/zero-intel/zero`.
+- Dockerfile build from the repository root.
+- Public HTTP networking enabled for the runtime service.
+- Persistent Railway volume mounted at `/data`.
+- Railway-provided `PORT`.
+
+### Why Deploy ZERO on Railway?
+
+Railway gives operators a fast paper-runtime rollout path without asking ZERO
+to host custody infrastructure. Operators keep their own project boundary,
+volume, logs, domains, variables, and billing relationship while ZERO stays
+inspectable, interruptible, and paper-first by default.
+```
 
 ### Template Variables
 
@@ -109,18 +155,33 @@ railway login --browserless
 scripts/railway_cli_preflight.py
 ```
 
-2. Create the template from a Railway project based on this GitHub repository.
-3. Confirm the `/data` volume is attached before the first public deploy.
-4. Publish the template from Railway workspace settings.
-5. Add the live demo project after `scripts/railway_doctor.py "$ZERO_RAILWAY_URL"` passes.
-6. Replace `<template-code>` in the README button with Railway's issued template code:
+2. From the live project canvas, open **Settings** and use **Generate Template from Project**.
+   Railway documents template creation through the dashboard,
+   not the normal CLI.
+3. Confirm the generated template keeps the GitHub source, Dockerfile build,
+   `/health` health check, public HTTP networking, and `/data` volume.
+4. Add `docs/assets/zero-template-icon.svg` as the template and service icon.
+5. Paste the Marketplace Overview Copy from this page.
+6. Publish the template from Railway workspace settings.
+7. Apply to the Open Source Partner Program at
+   `https://railway.com/partners` using [railway-partner.md](railway-partner.md).
+8. Add the live demo project after `scripts/railway_doctor.py "$ZERO_RAILWAY_URL"` passes.
+9. Replace `<template-code>` in the README button with Railway's issued template code:
 
 ```md
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template/<template-code>?utm_medium=integration&utm_source=button&utm_campaign=zero)
 ```
 
-7. Keep [docs/release.md](release.md) and the template packet current before
+10. Keep [docs/release.md](release.md) and the template packet current before
    merging template-impacting changes to `main`.
+
+### Partner And Support Packet
+
+Railway's partner program is a manual application. The prepared application
+packet lives in [railway-partner.md](railway-partner.md) and includes the
+maintainer summary, template evidence, support queue commitment, update policy,
+and submission message. After publishing the template, keep the Template Queue
+at https://station.railway.com/my-template-queue clear during launch week.
 
 ## Why Deploy ZERO on Railway?
 

@@ -27,6 +27,7 @@ def file_exists(path: str) -> bool:
 def build_packet() -> dict[str, Any]:
     readme = text("README.md")
     template_docs = text("docs/railway-template.md")
+    partner_docs = text("docs/railway-partner.md")
     deploy_docs = text("docs/railway-deploy.md")
     railway_toml = text("railway.toml")
     dockerfile = text("Dockerfile")
@@ -36,10 +37,19 @@ def build_packet() -> dict[str, Any]:
         "schema_version": SCHEMA_VERSION,
         "readme_names_live_demo": PUBLIC_DEMO_URL in readme,
         "readme_names_railway_template_docs": "docs/railway-template.md" in readme,
+        "readme_names_partner_packet": "docs/railway-partner.md" in readme,
         "template_docs_name_public_demo": PUBLIC_DEMO_URL in template_docs,
         "template_docs_name_partner_publish_step": "Railway Template Publish Packet" in template_docs,
+        "template_docs_name_dashboard_generation": "Generate Template from Project" in template_docs,
+        "template_docs_include_marketplace_overview": "Marketplace Overview Copy" in template_docs,
+        "template_docs_name_icon": "docs/assets/zero-template-icon.svg" in template_docs,
+        "partner_docs_present": file_exists("docs/railway-partner.md"),
+        "partner_docs_name_application_url": "https://railway.com/partners" in partner_docs,
+        "partner_docs_name_template_queue": "https://station.railway.com/my-template-queue" in partner_docs,
+        "partner_docs_name_support_commitment": "Support Commitment" in partner_docs,
         "deploy_docs_name_doctor": "scripts/railway_doctor.py" in deploy_docs,
         "dockerfile_present": file_exists("Dockerfile"),
+        "template_icon_present": file_exists("docs/assets/zero-template-icon.svg"),
         "railway_toml_present": file_exists("railway.toml"),
         "start_script_present": file_exists("scripts/railway_start.sh"),
         "dockerfile_installs_engine": "python -m pip install --no-cache-dir /app/engine"
@@ -67,6 +77,18 @@ def build_packet() -> dict[str, Any]:
             "latest_evidence_bundle": "artifacts/deployment-evidence/20260504T183948Z",
             "doctor_summary": {"ok": 17, "warn": 1, "fail": 0},
             "evidence_verify": {"ok": True, "checks": 60, "fail": 0},
+            "partner_application": "prepared_not_submitted",
+            "partner_application_packet": "docs/railway-partner.md",
+        },
+        "marketplace": {
+            "template_icon": "docs/assets/zero-template-icon.svg",
+            "service_icon": "docs/assets/zero-template-icon.svg",
+            "create_flow": "Project Settings -> Generate Template from Project",
+            "publish_flow": "Railway workspace templates page",
+            "partner_application_url": "https://railway.com/partners",
+            "support_queue_url": "https://station.railway.com/my-template-queue",
+            "updates": "GitHub main branch template updates",
+            "private_docker_images": "reserved for future commercial components; not used by open paper runtime",
         },
         "runtime": {
             "mode": "paper",
