@@ -51,8 +51,8 @@ The PyPI package README carries the MCP package proof string:
 
 ## Current Listing Evidence
 
-As of `2026-05-04T16:04:34Z`, the Official MCP Registry query returns the ZERO
-server and PyPI serves `zero-engine==0.1.3`:
+As of `2026-05-04T16:34:39Z`, the Official MCP Registry query returns the ZERO
+server and PyPI serves `zero-engine==0.1.5`:
 
 ```bash
 curl -fsS 'https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.zero-intel/zero'
@@ -60,13 +60,21 @@ curl -fsS 'https://pypi.org/pypi/zero-engine/json'
 ```
 
 ```json
-{"servers":[{"name":"io.github.zero-intel/zero","version":"0.1.3"}],"metadata":{"count":2}}
+{"servers":[{"name":"io.github.zero-intel/zero","version":"0.1.5"}],"metadata":{"count":4}}
 ```
 
-The MCP Registry Publication workflow `25329283281` published the `0.1.3`
-`server.json` with GitHub OIDC. The registry returns both `0.1.2` and `0.1.3`
-records for the same server name, so the verifier selects the listed record
-whose version matches local `server.json`.
+The MCP Registry Publication workflow `25330669013` published the `0.1.5`
+`server.json` with GitHub OIDC after PyPI Trusted Publishing completed for
+`zero-engine==0.1.5`. The registry currently returns four records for the same
+server name, so the verifier selects the listed record whose version matches
+local `server.json`.
+
+The published MCP runtime also reports the same package version from the
+initialize response:
+
+```json
+{"serverInfo":{"name":"zero-mcp","version":"0.1.5"}}
+```
 
 ## Publish Runbook
 
