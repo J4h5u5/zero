@@ -48,7 +48,7 @@
         "defaultMode": "paper",
         "safetyClass": "read-only-public",
         "sourceCommitPolicy": "release-tagged",
-        "submissionState": "listed",
+        "submissionState": "ready-after-pypi-publication",
         "verificationCommands": [
           "PYTHONPATH=$PWD/engine/src python3 -m zero_engine.mcp --smoke",
           "PYTHONPATH=$PWD/engine/src scripts/mcp_transcript.py --check",
@@ -83,7 +83,8 @@
   "submission": {
     "auth_method": "github-oidc",
     "blocked_until": [
-      "next server.json metadata change requires rerunning the MCP Registry Publication workflow"
+      "next server.json metadata change requires a new server/package version",
+      "rerun the MCP Registry Publication workflow after the versioned metadata change"
     ],
     "package_identifier": "zero-engine",
     "package_registry": "pypi",

@@ -3437,7 +3437,7 @@ with GitHub OIDC and verified the listing.
 
 ## Publish Runbook
 
-Run this after changing `server.json` or package metadata:
+Run this after changing `server.json` or package metadata for a new version:
 
 ```bash
 just registry-readiness
@@ -3456,6 +3456,10 @@ and current listing state. For a metadata update, rerun the workflow with
 workflow uses GitHub OIDC, installs the official `mcp-publisher`, publishes
 `server.json`, and then requires
 `scripts/mcp_registry_listing_check.py --expect-listed` to pass.
+
+The Official MCP Registry rejects duplicate publishes for the same
+`name/version` pair. Metadata-only changes must wait for the next server/package
+version; use `publish=false` for verification-only runs between releases.
 
 Record the workflow URL and listing JSON in release evidence for every metadata
 change.

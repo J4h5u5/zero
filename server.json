@@ -5,7 +5,7 @@
       "defaultMode": "paper",
       "safetyClass": "read-only-public",
       "sourceCommitPolicy": "release-tagged",
-      "submissionState": "listed",
+      "submissionState": "ready-after-pypi-publication",
       "verificationCommands": [
         "PYTHONPATH=$PWD/engine/src python3 -m zero_engine.mcp --smoke",
         "PYTHONPATH=$PWD/engine/src scripts/mcp_transcript.py --check",

@@ -44,7 +44,7 @@ def build_server_json() -> dict[str, Any]:
         "_meta": {
             "io.modelcontextprotocol.registry/publisher-provided": {
                 "defaultMode": "paper",
-                "submissionState": "listed",
+                "submissionState": "ready-after-pypi-publication",
                 "safetyClass": "read-only-public",
                 "sourceCommitPolicy": "release-tagged",
                 "verificationCommands": [
@@ -142,7 +142,8 @@ def build_packet() -> dict[str, Any]:
                 "scripts/mcp_registry_listing_check.py --expect-listed --json",
             ],
             "blocked_until": [
-                "next server.json metadata change requires rerunning the MCP Registry Publication workflow",
+                "next server.json metadata change requires a new server/package version",
+                "rerun the MCP Registry Publication workflow after the versioned metadata change",
             ],
         },
         "server_json": server,
