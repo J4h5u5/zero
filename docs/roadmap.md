@@ -18,6 +18,8 @@
 - Public Genesis Proposal Core
 - Public Evolve Harness
 - Public Research Command Chain
+- Published `zero-engine` PyPI package
+- Official MCP Registry listing for `io.github.zero-intel/zero`
 
 ## Near Term
 
@@ -37,8 +39,8 @@
 - OpenAPI contract hardening and compatibility checks
 - Public examples
 - Hosted public profile and leaderboard pages
-- Hosted ZERO Intelligence ingestion and billing
-- Package registry publication after ownership and rollback gates
+- Hosted ZERO Intelligence billing, terms, and warehouse backend
+- Optional crates.io/container publication after ownership and rollback gates
 - Good-first-issue backlog
 
 See [ZERO Autonomous OS Completion Plan](autonomous-os-plan.md) for the

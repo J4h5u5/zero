@@ -75,8 +75,8 @@ speed, scale, history, and reliability.
 
 | Dimension | Current | 100/100 Gap |
 |---|---:|---|
-| Public repo hygiene | 100 | MCP registry packet exists; live registry listing, package ownership evidence, and external review remain business/process tasks |
-| Product narrative | 99 | keep narrative aligned as hosted Network and Intelligence launch |
+| Public repo hygiene | 100 | PyPI `zero-engine`, MCP registry listing, release gates, and public contribution surfaces are live; external review remains business/process work |
+| Product narrative | 100 | keep narrative aligned as hosted Network and Intelligence launch |
 | CLI readiness | 100 | five-mode terminal with full-screen live cockpit exists; raw exchange records remain operator-owned proof |
 | Engine runtime | 100 | public production-parity OODA report plus redacted live trading evidence exist; raw exchange records remain operator-owned external proof |
 | Self-evolution loop | 98 | public memory, research command chain, genesis proposal classification, production-parity OODA reports, local apply, rollback, paper-first evolve gates, agent architecture bounds, and property-based safety coverage exist; protected live-code evolution remains human-reviewed |
@@ -86,8 +86,8 @@ speed, scale, history, and reliability.
 | Observability and audit | 99 | checksum-chained runtime bus, hash-chained signable decision journal, local timestamp binding, external anchor packet, periodic anchor-cadence operation, verifier, and signed evidence bundles exist; metrics backend and log drains remain |
 | Security and custody | 91 | external review, key-handling drill evidence |
 | ZERO Network | 82 | deterministic public proof-chain pack plus profile identity verifier exist; hosted identity service, public pages, and production ingestion service remain |
-| ZERO Intelligence | 70 | production hosted service persistence, billing provider, history storage, terms |
-| Release and distribution | 100 | public Homebrew repo tap and MCP registry packet exist; external registry ownership/listing evidence remains outside the public runtime |
+| ZERO Intelligence | 78 | durable JSONL hosted-reference persistence exists; billing provider, warehouse backend, terms, and SLAs remain |
+| Release and distribution | 100 | public Homebrew repo tap, PyPI `zero-engine`, and MCP Registry listing exist; crates/container registry ownership remains optional external distribution work |
 | Operator docs | 98 | third-party review and optional raw exchange disclosure |
 
 ## Execution Cycles
@@ -635,9 +635,12 @@ Current progress:
 - Backfilled `v0.1.1` with `SBOM.spdx.json` and `PROVENANCE.json`, verified the
   published release from a clean download, and added `scripts/release_evidence.py`
   so maintainers can rerun checksum, metadata, attestation, and formula evidence.
+- Published `zero-engine==0.1.2` on PyPI through Trusted Publishing and listed
+  `io.github.zero-intel/zero` in the Official MCP Registry with a public `uvx`
+  stdio package reference.
 
-Remaining scope before Cycle 26: external package-registry ownership evidence
-and external review evidence.
+Remaining scope before Cycle 26: crates/container ownership evidence and
+external review evidence.
 
 ### Cycle 26: External Review And Real-World Evidence
 

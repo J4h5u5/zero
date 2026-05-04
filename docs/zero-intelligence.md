@@ -126,6 +126,7 @@ ZERO_INTELLIGENCE_API_TOKEN=...
 ZERO_INTELLIGENCE_API_PLAN=team_fund
 ZERO_INTELLIGENCE_API_ACCOUNT_ID=acct_...
 ZERO_INTELLIGENCE_WEBHOOK_SIGNING_KEY=...
+ZERO_INTELLIGENCE_STORE_PATH=/data/zero/intelligence.jsonl
 ```
 
 The reference implementation enforces paid scopes when a token is configured,
@@ -140,6 +141,27 @@ x-zero-signature-algorithm
 
 The signature payload is `timestamp + "." + canonical_json_body` signed with
 HMAC-SHA256. The signing key is never returned.
+
+## Durable Reference Store
+
+When `ZERO_INTELLIGENCE_STORE_PATH` is configured, the hosted-compatible
+reference API appends public-safe JSONL records for delayed/realtime snapshots,
+usage events, webhook subscription fixtures, and export jobs. History queries
+then read stored snapshot records before falling back to the current runtime
+snapshot.
+
+The store is intentionally aggregate-only:
+
+- API tokens and webhook signing keys are never written.
+- Account IDs and webhook target URLs are persisted as SHA-256 hashes.
+- Raw journals, trace IDs, idempotency keys, symbols, exchange order IDs,
+  wallet identifiers, and strategy labels remain excluded by the same privacy
+  checks that guard public Network and Intelligence packets.
+
+This is not the final commercial warehouse or billing system. It is the
+durable, stdlib, self-hostable persistence boundary that production hosted
+Intelligence can replace with Postgres, ClickHouse, or another append-only
+warehouse without changing the public API contract.
 
 ## Data Rules
 

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import html
+import hashlib
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -19,6 +20,74 @@ class IntelligenceConfig:
     def __post_init__(self) -> None:
         if self.public_delay_s < 0:
             raise ValueError("intelligence public delay must be non-negative")
+
+
+@dataclass(frozen=True)
+class HostedIntelligenceStore:
+    """Append-only stdlib store for hosted-compatible intelligence records."""
+
+    path: str | Path
+
+    def append(
+        self,
+        record_type: str,
+        payload: dict[str, Any],
+        *,
+        recorded_at: str,
+    ) -> dict[str, Any]:
+        if record_type not in {"snapshot", "usage_event", "webhook_subscription", "export_job"}:
+            raise ValueError(f"unsupported hosted intelligence record type: {record_type}")
+        record = {
+            "schema_version": "zero.intelligence.store_record.v1",
+            "record_type": record_type,
+            "recorded_at": recorded_at,
+            "payload": payload,
+            "privacy": {
+                "aggregate_only": True,
+                "raw_private_data": False,
+                "token_material_included": False,
+            },
+        }
+        assert_intelligence_safe(record)
+        path = Path(self.path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("a", encoding="utf-8") as handle:
+            handle.write(json.dumps(record, sort_keys=True, separators=(",", ":")) + "\n")
+        return record
+
+    def records(self, *, record_type: str | None = None, limit: int = 100) -> list[dict[str, Any]]:
+        if limit <= 0:
+            return []
+        path = Path(self.path)
+        if not path.exists():
+            return []
+        rows: list[dict[str, Any]] = []
+        for line in path.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            if record.get("schema_version") != "zero.intelligence.store_record.v1":
+                continue
+            if record_type and record.get("record_type") != record_type:
+                continue
+            rows.append(record)
+        return rows[-limit:]
+
+    def snapshots(self, *, limit: int = 100) -> list[dict[str, Any]]:
+        snapshots: list[dict[str, Any]] = []
+        for record in self.records(record_type="snapshot", limit=limit):
+            payload = record.get("payload", {})
+            if isinstance(payload, dict) and isinstance(payload.get("snapshot"), dict):
+                snapshots.append(payload["snapshot"])
+        return snapshots
+
+
+def stable_hash(value: str) -> str:
+    return "sha256:" + hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def account_hash(account_id: str) -> str:
+    return stable_hash(account_id)
 
 
 def intelligence_snapshot(

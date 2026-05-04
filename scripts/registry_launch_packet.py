@@ -145,7 +145,7 @@ def build_packet() -> dict[str, Any]:
         "docs_release_states_no_registry_publish": contains_any(
             release_docs,
             [
-                "does not publish to PyPI",
+                "does not publish to any",
                 "Do not publish package-registry artifacts",
             ],
         ),

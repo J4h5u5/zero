@@ -50,6 +50,7 @@ start_container() {
     -e ZERO_INTELLIGENCE_API_PLAN=team_fund \
     -e ZERO_INTELLIGENCE_API_ACCOUNT_ID=acct_railway \
     -e ZERO_INTELLIGENCE_WEBHOOK_SIGNING_KEY=railway-webhook-signing-key \
+    -e ZERO_INTELLIGENCE_STORE_PATH=/tmp/zero/intelligence.jsonl \
     "${IMAGE}" \
     /app/scripts/railway_start.sh >/dev/null
 
@@ -184,7 +185,7 @@ curl_retry "${API}/intelligence/commercial" \
   | python3 -c 'import json,sys; p=json.load(sys.stdin); body=json.dumps(p); assert p["schema_version"] == "zero.intelligence.commercial.v1"; assert p["auth"]["runtime_required"] is False; assert p["plans"][0]["id"] == "free"; assert p["plans"][-1]["id"] == "enterprise"; assert "x-zero-ratelimit-policy" in p["rate_limits"]["headers"]; assert p["privacy"]["exchange_credentials_collected"] is False; assert "railway-smoke" not in body; assert "trace-" not in body'
 HEADER_FILE="$(mktemp)"
 curl_retry -D "${HEADER_FILE}" "${API}/v1/intelligence/snapshots" \
-  | python3 -c 'import json,sys; p=json.load(sys.stdin); body=json.dumps(p); assert p["schema_version"] == "zero.intelligence.hosted.snapshots.v1"; assert p["account"]["plan"] == "free"; assert p["access"]["freshness"] == "delayed"; assert p["usage"]["billable"] is False; assert "railway-intelligence-token" not in body; assert "trace-" not in body'
+  | python3 -c 'import json,sys; p=json.load(sys.stdin); body=json.dumps(p); assert p["schema_version"] == "zero.intelligence.hosted.snapshots.v1"; assert p["account"]["plan"] == "free"; assert p["access"]["freshness"] == "delayed"; assert p["usage"]["billable"] is False; assert p["storage"]["status"] == "durable_jsonl_reference"; assert "railway-intelligence-token" not in body; assert "trace-" not in body'
 grep -qi '^x-zero-ratelimit-policy: free;w=3600' "${HEADER_FILE}"
 rm -f "${HEADER_FILE}"
 python3 - "${API}" <<'PY'
@@ -208,7 +209,7 @@ PY
 curl_retry \
   -H "authorization: Bearer railway-intelligence-token" \
   "${API}/v1/intelligence/history?limit=10" \
-  | python3 -c 'import json,sys; p=json.load(sys.stdin); body=json.dumps(p); assert p["schema_version"] == "zero.intelligence.hosted.history.v1"; assert p["account"]["id"] == "acct_railway"; assert p["usage"]["name"] == "history.query"; assert p["storage"]["status"] == "reference_current_runtime_only"; assert "railway-intelligence-token" not in body'
+  | python3 -c 'import json,sys; p=json.load(sys.stdin); body=json.dumps(p); assert p["schema_version"] == "zero.intelligence.hosted.history.v1"; assert p["account"]["id"] == "acct_railway"; assert p["usage"]["name"] == "history.query"; assert p["storage"]["status"] == "durable_jsonl_reference"; assert p["storage"]["records_returned"] >= 1; assert "railway-intelligence-token" not in body'
 curl_retry \
   -H "content-type: application/json" \
   -H "authorization: Bearer railway-intelligence-token" \

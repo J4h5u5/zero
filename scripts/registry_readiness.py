@@ -237,11 +237,12 @@ def check_docs() -> list[Finding]:
             "just registry-readiness",
             "registry launch packet",
             "Trusted Publishing",
-            "does not publish to PyPI",
+            "does not publish to any",
         ],
         ".github/RELEASE_TEMPLATE.md": [
             "just registry-readiness",
-            "package registry publication remains disabled",
+            "PyPI `zero-engine` release",
+            "crates.io, Docker Hub, and GHCR publication remains disabled",
         ],
     }
     sources = {

@@ -44,10 +44,13 @@ ZERO_INTELLIGENCE_API_TOKEN=...
 ZERO_INTELLIGENCE_API_PLAN=team_fund
 ZERO_INTELLIGENCE_API_ACCOUNT_ID=acct_...
 ZERO_INTELLIGENCE_WEBHOOK_SIGNING_KEY=...
+ZERO_INTELLIGENCE_STORE_PATH=/data/zero/intelligence.jsonl
 ```
 
 Do not reuse production tokens in public demos. These variables only exercise
-the hosted-compatible contract surface on your own Railway service.
+the hosted-compatible contract surface on your own Railway service. The store
+path enables append-only aggregate snapshot and usage persistence; it must be
+mounted on a durable Railway volume if you want history to survive restarts.
 
 ## Deploy
 

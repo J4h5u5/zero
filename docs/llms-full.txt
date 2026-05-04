@@ -431,9 +431,15 @@ The formula installs the `zero` CLI from the checksummed GitHub Release asset.
 It does not use private package registries. Homebrew reinstall and rollback
 commands live in [docs/release.md](docs/release.md#homebrew-rollback-verification).
 
-PyPI, crates.io, Docker Hub, and GHCR are intentionally unpublished until
-ownership and rollback evidence are recorded in
-[docs/registry-launch.md](docs/registry-launch.md).
+`zero-engine` is also published on PyPI for agent/MCP installs:
+
+```bash
+uvx zero-engine --smoke
+uvx --from zero-engine zero-mcp --smoke
+```
+
+crates.io, Docker Hub, and GHCR remain unpublished until ownership and rollback
+evidence are recorded in [docs/registry-launch.md](docs/registry-launch.md).
 
 ## Source Quickstart
 
@@ -2440,11 +2446,13 @@ ZERO_INTELLIGENCE_API_TOKEN=...
 ZERO_INTELLIGENCE_API_PLAN=team_fund
 ZERO_INTELLIGENCE_API_ACCOUNT_ID=acct_...
 ZERO_INTELLIGENCE_WEBHOOK_SIGNING_KEY=...
+ZERO_INTELLIGENCE_STORE_PATH=/data/zero/intelligence.jsonl
 ```
 
 These endpoints prove auth boundaries, scopes, usage events, rate-limit
-headers, and webhook signing behavior. They do not imply the local runtime is a
-hosted billing system or a historical data warehouse.
+headers, webhook signing behavior, and durable aggregate reference persistence.
+They do not imply the local runtime is a hosted billing system or a production
+warehouse.
 
 `GET /intelligence/model-gateway` returns `zero.model_gateway.status.v1`, a
 public-safe provider and routing status packet. The default mode is
@@ -4095,8 +4103,8 @@ ZERO reaches the autonomous trust bar only when:
   state;
 - failures that touch live safety, journal integrity, or public privacy produce
   redacted postmortems in `docs/incident-postmortems/`;
-- the MCP server has a committed registry packet before launch and is tracked
-  until package or remote publication produces a live registry listing.
+- the MCP server has a committed registry packet and live Official MCP Registry
+  listing backed by the public `zero-engine` PyPI package.
 
 ## Operating Rule
 
@@ -4457,8 +4465,8 @@ for local wallet control, preflight, kill-switches, reconciliation, and review.
 | Observability and audit | 100 | HTTP trace IDs, operator context packets, operator-local state partitions, live-control action logs, traced paper decisions, metrics, idempotency counters, replay counts, retention/redaction metadata, structured audit export, checksum-chained runtime events, local state snapshots, immune breaker packets, Hyperliquid reconciliation packets, live cockpit packets, live execution receipt hashes, dry-run live certification packets, hash-only signed live evidence bundles, redacted private live trading evidence, live canary policy packets, live canary bundle verification, live cockpit drill replay verification, live cockpit drill tamper rehearsal, public-safe exchange evidence attachment, public-safe operator reports, recursive operator evidence checksums, operator report verification, model gateway health packets, model gateway audit bundles, deployment evidence manifests, and required incident artifacts are documented. Remaining production work is external log drains/signing, not public-runtime audit shape. |
 | Security and custody | 100 | No secrets needed for first run; Hyperliquid private keys have operator-scoped keychain/env helpers, redaction tests, a non-secret preflight gate, optional SDK-backed live adapter, threat model, secret-leak runbook, dependency policy, SBOM/provenance metadata, and release provenance policy. External security review remains diligence evidence, not a missing custody contract. |
 | ZERO Network contracts | 100 | Public-safe local profile packets, proof hashes, deployment claim hashes, deployment heartbeat hashes, verification badges, leaderboard rows, opt-in local publish logs, hosted-compatible ingestion, proof validation, duplicate refusal, metric-consistency checks, accepted-only leaderboard output, empty/active/stale public page states, `zero.network.profile_verification.v1` profile-plus-identity verification, and deterministic `zero.network_proof_pack.v1` public proof-chain artifacts exist. Hosted persistence, sybil policy operation, and identity service operation are external product work. |
-| ZERO Intelligence contracts | 100 | Delayed public snapshots, catalog, billing-ready commercial contract, hosted-compatible `/v1/intelligence/*` reads/writes, token-gated paid scopes, actual rate-limit headers, usage events, HMAC-SHA256 webhook signature fixtures, aggregate export jobs, plan/scope model, dataset names, fail-closed model gateway status, model gateway health probes, model gateway audit bundles, mock/local provider conformance, external model adapter contract tests, bounded retry/cost policy, hosted key-management rules, plan boundary, and opt-in local export packets exist. Production persistence, billing, warehouse-backed feeds, and webhook delivery are external commercial service work. |
-| Release and distribution | 100 | GitHub release artifacts, checksums, SBOM/provenance bundle, recorded `v0.1.2` clean-download release evidence, published-release evidence command with committed Homebrew formula comparison, release verifier, tamper-detection rehearsal, draft-release rollback rehearsal, committed Homebrew formula, formula drift check, attestations, installer, registry-readiness gate, package dry run, distribution readiness policy, release template hardening checks, dependency policy, and rollback rules exist. External package registries remain unpublished pending name ownership and support policy. |
+| ZERO Intelligence contracts | 100 | Delayed public snapshots, catalog, billing-ready commercial contract, hosted-compatible `/v1/intelligence/*` reads/writes, token-gated paid scopes, actual rate-limit headers, usage events, HMAC-SHA256 webhook signature fixtures, aggregate export jobs, plan/scope model, dataset names, fail-closed model gateway status, model gateway health probes, model gateway audit bundles, mock/local provider conformance, external model adapter contract tests, bounded retry/cost policy, hosted key-management rules, plan boundary, opt-in local export packets, and a durable JSONL reference store behind `ZERO_INTELLIGENCE_STORE_PATH` exist. Billing, warehouse-backed feeds, and webhook delivery are external commercial service work. |
+| Release and distribution | 100 | GitHub release artifacts, checksums, SBOM/provenance bundle, recorded `v0.1.2` clean-download release evidence, published-release evidence command with committed Homebrew formula comparison, release verifier, tamper-detection rehearsal, draft-release rollback rehearsal, committed Homebrew formula, formula drift check, attestations, installer, registry-readiness gate, package dry run, distribution readiness policy, release template hardening checks, dependency policy, PyPI `zero-engine`, Official MCP Registry listing, and rollback rules exist. crates.io, Docker Hub, and GHCR remain unpublished pending ownership and rollback evidence. |
 | Documentation for operators | 100 | Good local docs, operator isolation docs, Hyperliquid read-only boundary docs, live-paper quote docs, immune-system docs, live cockpit docs, live cockpit drill bundle, verifier, and tamper rehearsal, live certification docs, live evidence docs, redacted live trading evidence docs, live canary policy/operator docs, Railway paper deploy, remote-doctor, and evidence-pack docs, restart recovery docs, audit/metrics docs, live-preflight warnings, threat model, and incident runbooks. Missing third-party review evidence only as external proof, not documented workflow. |
 
 **Public repo readiness: 100/100.**
@@ -4511,10 +4519,10 @@ For the public repo target, ZERO now has the executable contracts expected from
 a complete autonomous operating-system launch artifact: paper runtime,
 production-parity OODA proof, live-readiness gates, live-shadow fail-closed
 evidence, local evolution gates, release evidence, and agentic contribution
-surfaces. Hosted Network persistence, paid Intelligence infrastructure,
-package-registry publication, third-party security review, production log
-drains, and raw exchange disclosure remain external product and launch work,
-not missing public-runtime contracts.
+surfaces. Hosted Network persistence, paid Intelligence billing/warehouse
+infrastructure, crates/container publication, third-party security review,
+production log drains, and raw exchange disclosure remain external product and
+launch work, not missing public-runtime contracts.
 
 ## CLI Readiness Detail
 
@@ -4523,7 +4531,7 @@ not missing public-runtime contracts.
 | Command surface | 100 | `zero`, `zero init`, `zero doctor`, `zero run`, TUI, and slash-command dispatch cover the public runtime and operator workflows. |
 | Operator safety | 100 | Risk-reducing commands are friction-exempt and risk-increasing commands require interactive friction. |
 | Engine integration | 100 | HTTP, WebSocket, mock engine, contract tests, Rust client decoding for production-parity OODA reports, live receipt packets, live canary policy packets, `/runtime-parity`, `/live-receipts`, and `/live-canary` operator rendering, live risk-reducer endpoints, and redacted private live execution evidence exist. Raw accepted canary records remain external. |
-| Install path | 100 | Release installer exists with checksum and attestation verification, `v0.1.2` was installed from the public GitHub Release into a temporary bin directory, and the public Homebrew repo tap installs and tests `zero` from the checksummed GitHub Release asset. External package registries remain unpublished pending ownership proof. |
+| Install path | 100 | Release installer exists with checksum and attestation verification, `v0.1.2` was installed from the public GitHub Release into a temporary bin directory, the public Homebrew repo tap installs and tests `zero` from the checksummed GitHub Release asset, and PyPI serves `zero-engine` for agent/MCP installs. crates.io, Docker Hub, and GHCR remain unpublished pending ownership proof. |
 | Diagnostics | 100 | Doctor, JSON output, exit codes, rate-budget checks, operator/credential partition checks, live-preflight diagnostics, live-cockpit next-action/operator rendering, Railway remote doctor, deployment evidence verification, deployment identity verification, deployment evidence log capture/signing, rollback rehearsal checks, paid-scope fail-closed checks, and live-control refusals are covered. External production examples against a linked Railway project remain operations evidence. |
 | TUI production UX | 100 | Snapshot coverage, status honesty, risk overlays, live-stream pane, and a full-screen live cockpit are covered for the public runtime. External live operator fault drills remain operations evidence. |
 | Non-interactive automation | 100 | `zero run` covers cockpit, receipts, canary policy, runtime parity, breaker, certification, account truth, and risk-reducer workflows while intentionally gating risk-increasing commands. External production examples remain operations evidence. |
@@ -5181,8 +5189,8 @@ speed, scale, history, and reliability.
 
 | Dimension | Current | 100/100 Gap |
 |---|---:|---|
-| Public repo hygiene | 100 | MCP registry packet exists; live registry listing, package ownership evidence, and external review remain business/process tasks |
-| Product narrative | 99 | keep narrative aligned as hosted Network and Intelligence launch |
+| Public repo hygiene | 100 | PyPI `zero-engine`, MCP registry listing, release gates, and public contribution surfaces are live; external review remains business/process work |
+| Product narrative | 100 | keep narrative aligned as hosted Network and Intelligence launch |
 | CLI readiness | 100 | five-mode terminal with full-screen live cockpit exists; raw exchange records remain operator-owned proof |
 | Engine runtime | 100 | public production-parity OODA report plus redacted live trading evidence exist; raw exchange records remain operator-owned external proof |
 | Self-evolution loop | 98 | public memory, research command chain, genesis proposal classification, production-parity OODA reports, local apply, rollback, paper-first evolve gates, agent architecture bounds, and property-based safety coverage exist; protected live-code evolution remains human-reviewed |
@@ -5192,8 +5200,8 @@ speed, scale, history, and reliability.
 | Observability and audit | 99 | checksum-chained runtime bus, hash-chained signable decision journal, local timestamp binding, external anchor packet, periodic anchor-cadence operation, verifier, and signed evidence bundles exist; metrics backend and log drains remain |
 | Security and custody | 91 | external review, key-handling drill evidence |
 | ZERO Network | 82 | deterministic public proof-chain pack plus profile identity verifier exist; hosted identity service, public pages, and production ingestion service remain |
-| ZERO Intelligence | 70 | production hosted service persistence, billing provider, history storage, terms |
-| Release and distribution | 100 | public Homebrew repo tap and MCP registry packet exist; external registry ownership/listing evidence remains outside the public runtime |
+| ZERO Intelligence | 78 | durable JSONL hosted-reference persistence exists; billing provider, warehouse backend, terms, and SLAs remain |
+| Release and distribution | 100 | public Homebrew repo tap, PyPI `zero-engine`, and MCP Registry listing exist; crates/container registry ownership remains optional external distribution work |
 | Operator docs | 98 | third-party review and optional raw exchange disclosure |
 
 ## Execution Cycles
@@ -5741,9 +5749,12 @@ Current progress:
 - Backfilled `v0.1.1` with `SBOM.spdx.json` and `PROVENANCE.json`, verified the
   published release from a clean download, and added `scripts/release_evidence.py`
   so maintainers can rerun checksum, metadata, attestation, and formula evidence.
+- Published `zero-engine==0.1.2` on PyPI through Trusted Publishing and listed
+  `io.github.zero-intel/zero` in the Official MCP Registry with a public `uvx`
+  stdio package reference.
 
-Remaining scope before Cycle 26: external package-registry ownership evidence
-and external review evidence.
+Remaining scope before Cycle 26: crates/container ownership evidence and
+external review evidence.
 
 ### Cycle 26: External Review And Real-World Evidence
 
@@ -7484,6 +7495,7 @@ ZERO_INTELLIGENCE_API_TOKEN=...
 ZERO_INTELLIGENCE_API_PLAN=team_fund
 ZERO_INTELLIGENCE_API_ACCOUNT_ID=acct_...
 ZERO_INTELLIGENCE_WEBHOOK_SIGNING_KEY=...
+ZERO_INTELLIGENCE_STORE_PATH=/data/zero/intelligence.jsonl
 ```
 
 The reference implementation enforces paid scopes when a token is configured,
@@ -7498,6 +7510,27 @@ x-zero-signature-algorithm
 
 The signature payload is `timestamp + "." + canonical_json_body` signed with
 HMAC-SHA256. The signing key is never returned.
+
+## Durable Reference Store
+
+When `ZERO_INTELLIGENCE_STORE_PATH` is configured, the hosted-compatible
+reference API appends public-safe JSONL records for delayed/realtime snapshots,
+usage events, webhook subscription fixtures, and export jobs. History queries
+then read stored snapshot records before falling back to the current runtime
+snapshot.
+
+The store is intentionally aggregate-only:
+
+- API tokens and webhook signing keys are never written.
+- Account IDs and webhook target URLs are persisted as SHA-256 hashes.
+- Raw journals, trace IDs, idempotency keys, symbols, exchange order IDs,
+  wallet identifiers, and strategy labels remain excluded by the same privacy
+  checks that guard public Network and Intelligence packets.
+
+This is not the final commercial warehouse or billing system. It is the
+durable, stdlib, self-hostable persistence boundary that production hosted
+Intelligence can replace with Postgres, ClickHouse, or another append-only
+warehouse without changing the public API contract.
 
 ## Data Rules
 
@@ -7931,6 +7964,7 @@ long-lived PyPI tokens to repository secrets or examples.
 Current package-name assumptions:
 
 - PyPI candidate: `zero-engine`
+- PyPI published package: `zero-engine`
 - crates.io candidates: the `zero-*` workspace crates plus the `zero` binary crate
 - Homebrew: `zero-intel/zero` public repo tap with `Formula/zero.rb`
 
@@ -8008,10 +8042,11 @@ executable attestations, then deletes the draft release and temporary tag. Use
   `scripts/release_workflow_rehearsal.sh --execute`
 
 The workflow uploads artifacts to the GitHub Actions run and attaches the
-assembled release bundle to a draft GitHub Release. It does not publish to PyPI,
-crates.io, Docker Hub, or GHCR yet. Package publishing should be added only
-after repository ownership, package names, signing, and token permissions are
-finalized.
+assembled release bundle to a draft GitHub Release. It does not publish to any
+package registry. PyPI publication for `zero-engine` is handled by
+`python-release.yml` through Trusted Publishing; crates.io, Docker Hub, and
+GHCR publishing should be added only after repository ownership, package names,
+signing, rollback, and token permissions are finalized.
 
 ## Homebrew Formula
 
@@ -8042,10 +8077,11 @@ ZERO also ships local provenance metadata:
   release assets.
 - `PROVENANCE.json`: source commit, branch/tag, dirty-state flag, asset hashes,
   and policy assertions that paper mode is default, live execution evidence is
-  not claimed, and package-registry publication remains disabled.
+  not claimed, and release-bundle generation does not publish package-registry
+  artifacts.
 
-Do not publish package-registry artifacts until the registry channel has an
-owner, rollback path, least-privilege token plan, and documented support
+Do not add crates.io, Docker Hub, or GHCR publishing until the registry channel
+has an owner, rollback path, least-privilege token plan, and documented support
 expectation in [distribution.md](distribution.md).
 ````
 

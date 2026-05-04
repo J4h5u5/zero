@@ -31,11 +31,14 @@ from zero_engine.hyperliquid import (
 )
 from zero_engine.immune import build_immune_report
 from zero_engine.intelligence import (
+    HostedIntelligenceStore,
     IntelligenceConfig,
+    account_hash,
     export_intelligence_snapshot,
     intelligence_catalog,
     intelligence_commercial_contract,
     intelligence_snapshot,
+    stable_hash,
 )
 from zero_engine.journal import DecisionJournal
 from zero_engine.live import HyperliquidSdkAdapter, LiveExecutionPolicy, LiveExecutor
@@ -328,6 +331,7 @@ class PaperApiState:
     intelligence_api_plan: str = "team_fund"
     intelligence_api_account_id: str = "local-reference"
     intelligence_webhook_signing_key: str | None = field(default=None, repr=False)
+    intelligence_store_path: str | None = None
     model_gateway_provider: str = "none"
     model_gateway_model: str | None = None
     model_gateway_mock_enabled: bool = False
@@ -1857,6 +1861,14 @@ class PaperApi:
     ) -> dict[str, Any]:
         realtime = freshness == "realtime"
         snapshot = self.intelligence_snapshot()
+        self.hosted_intelligence_record(
+            "snapshot",
+            {
+                "snapshot": snapshot,
+                "freshness": "realtime" if realtime else "delayed",
+                "account_id_hash": account_hash(str(principal["id"])),
+            },
+        )
         return {
             "schema_version": "zero.intelligence.hosted.snapshots.v1",
             "generated_at": self.state.now_iso(),
@@ -1876,6 +1888,7 @@ class PaperApi:
                 },
             ),
             "data": [snapshot],
+            "storage": self.hosted_intelligence_storage_status(record_type="snapshot"),
             **self.hosted_intelligence_rate_limit(str(principal["plan"])),
         }
 
@@ -1885,7 +1898,9 @@ class PaperApi:
         query: dict[str, list[str]],
     ) -> dict[str, Any]:
         limit = min(int(first(query, "limit") or "100"), 1000)
-        snapshot = self.intelligence_snapshot()
+        store = self.hosted_intelligence_store()
+        stored_snapshots = store.snapshots(limit=limit) if store else []
+        data = list(reversed(stored_snapshots)) or [self.intelligence_snapshot()]
         return {
             "schema_version": "zero.intelligence.hosted.history.v1",
             "generated_at": self.state.now_iso(),
@@ -1895,16 +1910,18 @@ class PaperApi:
                 "dataset": first(query, "dataset") or "verified_behavior_snapshots",
             },
             "storage": {
-                "status": "reference_current_runtime_only",
+                "status": "durable_jsonl_reference" if store else "reference_current_runtime_only",
                 "production_requirement": "backed by hosted append-only intelligence warehouse",
+                "configured": store is not None,
+                "records_returned": len(data),
             },
             "usage": self.hosted_usage_event(
                 "history.query",
                 principal,
                 billable=True,
-                extra={"rows_returned": 1},
+                extra={"rows_returned": len(data)},
             ),
-            "data": [snapshot],
+            "data": data,
             **self.hosted_intelligence_rate_limit(str(principal["plan"])),
         }
 
@@ -1969,7 +1986,7 @@ class PaperApi:
             f"{timestamp}.{encoded}".encode("utf-8"),
             hashlib.sha256,
         ).hexdigest()
-        return {
+        response = {
             "schema_version": "zero.intelligence.hosted.webhook_subscription.v1",
             "generated_at": self.state.now_iso(),
             "account": self.hosted_intelligence_account(principal),
@@ -1995,8 +2012,22 @@ class PaperApi:
             },
             "fixture_payload": fixture,
             "usage": self.hosted_usage_event("webhook.delivery", principal, billable=True),
+            "storage": self.hosted_intelligence_storage_status(record_type="webhook_subscription"),
             **self.hosted_intelligence_rate_limit(str(principal["plan"])),
         }
+        self.hosted_intelligence_record(
+            "webhook_subscription",
+            {
+                "subscription": {
+                    "id": response["subscription"]["id"],
+                    "event_types": event_types,
+                    "target_url_hash": stable_hash(target_url),
+                    "status": response["subscription"]["status"],
+                },
+                "account_id_hash": account_hash(str(principal["id"])),
+            },
+        )
+        return response
 
     def hosted_intelligence_export_job(
         self,
@@ -2011,7 +2042,7 @@ class PaperApi:
                 "supported_formats": ["jsonl", "csv"],
                 **self.hosted_intelligence_rate_limit(str(principal["plan"])),
             }
-        return {
+        response = {
             "schema_version": "zero.intelligence.hosted.export.v1",
             "generated_at": self.state.now_iso(),
             "account": self.hosted_intelligence_account(principal),
@@ -2030,8 +2061,17 @@ class PaperApi:
                 billable=True,
                 extra={"rows_exported": 1},
             ),
+            "storage": self.hosted_intelligence_storage_status(record_type="export_job"),
             **self.hosted_intelligence_rate_limit(str(principal["plan"])),
         }
+        self.hosted_intelligence_record(
+            "export_job",
+            {
+                "export": response["export"],
+                "account_id_hash": account_hash(str(principal["id"])),
+            },
+        )
+        return response
 
     def hosted_intelligence_account(self, principal: dict[str, Any]) -> dict[str, Any]:
         return {
@@ -2049,7 +2089,7 @@ class PaperApi:
         billable: bool,
         extra: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        return {
+        event = {
             "name": name,
             "account_id": principal["id"],
             "scope": principal["required_scope"],
@@ -2058,6 +2098,40 @@ class PaperApi:
             "metered": billable,
             "billable": billable,
             **(extra or {}),
+        }
+        self.hosted_intelligence_record(
+            "usage_event",
+            {
+                "usage": {**event, "account_id": account_hash(str(principal["id"]))},
+                "account_id_hash": account_hash(str(principal["id"])),
+            },
+        )
+        return event
+
+    def hosted_intelligence_store(self) -> HostedIntelligenceStore | None:
+        if not self.state.intelligence_store_path:
+            return None
+        return HostedIntelligenceStore(self.state.intelligence_store_path)
+
+    def hosted_intelligence_record(self, record_type: str, payload: dict[str, Any]) -> None:
+        store = self.hosted_intelligence_store()
+        if store is None:
+            return
+        store.append(record_type, payload, recorded_at=self.state.now_iso())
+
+    def hosted_intelligence_storage_status(self, *, record_type: str) -> dict[str, Any]:
+        store = self.hosted_intelligence_store()
+        if store is None:
+            return {
+                "status": "reference_current_runtime_only",
+                "configured": False,
+                "record_type": record_type,
+            }
+        return {
+            "status": "durable_jsonl_reference",
+            "configured": True,
+            "record_type": record_type,
+            "path_configured": True,
         }
 
     def hosted_intelligence_rate_limit(self, plan: str) -> dict[str, Any]:
@@ -2794,6 +2868,7 @@ def serve(
                     intelligence_webhook_signing_key=os.environ.get(
                         "ZERO_INTELLIGENCE_WEBHOOK_SIGNING_KEY"
                     ),
+                    intelligence_store_path=os.environ.get("ZERO_INTELLIGENCE_STORE_PATH"),
                     model_gateway_provider=os.environ.get("ZERO_MODEL_PROVIDER", "none"),
                     model_gateway_model=os.environ.get("ZERO_MODEL_NAME"),
                     model_gateway_mock_enabled=parse_bool_env("ZERO_MODEL_MOCK_ENABLED", False),

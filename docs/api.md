@@ -296,11 +296,13 @@ ZERO_INTELLIGENCE_API_TOKEN=...
 ZERO_INTELLIGENCE_API_PLAN=team_fund
 ZERO_INTELLIGENCE_API_ACCOUNT_ID=acct_...
 ZERO_INTELLIGENCE_WEBHOOK_SIGNING_KEY=...
+ZERO_INTELLIGENCE_STORE_PATH=/data/zero/intelligence.jsonl
 ```
 
 These endpoints prove auth boundaries, scopes, usage events, rate-limit
-headers, and webhook signing behavior. They do not imply the local runtime is a
-hosted billing system or a historical data warehouse.
+headers, webhook signing behavior, and durable aggregate reference persistence.
+They do not imply the local runtime is a hosted billing system or a production
+warehouse.
 
 `GET /intelligence/model-gateway` returns `zero.model_gateway.status.v1`, a
 public-safe provider and routing status packet. The default mode is

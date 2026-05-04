@@ -277,7 +277,8 @@ Acceptance:
 
 - The docs show exact rollback or reinstall commands for the public tap path.
 - The docs explain what checksum and formula drift checks prove.
-- The docs do not claim PyPI, crates.io, or container registry publication.
+- The docs name the published PyPI `zero-engine` package and do not claim
+  crates.io or container registry publication.
 - `just docs-check` and `scripts/homebrew_formula_check.py` pass.
 
 ## Completed Maintainer Tasks

@@ -368,9 +368,15 @@ The formula installs the `zero` CLI from the checksummed GitHub Release asset.
 It does not use private package registries. Homebrew reinstall and rollback
 commands live in [docs/release.md](docs/release.md#homebrew-rollback-verification).
 
-PyPI, crates.io, Docker Hub, and GHCR are intentionally unpublished until
-ownership and rollback evidence are recorded in
-[docs/registry-launch.md](docs/registry-launch.md).
+`zero-engine` is also published on PyPI for agent/MCP installs:
+
+```bash
+uvx zero-engine --smoke
+uvx --from zero-engine zero-mcp --smoke
+```
+
+crates.io, Docker Hub, and GHCR remain unpublished until ownership and rollback
+evidence are recorded in [docs/registry-launch.md](docs/registry-launch.md).
 
 ## Source Quickstart
 

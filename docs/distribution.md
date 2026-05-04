@@ -45,9 +45,9 @@ just registry-readiness
 
 The gate checks PyPI metadata, Cargo workspace metadata, per-crate publish
 metadata inheritance, optional live dependencies, and documentation guardrails.
-It does not publish to PyPI, crates.io, Homebrew, Docker Hub, GHCR, or any
-private registry. A passing result means the repo is structured for registry
-review; publication state is recorded in the registry launch packet.
+It does not publish to any package registry. A passing result means the repo is
+structured for registry review; publication state is recorded in the registry
+launch packet.
 
 ## Registry Launch Packet
 
@@ -184,7 +184,8 @@ from the release checksum manifest and remains public-safe. `just
 release-evidence <tag>` goes further: it downloads the release, verifies
 `SHA256SUMS`, verifies release metadata and attestations, rerenders the formula
 from the clean download, and fails if the committed formula has drifted. These
-checks do not claim PyPI, crates.io, Docker Hub, or GHCR publication.
+checks name the already-published PyPI `zero-engine` package but do not claim
+crates.io, Docker Hub, or GHCR publication.
 
 ## Draft Release Rollback Rehearsal
 
