@@ -155,7 +155,8 @@ The controlling plan is `docs/autonomous-os-plan.md`.
 
 The current trust-hardening priorities are:
 
-1. MCP registry publication after PyPI or remote-server enablement;
+1. publish `zero-engine` on PyPI or enable a public remote MCP endpoint, then
+   run the MCP Registry publication workflow;
 2. postmortem publication when live safety, journal integrity, privacy, or
    release integrity is affected.
 

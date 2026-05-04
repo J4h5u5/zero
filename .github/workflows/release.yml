@@ -38,6 +38,7 @@ jobs:
           scripts/registry_readiness.py
           scripts/registry_launch_packet.py --check
           scripts/mcp_registry_packet.py --check
+          scripts/mcp_registry_listing_check.py --json
 
   python-package:
     needs: [registry-readiness]

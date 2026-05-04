@@ -63,6 +63,7 @@ scripts/registry_launch_packet.py --output contracts/distribution/registry-launc
 scripts/registry_launch_packet.py --check
 scripts/mcp_registry_packet.py --output
 scripts/mcp_registry_packet.py --check
+scripts/mcp_registry_listing_check.py --json
 ```
 
 `just registry-readiness` runs this check. The release workflow must not add
@@ -74,7 +75,9 @@ The MCP Registry packet is separate from package registries because it is
 metadata for agents, not an artifact host. ZERO commits `server.json` and
 `contracts/distribution/mcp-registry.json`, but the Official MCP Registry
 listing remains blocked until the referenced `zero-engine` PyPI package or a
-public remote MCP endpoint exists.
+public remote MCP endpoint exists. The manual `.github/workflows/mcp-registry.yml`
+workflow is present and uses GitHub OIDC, but it fails closed unless the PyPI
+package is already public and carries the required `mcp-name` marker.
 
 ## Ownership Proof Requirements
 

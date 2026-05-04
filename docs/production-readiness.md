@@ -61,7 +61,9 @@ has a periodic operation that creates or reuses external anchor packets, fails
 closed when live evidence requires an external receipt, and verifies cadence
 state. ZERO should not claim the final autonomous trust moat until the MCP
 Registry submission packet is live-listed after PyPI or a public remote MCP
-endpoint is enabled. The tracked failure modes are documented in
+endpoint is enabled. The manual GitHub OIDC MCP Registry workflow and listing
+verifier now exist, but they fail closed while `zero-engine` is absent from
+PyPI. The tracked failure modes are documented in
 [Failure Modes Of The Autonomous Loop](failure-modes-autonomous-loop.md).
 
 It is still not a hosted custody product, and real capital operation remains
@@ -125,11 +127,12 @@ ZERO is 100/100 when a new serious operator can:
 
 ## Execution Cycles
 
-Forecast after Cycle 44: **0 major public-repo product cycles remain before the
+Forecast after Cycle 45: **0 major public-repo product cycles remain before the
 repo can be treated as a complete ZERO autonomous operating-system launch
-artifact. 1 trust-moat cycle remains before the autonomous trust score should
-return to 100/100:** live MCP registry listing evidence after package or remote
-publication. External work still includes third-party review, package registry
+artifact. 1 external trust-moat action remains before the autonomous trust score
+should return to 100/100:** publish `zero-engine` on PyPI or enable a public
+remote MCP endpoint, run the MCP Registry publication workflow, and record live
+listing evidence. External work still includes third-party review, package registry
 ownership, hosted Network, paid
 Intelligence deployment, and optional raw exchange disclosure for commercial
 diligence.

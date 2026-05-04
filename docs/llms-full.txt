@@ -839,7 +839,8 @@ The controlling plan is `docs/autonomous-os-plan.md`.
 
 The current trust-hardening priorities are:
 
-1. MCP registry publication after PyPI or remote-server enablement;
+1. publish `zero-engine` on PyPI or enable a public remote MCP endpoint, then
+   run the MCP Registry publication workflow;
 2. postmortem publication when live safety, journal integrity, privacy, or
    release integrity is affected.
 
@@ -3189,6 +3190,7 @@ ZERO ships a committed Official MCP Registry manifest at
 
 ```bash
 scripts/mcp_registry_packet.py --check
+scripts/mcp_registry_listing_check.py --json
 ```
 
 The packet is `ready_after_pypi_publication`, not listed. The Official MCP
@@ -3280,8 +3282,9 @@ cannot silently drift into a write-capable trading interface.
 ````markdown
 # MCP Registry Submission Packet
 
-ZERO has a public-safe MCP server and a committed MCP Registry manifest, but it
-is not listed in the Official MCP Registry yet.
+ZERO has a public-safe MCP server, a committed MCP Registry manifest, and a
+manual GitHub OIDC publication workflow. It is not listed in the Official MCP
+Registry yet.
 
 The blocker is intentional: the Official MCP Registry metadata points to a
 public package or public remote server, and ZERO package registries remain
@@ -3292,10 +3295,12 @@ Machine-readable files:
 
 - [server.json](../server.json)
 - [contracts/distribution/mcp-registry.json](../contracts/distribution/mcp-registry.json)
+- [.github/workflows/mcp-registry.yml](../.github/workflows/mcp-registry.yml)
 
 Schemas:
 
 - `zero.mcp_registry_packet.v1`
+- `zero.mcp_registry_listing_check.v1`
 - `https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json`
 
 Regenerate and verify:
@@ -3303,6 +3308,7 @@ Regenerate and verify:
 ```bash
 scripts/mcp_registry_packet.py --output
 scripts/mcp_registry_packet.py --check
+scripts/mcp_registry_listing_check.py --json
 PYTHONPATH="$PWD/engine/src" python3 -m zero_engine.mcp --smoke
 PYTHONPATH="$PWD/engine/src" scripts/mcp_transcript.py --check
 ```
@@ -3315,6 +3321,8 @@ PYTHONPATH="$PWD/engine/src" scripts/mcp_transcript.py --check
 | Title | `ZERO MCP` |
 | Package | `zero-engine` |
 | Transport | `stdio` |
+| Registry base URL | `https://pypi.org` |
+| Runtime hint | `uvx` |
 | Auth path | GitHub OIDC from `zero-intel/zero` |
 | Safety class | `read-only-public` |
 
@@ -3326,11 +3334,12 @@ The PyPI package README carries the MCP package proof string:
 
 ## Current Listing Evidence
 
-As of `2026-05-04T05:08:00Z`, the Official MCP Registry query returns no ZERO
-server:
+As of `2026-05-04T05:59:55Z`, the Official MCP Registry query returns no ZERO
+server and PyPI returns no `zero-engine` package:
 
 ```bash
 curl -fsS 'https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.zero-intel/zero'
+curl -fsS 'https://pypi.org/pypi/zero-engine/json'
 ```
 
 ```json
@@ -3348,13 +3357,38 @@ release:
 ```bash
 just registry-readiness
 just package-dry-run
+just mcp-registry-listing-check
 mcp-publisher login github-oidc
 mcp-publisher publish
 curl -fsS 'https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.zero-intel/zero'
 ```
 
-Record the command output in the release evidence before calling the MCP
-registry gap closed.
+The preferred path is the manual
+[`MCP Registry Publication`](../.github/workflows/mcp-registry.yml) workflow.
+Run it first with `publish=false` to verify local MCP surfaces, server metadata,
+and current listing state. After the `zero-engine` PyPI package is public and
+its README description contains `mcp-name: io.github.zero-intel/zero`, rerun the
+workflow with `publish=true` and confirmation text
+`publish io.github.zero-intel/zero`. The workflow uses GitHub OIDC, installs
+the official `mcp-publisher`, publishes `server.json`, and then requires
+`scripts/mcp_registry_listing_check.py --expect-listed` to pass.
+
+Record the workflow URL and listing JSON in the release evidence before calling
+the MCP registry gap closed.
+
+## Upstream Requirements
+
+The Official MCP Registry hosts metadata, not artifacts; the referenced package
+must already exist in a supported public registry. For PyPI packages, the
+package README must include an `mcp-name: <server-name>` marker that matches
+`server.json`. GitHub OIDC publication does not require a dedicated MCP secret,
+but it does require `id-token: write` in the workflow.
+
+Primary references:
+
+- [MCP Registry quickstart](https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/quickstart.mdx)
+- [MCP Registry GitHub Actions guide](https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/github-actions.mdx)
+- [MCP Registry package types](https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/package-types.mdx)
 
 ## Safety Boundary
 
@@ -4354,7 +4388,9 @@ has a periodic operation that creates or reuses external anchor packets, fails
 closed when live evidence requires an external receipt, and verifies cadence
 state. ZERO should not claim the final autonomous trust moat until the MCP
 Registry submission packet is live-listed after PyPI or a public remote MCP
-endpoint is enabled. The tracked failure modes are documented in
+endpoint is enabled. The manual GitHub OIDC MCP Registry workflow and listing
+verifier now exist, but they fail closed while `zero-engine` is absent from
+PyPI. The tracked failure modes are documented in
 [Failure Modes Of The Autonomous Loop](failure-modes-autonomous-loop.md).
 
 It is still not a hosted custody product, and real capital operation remains
@@ -4418,11 +4454,12 @@ ZERO is 100/100 when a new serious operator can:
 
 ## Execution Cycles
 
-Forecast after Cycle 44: **0 major public-repo product cycles remain before the
+Forecast after Cycle 45: **0 major public-repo product cycles remain before the
 repo can be treated as a complete ZERO autonomous operating-system launch
-artifact. 1 trust-moat cycle remains before the autonomous trust score should
-return to 100/100:** live MCP registry listing evidence after package or remote
-publication. External work still includes third-party review, package registry
+artifact. 1 external trust-moat action remains before the autonomous trust score
+should return to 100/100:** publish `zero-engine` on PyPI or enable a public
+remote MCP endpoint, run the MCP Registry publication workflow, and record live
+listing evidence. External work still includes third-party review, package registry
 ownership, hosted Network, paid
 Intelligence deployment, and optional raw exchange disclosure for commercial
 diligence.

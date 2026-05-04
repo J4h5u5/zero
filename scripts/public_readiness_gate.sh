@@ -111,6 +111,7 @@ required=(
   scripts/codeowners_check.py
   scripts/homebrew_formula_check.py
   scripts/mcp_registry_packet.py
+  scripts/mcp_registry_listing_check.py
   scripts/journal_verify.py
   scripts/journal_anchor_cadence.py
   scripts/stale_artifact_check.sh
@@ -119,6 +120,7 @@ required=(
   engine/tests/test_journal_anchor_cadence.py
   .github/dependabot.yml
   .github/workflows/ci.yml
+  .github/workflows/mcp-registry.yml
   .github/workflows/codeql.yml
   .github/workflows/secret-scan.yml
   .github/workflows/scorecard.yml
@@ -209,7 +211,10 @@ file_contains "Add Homebrew rollback verification docs" docs/contributor-issue-b
 file_contains "zero.registry_launch_packet.v1" contracts/distribution/registry-launch.json
 file_contains "package_registries_enabled" contracts/distribution/registry-launch.json
 file_contains "zero.mcp_registry_packet.v1" contracts/distribution/mcp-registry.json
+file_contains "zero.mcp_registry_listing_check.v1" docs/mcp-registry.md
 file_contains "io.github.zero-intel/zero" server.json
+file_contains "registryBaseUrl" server.json
+file_contains "runtimeHint" server.json
 file_contains "ready_after_pypi_publication" contracts/distribution/mcp-registry.json
 file_contains "mcp-name: io.github.zero-intel/zero" engine/README.md
 

@@ -160,6 +160,10 @@ registry-readiness:
     scripts/registry_readiness.py
     scripts/registry_launch_packet.py --check
     scripts/mcp_registry_packet.py --check
+    scripts/mcp_registry_listing_check.py --json >/dev/null
+
+mcp-registry-listing-check:
+    scripts/mcp_registry_listing_check.py --json
 
 release-rehearsal:
     scripts/release_rehearsal.sh
@@ -269,6 +273,7 @@ docs-check:
     test -f .claude/commands/mcp-transcript.md
     test -f .claude/commands/new-strategy.md
     test -f .github/copilot-instructions.md
+    test -f .github/workflows/mcp-registry.yml
     test -f .github/ISSUE_TEMPLATE/agent_task.yml
     test -f .github/ISSUE_TEMPLATE/bug_report.yml
     test -f .github/ISSUE_TEMPLATE/design_review.yml
@@ -446,6 +451,7 @@ docs-check:
     test -x scripts/registry_readiness.py
     test -x scripts/registry_launch_packet.py
     test -x scripts/mcp_registry_packet.py
+    test -x scripts/mcp_registry_listing_check.py
     test -x scripts/homebrew_formula.py
     test -x scripts/homebrew_formula_check.py
     test -x scripts/release_provenance.py

@@ -14,7 +14,9 @@ reserved for ZERO Intelligence.
 
 The launch repository is ready for serious contributors. The stricter
 autonomous-systems trust bar is not complete until the MCP server has a live
-registry listing after package or remote publication. Journal-head anchor
+registry listing after package or remote publication. The manual GitHub OIDC
+MCP Registry workflow and listing verifier are present, but publication still
+fails closed while `zero-engine` is absent from PyPI. Journal-head anchor
 packets now have a periodic operation that attaches trusted external receipts,
 fails closed when live evidence requires a receipt, and verifies cadence state.
 Bounded property-based coverage exists for the core safety gates and documented
@@ -72,6 +74,7 @@ malformed-input paths.
 - Dependency and supply-chain policy with vulnerability response rules
 - One-line CLI install path with checksum and attestation verification
 - Registry-readiness gate for PyPI/Cargo metadata and package-channel guardrails
+- MCP Registry publication workflow with GitHub OIDC and live listing verifier
 - Package dry-run gate for Python artifacts and the Rust crate graph
 - Shared paper API contract fixtures pinned by Python API tests and Rust client tests
 - First-class GitHub product page with category narrative, above-the-fold

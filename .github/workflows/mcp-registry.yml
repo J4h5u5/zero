@@ -1,0 +1,70 @@
+name: MCP Registry Publication
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish server.json to the Official MCP Registry
+        required: true
+        default: false
+        type: boolean
+      confirm:
+        description: Type "publish io.github.zero-intel/zero" to allow publication
+        required: false
+        default: ""
+        type: string
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+
+jobs:
+  mcp-registry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.2
+
+      - uses: actions/setup-python@v6.2.0
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Verify local MCP surfaces
+        run: |
+          cd engine
+          python -m pip install -e ".[dev]"
+          ruff check --no-cache .
+          pytest -p no:cacheprovider tests/test_mcp.py
+          cd ..
+          scripts/mcp_registry_packet.py --check
+          PYTHONPATH="$PWD/engine/src" python3 -m zero_engine.mcp --smoke
+          PYTHONPATH="$PWD/engine/src" scripts/mcp_transcript.py --check
+          scripts/mcp_registry_listing_check.py --json
+
+      - name: Require published PyPI package before registry publication
+        if: ${{ inputs.publish }}
+        env:
+          CONFIRM: ${{ inputs.confirm }}
+        run: |
+          test "$CONFIRM" = "publish io.github.zero-intel/zero"
+          scripts/mcp_registry_listing_check.py --require-pypi-published --json
+
+      - name: Install mcp-publisher
+        if: ${{ inputs.publish }}
+        run: |
+          curl -fsSL "https://github.com/modelcontextprotocol/registry/releases/latest/download/mcp-publisher_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/').tar.gz" \
+            | tar xz mcp-publisher
+          ./mcp-publisher --help
+
+      - name: Publish to Official MCP Registry
+        if: ${{ inputs.publish }}
+        run: |
+          ./mcp-publisher login github-oidc
+          ./mcp-publisher publish
+
+      - name: Verify Official MCP Registry listing
+        if: ${{ inputs.publish }}
+        run: scripts/mcp_registry_listing_check.py --expect-listed --json

@@ -65,6 +65,7 @@ ZERO ships a committed Official MCP Registry manifest at
 
 ```bash
 scripts/mcp_registry_packet.py --check
+scripts/mcp_registry_listing_check.py --json
 ```
 
 The packet is `ready_after_pypi_publication`, not listed. The Official MCP

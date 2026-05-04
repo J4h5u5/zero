@@ -135,6 +135,19 @@ The response is expected to include `"simulated": true`. Public `/execute`
 orders are paper fills and still pass through the same safety evaluation path as
 the Python `PaperEngine`.
 
+## MCP Server
+
+The package exposes `zero-mcp` for local agent inspection and `zero-engine` as
+the package-name entry point expected by the MCP Registry PyPI runtime path:
+
+```bash
+zero-mcp --smoke
+zero-engine --smoke
+```
+
+Both commands expose the same read-only MCP server. They cannot place orders,
+change runtime state, read secrets, or access wallet material.
+
 ## Test
 
 ```bash

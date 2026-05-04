@@ -21,6 +21,7 @@ scripts/registry_launch_packet.py --output contracts/distribution/registry-launc
 scripts/registry_launch_packet.py --check
 scripts/mcp_registry_packet.py --output
 scripts/mcp_registry_packet.py --check
+scripts/mcp_registry_listing_check.py --json
 ```
 
 ## Current Channel State
@@ -32,7 +33,7 @@ scripts/mcp_registry_packet.py --check
 | PyPI | blocked | `zero-engine` |
 | crates.io | blocked | `zero`, `zero-*` workspace crates |
 | Container registry | blocked | `zero-intel/zero-paper` |
-| MCP Registry | ready after PyPI publication | `io.github.zero-intel/zero` |
+| MCP Registry | workflow ready after PyPI publication | `io.github.zero-intel/zero` |
 
 ## Enablement Rule
 

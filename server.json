@@ -9,7 +9,8 @@
       "verificationCommands": [
         "PYTHONPATH=$PWD/engine/src python3 -m zero_engine.mcp --smoke",
         "PYTHONPATH=$PWD/engine/src scripts/mcp_transcript.py --check",
-        "scripts/mcp_registry_packet.py --check"
+        "scripts/mcp_registry_packet.py --check",
+        "scripts/mcp_registry_listing_check.py --json"
       ]
     }
   },
@@ -18,7 +19,9 @@
   "packages": [
     {
       "identifier": "zero-engine",
+      "registryBaseUrl": "https://pypi.org",
       "registryType": "pypi",
+      "runtimeHint": "uvx",
       "transport": {
         "type": "stdio"
       },

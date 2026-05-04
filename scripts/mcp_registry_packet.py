@@ -51,6 +51,7 @@ def build_server_json() -> dict[str, Any]:
                     "PYTHONPATH=$PWD/engine/src python3 -m zero_engine.mcp --smoke",
                     "PYTHONPATH=$PWD/engine/src scripts/mcp_transcript.py --check",
                     "scripts/mcp_registry_packet.py --check",
+                    "scripts/mcp_registry_listing_check.py --json",
                 ],
             }
         },
@@ -59,7 +60,9 @@ def build_server_json() -> dict[str, Any]:
         "packages": [
             {
                 "identifier": str(project["name"]),
+                "registryBaseUrl": "https://pypi.org",
                 "registryType": "pypi",
+                "runtimeHint": "uvx",
                 "transport": {"type": "stdio"},
                 "version": version,
             }
@@ -91,8 +94,11 @@ def _server_json_findings(server: dict[str, Any]) -> dict[str, bool | str]:
         "server_name_matches_registry_pattern": bool(name_pattern.fullmatch(str(server.get("name")))),
         "server_version_matches_engine_package": server.get("version") == project["version"],
         "package_identifier_matches_pyproject": package.get("identifier") == project["name"],
+        "package_registry_base_url_is_pypi": package.get("registryBaseUrl") == "https://pypi.org",
+        "package_runtime_hint_is_uvx": package.get("runtimeHint") == "uvx",
         "package_version_matches_server": package.get("version") == server.get("version"),
         "package_transport_is_stdio": package.get("transport") == {"type": "stdio"},
+        "pyproject_exposes_package_name_command": project.get("scripts", {}).get(project["name"]) == "zero_engine.mcp:main",
         "pyproject_exposes_zero_mcp": project.get("scripts", {}).get("zero-mcp") == "zero_engine.mcp:main",
         "pypi_readme_has_mcp_name": f"mcp-name: {SERVER_NAME}" in engine_readme,
         "mcp_docs_state_read_only": "read-only" in mcp_docs and "canPlaceOrders=false" in mcp_docs,
@@ -116,8 +122,9 @@ def build_packet() -> dict[str, Any]:
                 "curl -fsS "
                 "'https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.zero-intel/zero'"
             ),
+            "listing_check_command": "scripts/mcp_registry_listing_check.py --json",
             "last_query_evidence": {
-                "checked_at": "2026-05-04T05:08:00Z",
+                "checked_at": "2026-05-04T05:59:55Z",
                 "response": {"servers": [], "metadata": {"count": 0}},
                 "interpretation": "not listed yet; expected until the PyPI package is publicly published",
             },
@@ -129,8 +136,10 @@ def build_packet() -> dict[str, Any]:
             "package_identifier": "zero-engine",
             "auth_method": "github-oidc",
             "publish_commands": [
+                "scripts/mcp_registry_listing_check.py --require-pypi-published --json",
                 "mcp-publisher login github-oidc",
                 "mcp-publisher publish",
+                "scripts/mcp_registry_listing_check.py --expect-listed --json",
             ],
             "blocked_until": [
                 "zero-engine is published on PyPI with the engine README carrying the mcp-name proof",

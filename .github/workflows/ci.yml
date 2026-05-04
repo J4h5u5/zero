@@ -170,6 +170,7 @@ jobs:
           test -x scripts/registry_readiness.py
           test -x scripts/registry_launch_packet.py
           test -x scripts/mcp_registry_packet.py
+          test -x scripts/mcp_registry_listing_check.py
           test -x scripts/homebrew_formula.py
           test -x scripts/homebrew_formula_check.py
           test -x scripts/release_provenance.py
@@ -202,6 +203,7 @@ jobs:
           test -f railway.toml
           test -f docs/railway-deploy.md
           test -f .github/RELEASE_TEMPLATE.md
+          test -f .github/workflows/mcp-registry.yml
           scripts/issue_template_check.py
           scripts/label_taxonomy_check.py
           scripts/github_label_sync.py --validate-config
@@ -230,6 +232,7 @@ jobs:
           scripts/registry_readiness.py
           scripts/registry_launch_packet.py --check
           scripts/mcp_registry_packet.py --check
+          scripts/mcp_registry_listing_check.py --json
 
   strategy-plugin-example:
     runs-on: ubuntu-latest

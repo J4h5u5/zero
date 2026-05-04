@@ -2,10 +2,13 @@
   "checks": {
     "mcp_docs_state_read_only": true,
     "package_identifier_matches_pyproject": true,
+    "package_registry_base_url_is_pypi": true,
     "package_registry_publication_still_blocked": true,
+    "package_runtime_hint_is_uvx": true,
     "package_transport_is_stdio": true,
     "package_version_matches_server": true,
     "pypi_readme_has_mcp_name": true,
+    "pyproject_exposes_package_name_command": true,
     "pyproject_exposes_zero_mcp": true,
     "schema_version": "zero.mcp_registry_packet.v1",
     "server_json_schema_current": true,
@@ -19,7 +22,7 @@
   "official_registry": {
     "api": "https://registry.modelcontextprotocol.io",
     "last_query_evidence": {
-      "checked_at": "2026-05-04T05:08:00Z",
+      "checked_at": "2026-05-04T05:59:55Z",
       "interpretation": "not listed yet; expected until the PyPI package is publicly published",
       "response": {
         "metadata": {
@@ -28,6 +31,7 @@
         "servers": []
       }
     },
+    "listing_check_command": "scripts/mcp_registry_listing_check.py --json",
     "query_command": "curl -fsS 'https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.zero-intel/zero'",
     "server_name": "io.github.zero-intel/zero",
     "server_schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json"
@@ -44,7 +48,8 @@
         "verificationCommands": [
           "PYTHONPATH=$PWD/engine/src python3 -m zero_engine.mcp --smoke",
           "PYTHONPATH=$PWD/engine/src scripts/mcp_transcript.py --check",
-          "scripts/mcp_registry_packet.py --check"
+          "scripts/mcp_registry_packet.py --check",
+          "scripts/mcp_registry_listing_check.py --json"
         ]
       }
     },
@@ -53,7 +58,9 @@
     "packages": [
       {
         "identifier": "zero-engine",
+        "registryBaseUrl": "https://pypi.org",
         "registryType": "pypi",
+        "runtimeHint": "uvx",
         "transport": {
           "type": "stdio"
         },
@@ -79,8 +86,10 @@
     "package_identifier": "zero-engine",
     "package_registry": "pypi",
     "publish_commands": [
+      "scripts/mcp_registry_listing_check.py --require-pypi-published --json",
       "mcp-publisher login github-oidc",
-      "mcp-publisher publish"
+      "mcp-publisher publish",
+      "scripts/mcp_registry_listing_check.py --expect-listed --json"
     ],
     "server_json": "server.json",
     "status": "ready_after_pypi_publication"
