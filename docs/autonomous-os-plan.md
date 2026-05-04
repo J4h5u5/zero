@@ -635,9 +635,9 @@ Current progress:
 - Backfilled `v0.1.1` with `SBOM.spdx.json` and `PROVENANCE.json`, verified the
   published release from a clean download, and added `scripts/release_evidence.py`
   so maintainers can rerun checksum, metadata, attestation, and formula evidence.
-- Published `zero-engine==0.1.2` on PyPI through Trusted Publishing and listed
-  `io.github.zero-intel/zero` in the Official MCP Registry with a public `uvx`
-  stdio package reference.
+- Published `zero-engine==0.1.2` and `zero-engine==0.1.3` on PyPI through
+  Trusted Publishing, then listed `io.github.zero-intel/zero` in the Official
+  MCP Registry with a public `uvx` stdio package reference.
 
 Remaining scope before Cycle 26: crates/container ownership evidence and
 external review evidence.

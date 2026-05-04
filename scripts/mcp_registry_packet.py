@@ -127,9 +127,7 @@ def build_packet() -> dict[str, Any]:
             "last_query_evidence": {
                 "checked_at": "2026-05-04T15:15:58Z",
                 "response": {"servers": [{"name": SERVER_NAME}], "metadata": {"count": 1}},
-                "interpretation": (
-                    f"listed; refresh after zero-engine {version} PyPI publication"
-                ),
+                "interpretation": f"listed; verified after zero-engine {version} PyPI publication",
             },
         },
         "submission": {

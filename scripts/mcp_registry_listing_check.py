@@ -92,7 +92,10 @@ def build_report(timeout: float) -> dict[str, Any]:
             if isinstance(item, dict)
         ]
     matching_servers = [server for server in servers if server.get("name") == server_name]
-    listed_server = matching_servers[0] if matching_servers else {}
+    listed_server = next(
+        (server for server in matching_servers if server.get("version") == server_json.get("version")),
+        matching_servers[0] if matching_servers else {},
+    )
     listed_package = package_from_server(listed_server)
 
     pypi_description = ""

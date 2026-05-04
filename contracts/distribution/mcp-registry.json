@@ -23,7 +23,7 @@
     "api": "https://registry.modelcontextprotocol.io",
     "last_query_evidence": {
       "checked_at": "2026-05-04T15:15:58Z",
-      "interpretation": "listed; refresh after zero-engine 0.1.3 PyPI publication",
+      "interpretation": "listed; verified after zero-engine 0.1.3 PyPI publication",
       "response": {
         "metadata": {
           "count": 1
