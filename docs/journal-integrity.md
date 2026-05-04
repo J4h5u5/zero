@@ -123,8 +123,43 @@ PYTHONPATH="$PWD/engine/src" scripts/journal_verify.py verify-anchor \
 
 The verifier fails on anchor hash mutation, journal-head mismatch, entry-count
 mismatch, verification-hash mismatch, and missing external receipt when
-`--require-external` is set. The remaining trust work is operational cadence:
-operators should anchor journal heads periodically and preserve the external
+`--require-external` is set.
+
+## Periodic Anchor Cadence
+
+Live-capable operators should run the cadence wrapper after each journal-head
+change and at least once per configured interval. The wrapper reuses a fresh
+same-head anchor, creates a new packet when the head changes or the prior packet
+is stale, writes an immutable timestamped packet plus
+`journal-anchor-latest.json`, and records a verifiable
+`zero.decision_journal.anchor_cadence.v1` state file.
+
+```bash
+PYTHONPATH="$PWD/engine/src" scripts/journal_anchor_cadence.py run \
+  .zero/decisions.jsonl \
+  --anchor-dir .zero/anchors \
+  --method opentimestamps \
+  --anchor-ref ots:sha256:<receipt-digest> \
+  --max-age-hours 24 \
+  --require-external \
+  --require-signature \
+  --signing-key-env ZERO_JOURNAL_SIGNING_KEY
+```
+
+Verify the cadence state during live preflight or release evidence collection:
+
+```bash
+PYTHONPATH="$PWD/engine/src" scripts/journal_anchor_cadence.py verify-state \
+  .zero/decisions.jsonl \
+  --state .zero/anchors/journal-anchor-state.json \
+  --require-external \
+  --require-signature \
+  --signing-key-env ZERO_JOURNAL_SIGNING_KEY
+```
+
+The operation fails closed when `--require-external` is set without a receipt,
+when the state points at a missing or mutated packet, when the journal head no
+longer matches the anchor, or when the cadence is overdue. Preserve external
 receipt material outside the trading host.
 
 ## Incident Rule

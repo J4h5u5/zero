@@ -112,9 +112,11 @@ required=(
   scripts/homebrew_formula_check.py
   scripts/mcp_registry_packet.py
   scripts/journal_verify.py
+  scripts/journal_anchor_cadence.py
   scripts/stale_artifact_check.sh
   scripts/live_trading_evidence.py
   engine/tests/test_property_safety.py
+  engine/tests/test_journal_anchor_cadence.py
   .github/dependabot.yml
   .github/workflows/ci.yml
   .github/workflows/codeql.yml
@@ -163,14 +165,17 @@ file_contains "Autonomous operating system for self-custodial onchain operations
 file_contains "paper mode" README.md
 file_contains "Self-evolution" docs/private-engine-capability-gap-audit.md
 file_contains "Full ZERO operating-system contract readiness: 100/100" docs/production-readiness.md
-file_contains "Autonomous trust readiness: 98/100" docs/production-readiness.md
+file_contains "Autonomous trust readiness: 99/100" docs/production-readiness.md
 file_contains "Failure Modes Of The Autonomous Loop" docs/failure-modes-autonomous-loop.md
 file_contains "FM-AUTO-004" docs/failure-modes-autonomous-loop.md
 file_contains "zero.decision_journal.entry.v1" docs/journal-integrity.md
 file_contains "zero.decision_journal.external_anchor.v1" docs/journal-integrity.md
+file_contains "zero.decision_journal.anchor_cadence.v1" docs/journal-integrity.md
 file_contains "zero.decision_journal.external_anchor.verification.v1" docs/failure-modes-autonomous-loop.md
 file_contains "zero.decision_journal.verification.v1" docs/failure-modes-autonomous-loop.md
+file_contains "scripts/journal_anchor_cadence.py run" docs/journal-integrity.md
 file_contains "engine/tests/test_property_safety.py" docs/failure-modes-autonomous-loop.md
+file_contains "engine/tests/test_journal_anchor_cadence.py" docs/failure-modes-autonomous-loop.md
 file_contains "hypothesis" engine/pyproject.toml
 file_contains "Agent Architecture" docs/agent-architecture.md
 file_contains "Publication Policy" docs/incident-postmortems/README.md

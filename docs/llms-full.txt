@@ -839,9 +839,8 @@ The controlling plan is `docs/autonomous-os-plan.md`.
 
 The current trust-hardening priorities are:
 
-1. periodic external receipt anchoring for journal heads;
-2. MCP registry publication after PyPI or remote-server enablement;
-3. postmortem publication when live safety, journal integrity, privacy, or
+1. MCP registry publication after PyPI or remote-server enablement;
+2. postmortem publication when live safety, journal integrity, privacy, or
    release integrity is affected.
 
 Each cycle should update tests, docs, and scorecards with the behavior it
@@ -1843,7 +1842,7 @@ areas need safety review, tests, and explicit operator-visible refusal paths:
 
 | State | Owner | Durability requirement |
 |---|---|---|
-| Decision journal | Operator runtime | Append-only, hash-chained, locally signed when configured, verifier-backed, and externally anchorable through public-safe receipt packets. Periodic receipt operation remains the next trust cycle. |
+| Decision journal | Operator runtime | Append-only, hash-chained, locally signed when configured, verifier-backed, externally anchorable through public-safe receipt packets, and covered by a periodic cadence operation. |
 | Runtime bus | Runtime | Checksum-chained and replayable from disk. |
 | Memory | Operator runtime | Local, redacted, and source-attributed. |
 | Genesis journal | Operator runtime | Append-only, reviewable, and plan-only. |
@@ -3727,8 +3726,43 @@ PYTHONPATH="$PWD/engine/src" scripts/journal_verify.py verify-anchor \
 
 The verifier fails on anchor hash mutation, journal-head mismatch, entry-count
 mismatch, verification-hash mismatch, and missing external receipt when
-`--require-external` is set. The remaining trust work is operational cadence:
-operators should anchor journal heads periodically and preserve the external
+`--require-external` is set.
+
+## Periodic Anchor Cadence
+
+Live-capable operators should run the cadence wrapper after each journal-head
+change and at least once per configured interval. The wrapper reuses a fresh
+same-head anchor, creates a new packet when the head changes or the prior packet
+is stale, writes an immutable timestamped packet plus
+`journal-anchor-latest.json`, and records a verifiable
+`zero.decision_journal.anchor_cadence.v1` state file.
+
+```bash
+PYTHONPATH="$PWD/engine/src" scripts/journal_anchor_cadence.py run \
+  .zero/decisions.jsonl \
+  --anchor-dir .zero/anchors \
+  --method opentimestamps \
+  --anchor-ref ots:sha256:<receipt-digest> \
+  --max-age-hours 24 \
+  --require-external \
+  --require-signature \
+  --signing-key-env ZERO_JOURNAL_SIGNING_KEY
+```
+
+Verify the cadence state during live preflight or release evidence collection:
+
+```bash
+PYTHONPATH="$PWD/engine/src" scripts/journal_anchor_cadence.py verify-state \
+  .zero/decisions.jsonl \
+  --state .zero/anchors/journal-anchor-state.json \
+  --require-external \
+  --require-signature \
+  --signing-key-env ZERO_JOURNAL_SIGNING_KEY
+```
+
+The operation fails closed when `--require-external` is set without a receipt,
+when the state points at a missing or mutated packet, when the journal head no
+longer matches the anchor, or when the cadence is overdue. Preserve external
 receipt material outside the trading host.
 
 ## Incident Rule
@@ -3912,7 +3946,7 @@ Unknown answers mean fail closed.
 | FM-AUTO-009 | MCP client asks ZERO to place an order or mutate state. | MCP safety catalog has no risk-increasing tools; unknown methods are rejected. | None if server remains read-only. | Keep server read-only, revoke unsafe registry submission, patch transcript. | MCP transcript refusal and safety catalog resource. | MCP smoke failure, CI failure. | `engine/tests/test_mcp.py`, `scripts/mcp_transcript.py --check`. |
 | FM-AUTO-010 | Public Network or Intelligence packet leaks private identifiers. | Privacy regression fixtures detect wallet-like, raw order ID, trace token, or private journal fields. | Public artifact exposure until publication is stopped. | Stop publishing, rotate unsafe packet, patch serializer, mark proof stale. | Public packet hash, privacy regression incident export. | P1 privacy regression alert, CI failure. | `engine/tests/test_proof_privacy.py`, `scripts/proof_privacy_regression.py`. |
 | FM-AUTO-011 | Kill switch, pause, flatten, or reduce-only path is unavailable. | Live certification drill fails; cockpit marks emergency controls not ready. | Live mode must refuse risk-increasing actions. Existing exchange positions may need manual exchange action. | Manual exchange close if needed; keep ZERO live disabled until certification passes. | `zero.live_certification.v1`, live cockpit packet, incident postmortem. | `/live-certification`, `/live-cockpit`, P0/P1 runbook. | `engine/tests/test_live_canary_policy.py`, `scripts/live_cockpit_drill_verify.py`. |
-| FM-AUTO-012 | Journal chain, signature, or timestamp anchor fails verification. | `zero.decision_journal.verification.v1` detects missing head, broken previous hash, invalid signature, missing required signature, or stale anchor; `zero.decision_journal.external_anchor.verification.v1` detects anchor packet drift or missing external receipt. | Audit trust for the affected interval. Live mode must refuse if the decision journal or required external anchor is unverifiable. | Stop writers, preserve artifact, restore last verified head, publish redacted postmortem if live safety was affected. | `zero.decision_journal.verification.v1`, `zero.decision_journal.external_anchor.v1`, verifier report, incident postmortem. | CLI live-preflight refusal, incident alert. | `engine/tests/test_journal.py`, `scripts/journal_verify.py`; periodic external anchoring cadence remains required before 100/100. |
+| FM-AUTO-012 | Journal chain, signature, or timestamp anchor fails verification. | `zero.decision_journal.verification.v1` detects missing head, broken previous hash, invalid signature, missing required signature, or stale anchor; `zero.decision_journal.external_anchor.verification.v1` detects anchor packet drift or missing external receipt; `zero.decision_journal.anchor_cadence.v1` detects stale cadence state. | Audit trust for the affected interval. Live mode must refuse if the decision journal or required external anchor is unverifiable. | Stop writers, preserve artifact, restore last verified head, publish redacted postmortem if live safety was affected. | `zero.decision_journal.verification.v1`, `zero.decision_journal.external_anchor.v1`, `zero.decision_journal.anchor_cadence.v1`, verifier report, incident postmortem. | CLI live-preflight refusal, incident alert. | `engine/tests/test_journal.py`, `engine/tests/test_journal_anchor_cadence.py`, `scripts/journal_verify.py`, `scripts/journal_anchor_cadence.py`. |
 
 ## Coverage Bar For 100/100
 
@@ -3921,8 +3955,9 @@ ZERO reaches the autonomous trust bar only when:
 - every row above has at least one deterministic regression test;
 - safety gates have property-based tests for bounded random inputs;
 - decision journals are hash-chained, signed, and locally verifiable;
-- journal-head external anchor packets are periodically attached to trusted
-  timestamp receipts or public-chain references;
+- journal-head external anchor packets have a periodic operation that attaches
+  trusted timestamp receipts or public-chain references and verifies cadence
+  state;
 - failures that touch live safety, journal integrity, or public privacy produce
   redacted postmortems in `docs/incident-postmortems/`;
 - the MCP server has a committed registry packet before launch and is tracked
@@ -4305,7 +4340,7 @@ packet.
 
 **Full ZERO operating-system contract readiness: 100/100.**
 
-**Autonomous trust readiness: 98/100.**
+**Autonomous trust readiness: 99/100.**
 
 The stricter trust bar is intentionally higher than contract completeness. The
 repo now documents autonomous-loop bounds, a failure-mode taxonomy, and a
@@ -4314,11 +4349,12 @@ signable, verifier-backed, and covered by public-safe external anchor packets
 that can require Rekor/OpenTimestamps/RFC3161/public-chain receipt references.
 The core safety gates now have bounded property-based coverage for risk-budget
 invariants, malformed Hyperliquid payloads, memory staleness, dry-run order
-validation, and model-gateway retry/privacy behavior. ZERO should not claim the
-final autonomous trust moat until journal-head anchors run on a periodic
-operator cadence and the MCP Registry submission packet is live-listed after
-PyPI or a public remote MCP endpoint is enabled. The tracked failure modes are
-documented in
+validation, and model-gateway retry/privacy behavior. Journal-head anchoring now
+has a periodic operation that creates or reuses external anchor packets, fails
+closed when live evidence requires an external receipt, and verifies cadence
+state. ZERO should not claim the final autonomous trust moat until the MCP
+Registry submission packet is live-listed after PyPI or a public remote MCP
+endpoint is enabled. The tracked failure modes are documented in
 [Failure Modes Of The Autonomous Loop](failure-modes-autonomous-loop.md).
 
 It is still not a hosted custody product, and real capital operation remains
@@ -4382,13 +4418,12 @@ ZERO is 100/100 when a new serious operator can:
 
 ## Execution Cycles
 
-Forecast after Cycle 43: **0 major public-repo product cycles remain before the
+Forecast after Cycle 44: **0 major public-repo product cycles remain before the
 repo can be treated as a complete ZERO autonomous operating-system launch
-artifact. 2 trust-moat cycles remain before the autonomous trust score should
-return to 100/100:** periodic external journal-head anchoring operation and
-live MCP registry listing evidence after package or remote publication.
-External work still includes third-party review, package registry ownership,
-hosted Network, paid
+artifact. 1 trust-moat cycle remains before the autonomous trust score should
+return to 100/100:** live MCP registry listing evidence after package or remote
+publication. External work still includes third-party review, package registry
+ownership, hosted Network, paid
 Intelligence deployment, and optional raw exchange disclosure for commercial
 diligence.
 
@@ -5017,7 +5052,7 @@ speed, scale, history, and reliability.
 | Safety and risk | 98 | autonomous-loop failure taxonomy and bounded property-based safety-gate tests exist; real exchange chaos drills and external review remain |
 | API contracts | 100 | public runtime contracts are complete; hosted compatibility is commercial launch work |
 | Deployment | 96 | live Railway proof, external production log-drain evidence |
-| Observability and audit | 97 | checksum-chained runtime bus, hash-chained signable decision journal, local timestamp binding, external anchor packet, verifier, and signed evidence bundles exist; periodic external receipt operation, metrics backend, and log drains remain |
+| Observability and audit | 99 | checksum-chained runtime bus, hash-chained signable decision journal, local timestamp binding, external anchor packet, periodic anchor-cadence operation, verifier, and signed evidence bundles exist; metrics backend and log drains remain |
 | Security and custody | 91 | external review, key-handling drill evidence |
 | ZERO Network | 82 | deterministic public proof-chain pack plus profile identity verifier exist; hosted identity service, public pages, and production ingestion service remain |
 | ZERO Intelligence | 70 | production hosted service persistence, billing provider, history storage, terms |

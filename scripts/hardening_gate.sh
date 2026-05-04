@@ -26,7 +26,9 @@ required_files=(
   "scripts/contributor_board_check.py"
   "scripts/homebrew_formula_check.py"
   "scripts/journal_verify.py"
+  "scripts/journal_anchor_cadence.py"
   "engine/tests/test_property_safety.py"
+  "engine/tests/test_journal_anchor_cadence.py"
   "scripts/stale_artifact_check.sh"
   "scripts/live_trading_evidence.py"
   "llms.txt"
@@ -115,8 +117,11 @@ contains "zero.decision_journal.external_anchor.v1" docs/journal-integrity.md
 contains "zero.decision_journal.external_anchor.verification.v1" docs/failure-modes-autonomous-loop.md
 contains "scripts/journal_verify.py verify" docs/journal-integrity.md
 contains "scripts/journal_verify.py verify-anchor" docs/journal-integrity.md
+contains "scripts/journal_anchor_cadence.py run" docs/journal-integrity.md
+contains "zero.decision_journal.anchor_cadence.v1" docs/journal-integrity.md
 contains "ZERO_JOURNAL_SIGNING_KEY" docs/journal-integrity.md
 contains "engine/tests/test_property_safety.py" docs/failure-modes-autonomous-loop.md
+contains "engine/tests/test_journal_anchor_cadence.py" docs/failure-modes-autonomous-loop.md
 contains "hypothesis" engine/pyproject.toml
 contains "Detection" docs/failure-modes-autonomous-loop.md
 contains "Blast radius" docs/failure-modes-autonomous-loop.md

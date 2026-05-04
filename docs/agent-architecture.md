@@ -73,7 +73,7 @@ areas need safety review, tests, and explicit operator-visible refusal paths:
 
 | State | Owner | Durability requirement |
 |---|---|---|
-| Decision journal | Operator runtime | Append-only, hash-chained, locally signed when configured, verifier-backed, and externally anchorable through public-safe receipt packets. Periodic receipt operation remains the next trust cycle. |
+| Decision journal | Operator runtime | Append-only, hash-chained, locally signed when configured, verifier-backed, externally anchorable through public-safe receipt packets, and covered by a periodic cadence operation. |
 | Runtime bus | Runtime | Checksum-chained and replayable from disk. |
 | Memory | Operator runtime | Local, redacted, and source-attributed. |
 | Genesis journal | Operator runtime | Append-only, reviewable, and plan-only. |

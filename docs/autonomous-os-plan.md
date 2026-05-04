@@ -83,7 +83,7 @@ speed, scale, history, and reliability.
 | Safety and risk | 98 | autonomous-loop failure taxonomy and bounded property-based safety-gate tests exist; real exchange chaos drills and external review remain |
 | API contracts | 100 | public runtime contracts are complete; hosted compatibility is commercial launch work |
 | Deployment | 96 | live Railway proof, external production log-drain evidence |
-| Observability and audit | 97 | checksum-chained runtime bus, hash-chained signable decision journal, local timestamp binding, external anchor packet, verifier, and signed evidence bundles exist; periodic external receipt operation, metrics backend, and log drains remain |
+| Observability and audit | 99 | checksum-chained runtime bus, hash-chained signable decision journal, local timestamp binding, external anchor packet, periodic anchor-cadence operation, verifier, and signed evidence bundles exist; metrics backend and log drains remain |
 | Security and custody | 91 | external review, key-handling drill evidence |
 | ZERO Network | 82 | deterministic public proof-chain pack plus profile identity verifier exist; hosted identity service, public pages, and production ingestion service remain |
 | ZERO Intelligence | 70 | production hosted service persistence, billing provider, history storage, terms |

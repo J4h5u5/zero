@@ -451,6 +451,7 @@ docs-check:
     test -x scripts/release_provenance.py
     test -x scripts/release_verify.py
     test -x scripts/journal_verify.py
+    test -x scripts/journal_anchor_cadence.py
     test -x scripts/release_evidence.py
     test -x scripts/generate_llms_full.py
     test -x scripts/proof_pack.py

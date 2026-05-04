@@ -10,14 +10,15 @@ reserved for ZERO Intelligence.
 
 ## Current Autonomous Trust Score
 
-**98/100**
+**99/100**
 
 The launch repository is ready for serious contributors. The stricter
-autonomous-systems trust bar is not complete until journal-head anchor packets
-are attached to trusted external receipts on a periodic operator cadence and
-the MCP server has a live registry listing after package or remote publication.
-Bounded property-based coverage now exists for the core safety gates and
-documented malformed-input paths.
+autonomous-systems trust bar is not complete until the MCP server has a live
+registry listing after package or remote publication. Journal-head anchor
+packets now have a periodic operation that attaches trusted external receipts,
+fails closed when live evidence requires a receipt, and verifies cadence state.
+Bounded property-based coverage exists for the core safety gates and documented
+malformed-input paths.
 
 ## Ready
 
@@ -62,6 +63,9 @@ documented malformed-input paths.
   incident-postmortem publication policy
 - Hash-chained decision journals, operator-owned signing hooks, local timestamp
   bindings, external anchor packets, verifier CLI, and tamper tests
+- Periodic journal-head anchor operation with
+  `zero.decision_journal.anchor_cadence.v1` state and fail-closed external
+  receipt enforcement
 - Property-based safety-gate tests for risk budgets, malformed Hyperliquid
   responses, memory staleness, dry-run order validation, and model-gateway
   retry/privacy behavior
