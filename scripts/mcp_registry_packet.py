@@ -111,6 +111,7 @@ def _server_json_findings(server: dict[str, Any]) -> dict[str, bool | str]:
 def build_packet() -> dict[str, Any]:
     server = build_server_json()
     checks = _server_json_findings(server)
+    version = str(server["version"])
     return {
         "schema_version": SCHEMA_VERSION,
         "generated_at": GENERATED_AT,
@@ -126,7 +127,9 @@ def build_packet() -> dict[str, Any]:
             "last_query_evidence": {
                 "checked_at": "2026-05-04T15:15:58Z",
                 "response": {"servers": [{"name": SERVER_NAME}], "metadata": {"count": 1}},
-                "interpretation": "listed; verified after zero-engine 0.1.2 PyPI publication",
+                "interpretation": (
+                    f"listed; refresh after zero-engine {version} PyPI publication"
+                ),
             },
         },
         "submission": {
