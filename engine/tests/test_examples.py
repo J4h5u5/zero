@@ -202,6 +202,25 @@ def test_network_index_page_example_runs_from_repo_root() -> None:
     assert "Stale" in page
 
 
+def test_intelligence_catalog_page_example_runs_from_repo_root() -> None:
+    repo_root = Path(__file__).resolve().parents[2]
+    result = subprocess.run(
+        [sys.executable, "examples/intelligence-catalog-page/build.py"],
+        cwd=repo_root,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    page = result.stdout
+    assert "<!doctype html>" in page
+    assert "<title>ZERO Intelligence Catalog</title>" in page
+    assert "Public Catalog" in page
+    assert "Commercial Metering" in page
+    assert 'href="catalog.json"' in page
+    assert 'href="commercial.json"' in page
+
+
 def test_network_pages_smoke_runs_from_repo_root() -> None:
     repo_root = Path(__file__).resolve().parents[2]
     result = subprocess.run(
@@ -213,3 +232,16 @@ def test_network_pages_smoke_runs_from_repo_root() -> None:
     )
 
     assert "network pages smoke passed: 5 pages" in result.stdout
+
+
+def test_intelligence_catalog_page_smoke_runs_from_repo_root() -> None:
+    repo_root = Path(__file__).resolve().parents[2]
+    result = subprocess.run(
+        [sys.executable, "scripts/intelligence_catalog_page_smoke.py"],
+        cwd=repo_root,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    assert "intelligence catalog page smoke passed" in result.stdout

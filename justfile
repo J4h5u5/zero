@@ -28,6 +28,9 @@ market-data-adapter-example:
 funding-rate-adapter-example:
     PYTHONPATH="$PWD/examples/funding-rate-adapter" python3 examples/funding-rate-adapter/run.py
 
+intelligence-catalog-page-example:
+    PYTHONPATH="$PWD/engine/src" python3 examples/intelligence-catalog-page/build.py
+
 network-leaderboard-example:
     PYTHONPATH="$PWD/engine/src" python3 examples/network-leaderboard/build.py
 
@@ -104,6 +107,9 @@ decision-stack-example:
 
 network-pages-smoke:
     scripts/network_pages_smoke.py
+
+intelligence-catalog-page-smoke:
+    scripts/intelligence_catalog_page_smoke.py
 
 paper-api:
     cd engine && python3 -m zero_engine.api
@@ -412,6 +418,8 @@ docs-check:
     test -f examples/network-leaderboard-page/build.py
     test -f examples/network-index-page/README.md
     test -f examples/network-index-page/build.py
+    test -f examples/intelligence-catalog-page/README.md
+    test -f examples/intelligence-catalog-page/build.py
     test -f contracts/paper-api/v2_status.json
     test -f contracts/paper-api/execute_accepted.json
     test -f contracts/paper-api/execute_rejected.json
@@ -435,6 +443,7 @@ docs-check:
     test -f contracts/network/index.html
     test -f contracts/intelligence/snapshot.json
     test -f contracts/intelligence/catalog.json
+    test -f contracts/intelligence/catalog.html
     test -f contracts/intelligence/commercial.json
     test -f contracts/intelligence/model_gateway.json
     test -f contracts/intelligence/model_gateway_health.json
@@ -454,6 +463,7 @@ docs-check:
     test -x scripts/stale_artifact_check.sh
     test -x scripts/openapi_contract_check.py
     test -x scripts/network_pages_smoke.py
+    test -x scripts/intelligence_catalog_page_smoke.py
     test -x scripts/package_dry_run.sh
     test -x scripts/registry_readiness.py
     test -x scripts/registry_launch_packet.py
@@ -531,4 +541,4 @@ container-smoke:
     docker run --rm zero-public:local
     docker run --rm zero-public:local python /app/examples/paper-trading/run.py
 
-ci: lint test paper-api-smoke fresh-clone-rehearsal example strategy-example strategy-plugin-example momentum-strategy-plugin-example strategy-runner-example market-data-adapter-example funding-rate-adapter-example runtime-loop-example memory-core-example genesis-example evolve-example research-example decision-stack-example network-leaderboard-example network-profile-page-example network-stale-profile-example network-empty-profile-example network-leaderboard-page-example network-index-page-example network-pages-smoke registry-readiness package-dry-run release-rehearsal draft-release-rehearsal public-readiness
+ci: lint test paper-api-smoke fresh-clone-rehearsal example strategy-example strategy-plugin-example momentum-strategy-plugin-example strategy-runner-example market-data-adapter-example funding-rate-adapter-example intelligence-catalog-page-example runtime-loop-example memory-core-example genesis-example evolve-example research-example decision-stack-example network-leaderboard-example network-profile-page-example network-stale-profile-example network-empty-profile-example network-leaderboard-page-example network-index-page-example network-pages-smoke intelligence-catalog-page-smoke registry-readiness package-dry-run release-rehearsal draft-release-rehearsal public-readiness

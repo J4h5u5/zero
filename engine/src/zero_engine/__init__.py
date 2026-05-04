@@ -15,6 +15,7 @@ from zero_engine.intelligence import (
     intelligence_catalog,
     intelligence_commercial_contract,
     intelligence_snapshot,
+    public_intelligence_catalog_page,
 )
 from zero_engine.live import LiveExecutionPolicy, LiveExecutionRecord, LiveExecutor
 from zero_engine.live_certification import (
@@ -159,6 +160,7 @@ __all__ = [
     "public_profile_page",
     "public_profile",
     "publish_profile",
+    "public_intelligence_catalog_page",
     "run_live_certification",
     "reconcile_positions",
     "validate_structured_output",

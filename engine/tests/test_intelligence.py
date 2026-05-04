@@ -7,7 +7,11 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from zero_engine.api import PaperApi, PaperApiState
-from zero_engine.intelligence import intelligence_catalog, intelligence_commercial_contract
+from zero_engine.intelligence import (
+    intelligence_catalog,
+    intelligence_commercial_contract,
+    public_intelligence_catalog_page,
+)
 from zero_engine.journal import DecisionJournal
 from zero_engine.paper import PaperEngine
 
@@ -226,6 +230,35 @@ def test_intelligence_catalog_fixture_is_fresh() -> None:
     )
 
     assert catalog == expected
+
+
+def test_public_intelligence_catalog_page_is_static_and_public_safe() -> None:
+    catalog = intelligence_catalog(
+        generated_at="2026-05-01T00:00:00+00:00",
+        public_delay_s=900,
+    )
+
+    page = public_intelligence_catalog_page(
+        catalog,
+        generated_at="2026-05-01T00:00:00+00:00",
+    )
+
+    assert "<!doctype html>" in page
+    assert "<title>ZERO Intelligence Catalog</title>" in page
+    assert "Public Catalog" in page
+    assert "Commercial Metering" in page
+    assert "Never Metered" in page
+    assert 'href="catalog.json"' in page
+    assert 'href="commercial.json"' in page
+    assert 'href="snapshot.json"' in page
+    assert "<script" not in page
+    assert "hosted realtime availability" in page
+    assert "guaranteed returns" in page
+    body = page.lower()
+    assert "private_key" not in body
+    assert "wallet_address" not in body
+    assert "exchange_order_id" not in body
+    assert "trace_id" not in body
 
 
 def test_intelligence_export_requires_consent_and_path(tmp_path) -> None:
