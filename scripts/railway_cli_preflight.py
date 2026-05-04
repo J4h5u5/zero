@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -39,12 +40,39 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def launchctl_getenv(name: str) -> str:
+    if not shutil.which("launchctl"):
+        return ""
+    child = subprocess.run(
+        ["launchctl", "getenv", name],
+        check=False,
+        text=True,
+        capture_output=True,
+        timeout=5,
+    )
+    return child.stdout.strip() if child.returncode == 0 else ""
+
+
+def railway_env() -> dict[str, str]:
+    env = os.environ.copy()
+    if not env.get("RAILWAY_API_TOKEN"):
+        token = launchctl_getenv("RAILWAY_API_TOKEN")
+        if token:
+            env["RAILWAY_API_TOKEN"] = token
+    if not env.get("RAILWAY_TOKEN"):
+        token = launchctl_getenv("RAILWAY_TOKEN")
+        if token:
+            env["RAILWAY_TOKEN"] = token
+    return env
+
+
 def run(*args: str) -> CommandResult:
     child = subprocess.run(
         ["railway", *args],
         check=False,
         text=True,
         capture_output=True,
+        env=railway_env(),
         timeout=20,
     )
     return CommandResult(
