@@ -365,7 +365,8 @@ zero --version
 ```
 
 The formula installs the `zero` CLI from the checksummed GitHub Release asset.
-It does not use private package registries.
+It does not use private package registries. Homebrew reinstall and rollback
+commands live in [docs/release.md](docs/release.md#homebrew-rollback-verification).
 
 PyPI, crates.io, Docker Hub, and GHCR are intentionally unpublished until
 ownership and rollback evidence are recorded in

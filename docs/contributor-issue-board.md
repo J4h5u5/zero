@@ -19,8 +19,9 @@ Use the GitHub labels when choosing work:
 
 ## Help Wanted
 
-- [#29 Add a static ZERO Intelligence catalog page](https://github.com/zero-intel/zero/issues/29)
-- [#30 Add Homebrew rollback verification docs](https://github.com/zero-intel/zero/issues/30)
+No open seeded help-wanted issues remain. New contributor lanes should be
+opened through [launch issues](launch-issues.md) so acceptance criteria stay
+source-controlled.
 
 ## Completed Seed Issues
 
@@ -42,6 +43,11 @@ Use the GitHub labels when choosing work:
   delivered in [ZERO Network Empty Profile Fixture](../examples/network-empty-profile/README.md),
   [ZERO Network Stale Profile Fixture](../examples/network-stale-profile/README.md),
   and [ZERO Network Profile Page Example](../examples/network-profile-page/README.md).
+- [#29 Add a static ZERO Intelligence catalog page](https://github.com/zero-intel/zero/issues/29) -
+  delivered in [ZERO Intelligence Catalog Page](../examples/intelligence-catalog-page/README.md).
+- [#30 Add Homebrew rollback verification docs](https://github.com/zero-intel/zero/issues/30) -
+  delivered in [Release Process](release.md#homebrew-rollback-verification) and
+  [Distribution Readiness](distribution.md#homebrew-rollback-verification).
 
 ## Contribution Rules
 

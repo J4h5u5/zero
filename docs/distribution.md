@@ -140,8 +140,51 @@ access:
 
 ```bash
 brew tap zero-intel/zero https://github.com/zero-intel/zero
-brew install zero
+brew install zero-intel/zero/zero
+zero --version
 ```
+
+## Homebrew Rollback Verification
+
+The public tap is a Git repository. To verify a clean reinstall from the
+published formula:
+
+```bash
+brew uninstall zero || true
+brew untap zero-intel/zero || true
+brew tap zero-intel/zero https://github.com/zero-intel/zero
+brew install zero-intel/zero/zero
+zero --version
+```
+
+To roll back to the previous formula commit on an operator machine:
+
+```bash
+tap_repo="$(brew --repo zero-intel/zero)"
+git -C "$tap_repo" log --oneline -- Formula/zero.rb
+git -C "$tap_repo" checkout <previous-formula-commit> -- Formula/zero.rb
+brew reinstall --formula zero-intel/zero/zero
+zero --version
+brew pin zero
+```
+
+To return to the current public formula:
+
+```bash
+brew unpin zero || true
+tap_repo="$(brew --repo zero-intel/zero)"
+git -C "$tap_repo" restore Formula/zero.rb
+brew update
+brew reinstall --formula zero-intel/zero/zero
+zero --version
+```
+
+`scripts/homebrew_formula_check.py` proves the committed formula is generated
+from the release checksum manifest and remains public-safe. `just
+release-evidence <tag>` goes further: it downloads the release, verifies
+`SHA256SUMS`, verifies release metadata and attestations, rerenders the formula
+from the clean download, and fails if the committed formula has drifted. These
+checks do not claim PyPI, crates.io, Docker Hub, or GHCR publication.
 
 ## Draft Release Rollback Rehearsal
 

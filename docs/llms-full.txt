@@ -428,7 +428,8 @@ zero --version
 ```
 
 The formula installs the `zero` CLI from the checksummed GitHub Release asset.
-It does not use private package registries.
+It does not use private package registries. Homebrew reinstall and rollback
+commands live in [docs/release.md](docs/release.md#homebrew-rollback-verification).
 
 PyPI, crates.io, Docker Hub, and GHCR are intentionally unpublished until
 ownership and rollback evidence are recorded in
@@ -6407,8 +6408,9 @@ Use the GitHub labels when choosing work:
 
 ## Help Wanted
 
-- [#29 Add a static ZERO Intelligence catalog page](https://github.com/zero-intel/zero/issues/29)
-- [#30 Add Homebrew rollback verification docs](https://github.com/zero-intel/zero/issues/30)
+No open seeded help-wanted issues remain. New contributor lanes should be
+opened through [launch issues](launch-issues.md) so acceptance criteria stay
+source-controlled.
 
 ## Completed Seed Issues
 
@@ -6430,6 +6432,11 @@ Use the GitHub labels when choosing work:
   delivered in [ZERO Network Empty Profile Fixture](../examples/network-empty-profile/README.md),
   [ZERO Network Stale Profile Fixture](../examples/network-stale-profile/README.md),
   and [ZERO Network Profile Page Example](../examples/network-profile-page/README.md).
+- [#29 Add a static ZERO Intelligence catalog page](https://github.com/zero-intel/zero/issues/29) -
+  delivered in [ZERO Intelligence Catalog Page](../examples/intelligence-catalog-page/README.md).
+- [#30 Add Homebrew rollback verification docs](https://github.com/zero-intel/zero/issues/30) -
+  delivered in [Release Process](release.md#homebrew-rollback-verification) and
+  [Distribution Readiness](distribution.md#homebrew-rollback-verification).
 
 ## Contribution Rules
 
@@ -7850,11 +7857,58 @@ Homebrew is also supported through the public repo tap:
 ```bash
 brew tap zero-intel/zero https://github.com/zero-intel/zero
 brew install zero
+zero --version
 ```
 
 The formula lives at `Formula/zero.rb`, installs the `zero` CLI from the
 checksummed GitHub Release asset, and does not require private package registry
 access. It is generated from `SHA256SUMS` by `scripts/homebrew_formula.py`.
+
+### Homebrew Rollback Verification
+
+First prove the current public tap path still works from a clean local tap:
+
+```bash
+brew uninstall zero || true
+brew untap zero-intel/zero || true
+brew tap zero-intel/zero https://github.com/zero-intel/zero
+brew install zero-intel/zero/zero
+zero --version
+```
+
+To temporarily roll an operator machine back to the previous formula commit,
+checkout the older `Formula/zero.rb` inside the local Homebrew tap, reinstall,
+and pin the package until the incident is resolved:
+
+```bash
+tap_repo="$(brew --repo zero-intel/zero)"
+git -C "$tap_repo" log --oneline -- Formula/zero.rb
+git -C "$tap_repo" checkout <previous-formula-commit> -- Formula/zero.rb
+brew reinstall --formula zero-intel/zero/zero
+zero --version
+brew pin zero
+```
+
+After the rollback window, return the tap to the published formula and reinstall
+the current release:
+
+```bash
+brew unpin zero || true
+tap_repo="$(brew --repo zero-intel/zero)"
+git -C "$tap_repo" restore Formula/zero.rb
+brew update
+brew reinstall --formula zero-intel/zero/zero
+zero --version
+```
+
+The checksum check proves the installed binary matches the GitHub Release
+checksum recorded in `SHA256SUMS`. The formula drift check proves the committed
+Homebrew formula was generated from that release checksum manifest, still points
+at the public GitHub Release asset, and has not been edited to use a stale
+checksum, stale tag, private tap, or private registry. These checks prove
+release integrity for the public Homebrew path; they do not prove trading
+performance, custody safety, or publication to PyPI, crates.io, Docker Hub, or
+GHCR.
 
 ## Package Dry Run
 
