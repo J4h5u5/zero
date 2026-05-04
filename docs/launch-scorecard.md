@@ -10,14 +10,14 @@ reserved for ZERO Intelligence.
 
 ## Current Autonomous Trust Score
 
-**97/100**
+**98/100**
 
 The launch repository is ready for serious contributors. The stricter
 autonomous-systems trust bar is not complete until journal-head anchor packets
-are attached to trusted external receipts on a periodic operator cadence; the
-MCP server has a live registry listing after package or remote publication; and
-every safety gate has deterministic or property-based coverage for the
-documented failure modes.
+are attached to trusted external receipts on a periodic operator cadence and
+the MCP server has a live registry listing after package or remote publication.
+Bounded property-based coverage now exists for the core safety gates and
+documented malformed-input paths.
 
 ## Ready
 
@@ -62,6 +62,9 @@ documented failure modes.
   incident-postmortem publication policy
 - Hash-chained decision journals, operator-owned signing hooks, local timestamp
   bindings, external anchor packets, verifier CLI, and tamper tests
+- Property-based safety-gate tests for risk budgets, malformed Hyperliquid
+  responses, memory staleness, dry-run order validation, and model-gateway
+  retry/privacy behavior
 - Dependency and supply-chain policy with vulnerability response rules
 - One-line CLI install path with checksum and attestation verification
 - Registry-readiness gate for PyPI/Cargo metadata and package-channel guardrails

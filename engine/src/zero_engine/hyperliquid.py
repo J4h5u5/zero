@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from typing import Any
@@ -111,10 +112,14 @@ def post_json(endpoint: str, payload: Mapping[str, Any], timeout_s: float) -> An
 
 
 def parse_positive_float(value: Any, label: str) -> float:
+    if isinstance(value, bool):
+        raise ValueError(f"{label} must be numeric")
     try:
         parsed = float(value)
     except (TypeError, ValueError) as exc:
         raise ValueError(f"{label} must be numeric") from exc
+    if not math.isfinite(parsed):
+        raise ValueError(f"{label} must be finite")
     if parsed <= 0:
         raise ValueError(f"{label} must be positive")
     return parsed
@@ -136,14 +141,24 @@ def is_private_key(value: str | None) -> bool:
 def validate_dry_run_order(payload: Mapping[str, Any]) -> dict[str, Any]:
     symbol = str(payload.get("coin") or payload.get("symbol") or "").upper()
     side = str(payload.get("side") or "").lower()
+    if "size" in payload:
+        raw_size = payload.get("size")
+    elif "quantity" in payload:
+        raw_size = payload.get("quantity")
+    else:
+        raw_size = 0
+    if isinstance(raw_size, bool):
+        raise ValueError("dry-run order size must be numeric")
     try:
-        size = float(payload.get("size") or payload.get("quantity") or 0)
+        size = float(raw_size)
     except (TypeError, ValueError) as exc:
         raise ValueError("dry-run order size must be numeric") from exc
     if not symbol:
         raise ValueError("dry-run order requires a symbol")
     if side not in {"buy", "sell"}:
         raise ValueError("dry-run order side must be buy or sell")
+    if not math.isfinite(size):
+        raise ValueError("dry-run order size must be finite")
     if size <= 0:
         raise ValueError("dry-run order size must be positive")
     return {"coin": symbol, "side": side, "size": size, "dry_run": True}

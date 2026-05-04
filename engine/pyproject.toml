@@ -51,6 +51,7 @@ zero-journal = "zero_engine.journal:main"
 [project.optional-dependencies]
 dev = [
   "build>=1.2",
+  "hypothesis>=6.100",
   "pytest>=8.0",
   "ruff>=0.8",
 ]

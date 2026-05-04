@@ -47,18 +47,20 @@ packet.
 
 **Full ZERO operating-system contract readiness: 100/100.**
 
-**Autonomous trust readiness: 97/100.**
+**Autonomous trust readiness: 98/100.**
 
 The stricter trust bar is intentionally higher than contract completeness. The
 repo now documents autonomous-loop bounds, a failure-mode taxonomy, and a
 postmortem publication policy. Decision journals are hash-chained, locally
 signable, verifier-backed, and covered by public-safe external anchor packets
 that can require Rekor/OpenTimestamps/RFC3161/public-chain receipt references.
-ZERO should not claim the final autonomous trust moat until those journal-head
-anchors run on a periodic operator cadence; the MCP Registry submission packet
-is manifest-ready but intentionally unlisted until PyPI or a public remote MCP
-endpoint is enabled; and every safety gate has deterministic or property-based
-coverage for the failure modes in
+The core safety gates now have bounded property-based coverage for risk-budget
+invariants, malformed Hyperliquid payloads, memory staleness, dry-run order
+validation, and model-gateway retry/privacy behavior. ZERO should not claim the
+final autonomous trust moat until journal-head anchors run on a periodic
+operator cadence and the MCP Registry submission packet is live-listed after
+PyPI or a public remote MCP endpoint is enabled. The tracked failure modes are
+documented in
 [Failure Modes Of The Autonomous Loop](failure-modes-autonomous-loop.md).
 
 It is still not a hosted custody product, and real capital operation remains
@@ -122,13 +124,13 @@ ZERO is 100/100 when a new serious operator can:
 
 ## Execution Cycles
 
-Forecast after Cycle 42: **0 major public-repo product cycles remain before the
+Forecast after Cycle 43: **0 major public-repo product cycles remain before the
 repo can be treated as a complete ZERO autonomous operating-system launch
-artifact. 3 trust-moat cycles remain before the autonomous trust score should
-return to 100/100:** periodic external journal-head anchoring operation, live
-MCP registry listing evidence after package or remote publication, and
-property-based safety-gate coverage. External work still includes third-party
-review, package registry ownership, hosted Network, paid
+artifact. 2 trust-moat cycles remain before the autonomous trust score should
+return to 100/100:** periodic external journal-head anchoring operation and
+live MCP registry listing evidence after package or remote publication.
+External work still includes third-party review, package registry ownership,
+hosted Network, paid
 Intelligence deployment, and optional raw exchange disclosure for commercial
 diligence.
 

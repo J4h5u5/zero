@@ -79,8 +79,8 @@ speed, scale, history, and reliability.
 | Product narrative | 99 | keep narrative aligned as hosted Network and Intelligence launch |
 | CLI readiness | 100 | five-mode terminal with full-screen live cockpit exists; raw exchange records remain operator-owned proof |
 | Engine runtime | 100 | public production-parity OODA report plus redacted live trading evidence exist; raw exchange records remain operator-owned external proof |
-| Self-evolution loop | 98 | public memory, research command chain, genesis proposal classification, production-parity OODA reports, local apply, rollback, paper-first evolve gates, and agent architecture bounds exist; property-based failure-mode coverage remains |
-| Safety and risk | 96 | autonomous-loop failure taxonomy exists; real exchange chaos drills, property-based safety-gate tests, and external review remain |
+| Self-evolution loop | 98 | public memory, research command chain, genesis proposal classification, production-parity OODA reports, local apply, rollback, paper-first evolve gates, agent architecture bounds, and property-based safety coverage exist; protected live-code evolution remains human-reviewed |
+| Safety and risk | 98 | autonomous-loop failure taxonomy and bounded property-based safety-gate tests exist; real exchange chaos drills and external review remain |
 | API contracts | 100 | public runtime contracts are complete; hosted compatibility is commercial launch work |
 | Deployment | 96 | live Railway proof, external production log-drain evidence |
 | Observability and audit | 97 | checksum-chained runtime bus, hash-chained signable decision journal, local timestamp binding, external anchor packet, verifier, and signed evidence bundles exist; periodic external receipt operation, metrics backend, and log drains remain |

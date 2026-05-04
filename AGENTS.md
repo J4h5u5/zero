@@ -157,8 +157,7 @@ The current trust-hardening priorities are:
 
 1. periodic external receipt anchoring for journal heads;
 2. MCP registry publication after PyPI or remote-server enablement;
-3. property-based tests for safety gates and malformed venue responses;
-4. postmortem publication when live safety, journal integrity, privacy, or
+3. postmortem publication when live safety, journal integrity, privacy, or
    release integrity is affected.
 
 Each cycle should update tests, docs, and scorecards with the behavior it
