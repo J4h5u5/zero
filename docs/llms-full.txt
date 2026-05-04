@@ -29,6 +29,7 @@ Use this bundle for retrieval and coding agents. It is not evidence of live trad
 - `docs/mcp/transcript.jsonl`
 - `docs/api-compatibility.md`
 - `docs/runtime-bus.md`
+- `docs/journal-integrity.md`
 - `docs/safety-model.md`
 - `docs/threat-model.md`
 - `docs/failure-modes-autonomous-loop.md`
@@ -619,6 +620,7 @@ Machine-readable entrypoints:
 - [Issue Templates](.github/ISSUE_TEMPLATE/agent_task.yml)
 - [OpenAPI Contract](openapi/zero-paper-api.v1.yaml)
 - [Agent Architecture](docs/agent-architecture.md)
+- [Journal Integrity](docs/journal-integrity.md)
 - [Memory Core](docs/memory-core.md)
 - [Genesis](docs/genesis.md)
 - [Research Command Chain](docs/research.md)
@@ -638,6 +640,7 @@ Machine-readable entrypoints:
 - [CLI Quickstart](docs/cli-quickstart.md)
 - [CLI Doctor Troubleshooting](docs/cli-doctor-troubleshooting.md)
 - [API](docs/api.md)
+- [Journal Integrity](docs/journal-integrity.md)
 - [Memory Core](docs/memory-core.md)
 - [Research Command Chain](docs/research.md)
 - [Decision Stack](docs/decision-stack.md)
@@ -696,6 +699,7 @@ Before editing, read:
 - `docs/open-core-boundary.md`
 - `docs/safety-model.md`
 - `docs/failure-modes-autonomous-loop.md`
+- `docs/journal-integrity.md`
 - `docs/autonomous-os-plan.md`
 - `docs/agentic-contribution.md`
 - `docs/llms.txt`
@@ -722,6 +726,9 @@ Before editing, read:
   `docs/failure-modes-autonomous-loop.md` when they introduce a new failure
   mode or change detection, blast radius, rollback, journal evidence, alerting,
   or test coverage.
+- Decision journals must stay hash-chained and verifiable. Do not remove
+  `zero.decision_journal.entry.v1` envelopes, signature hooks, or verification
+  refusal paths.
 
 ## Product Boundary
 
@@ -829,7 +836,7 @@ The controlling plan is `docs/autonomous-os-plan.md`.
 
 The current trust-hardening priorities are:
 
-1. hash-chained, signed, and timestamp-anchored decision journals;
+1. external timestamp anchoring for journal heads;
 2. MCP registry submission and listing evidence;
 3. property-based tests for safety gates and malformed venue responses;
 4. postmortem publication when live safety, journal integrity, privacy, or
@@ -1157,6 +1164,7 @@ Out of scope:
 - [Architecture](architecture.md)
 - [Agent Architecture](agent-architecture.md)
 - [Runtime Bus](runtime-bus.md)
+- [Journal Integrity](journal-integrity.md)
 - [Memory Core](memory-core.md)
 - [Genesis](genesis.md)
 - [Research Command Chain](research.md)
@@ -1832,7 +1840,7 @@ areas need safety review, tests, and explicit operator-visible refusal paths:
 
 | State | Owner | Durability requirement |
 |---|---|---|
-| Decision journal | Operator runtime | Append-only now; hash-chained and signed in the next trust cycle. |
+| Decision journal | Operator runtime | Append-only, hash-chained, locally signed when configured, and verifier-backed. External timestamp anchoring remains the next trust cycle. |
 | Runtime bus | Runtime | Checksum-chained and replayable from disk. |
 | Memory | Operator runtime | Local, redacted, and source-attributed. |
 | Genesis journal | Operator runtime | Append-only, reviewable, and plan-only. |
@@ -3476,6 +3484,104 @@ production-shape parity proof, not live trading proof.
 ````
 
 
+## Source: `docs/journal-integrity.md`
+
+````markdown
+# Journal Integrity
+
+ZERO decision journals are append-only JSONL files with a cryptographic
+envelope around each decision.
+
+The public runtime keeps reads backward-compatible: `DecisionJournal.read_all()`
+and `/journal` return the decision payloads operators already expect. The file
+on disk now stores `zero.decision_journal.entry.v1` entries so the operator can
+verify sequence, previous hash, payload hash, signature status, and timestamp
+anchor binding.
+
+## Entry Shape
+
+Each line contains:
+
+| Field | Meaning |
+|---|---|
+| `schema_version` | `zero.decision_journal.entry.v1` |
+| `sequence` | Monotonic 1-based sequence number. |
+| `previous_hash` | Previous entry hash, or `null` for the first entry. |
+| `payload` | The original accepted or rejected decision record. |
+| `entry_hash` | SHA-256 over schema, sequence, previous hash, and payload. |
+| `signature` | Operator-owned signing metadata. |
+| `timestamp_anchor` | Local timestamp-anchor binding for the entry hash and local clock time. |
+
+Unsigned local journals are still valid for paper examples. Live-capable
+operator deployments should set a journal signing key and require signature
+verification before risk can increase.
+
+## Signing
+
+The built-in signer uses HMAC-SHA256 from the Python standard library so a
+fresh clone has no extra dependency.
+
+```bash
+export ZERO_JOURNAL_SIGNING_KEY="replace-with-operator-secret"
+PYTHONPATH="$PWD/engine/src" python3 -m zero_engine.journal verify \
+  .zero/decisions.jsonl \
+  --require-signature \
+  --signing-key-env ZERO_JOURNAL_SIGNING_KEY \
+  --key-id local-operator
+```
+
+The signature is operator-owned. Do not commit signing keys. Do not publish raw
+private journals.
+
+## Verification
+
+Verify an unsigned paper journal:
+
+```bash
+PYTHONPATH="$PWD/engine/src" scripts/journal_verify.py verify .zero/decisions.jsonl
+```
+
+Verify a signed operator journal:
+
+```bash
+PYTHONPATH="$PWD/engine/src" scripts/journal_verify.py verify \
+  .zero/decisions.jsonl \
+  --require-signature \
+  --signing-key-env ZERO_JOURNAL_SIGNING_KEY
+```
+
+The verifier fails on:
+
+- malformed JSON;
+- sequence gaps or reordering;
+- previous-hash mismatch;
+- payload mutation;
+- entry-hash mutation;
+- missing signature when required;
+- signature mismatch when the operator key is provided;
+- timestamp-anchor mismatch when anchors are required.
+
+## Timestamp Anchoring
+
+Every entry includes a local timestamp-anchor binding to the entry hash and a
+local `anchored_at` clock reading. This is enough to detect local tampering, but
+it is not a trusted external timestamp.
+
+The next trust cycle should add periodic external anchoring for journal heads
+through a trusted timestamp service, Rekor/OpenTimestamps, or a public chain.
+The public contract is already explicit: the anchor must bind the journal head
+hash, anchor time, method, and external reference without exposing raw journal
+payloads.
+
+## Incident Rule
+
+Any `zero.decision_journal.verification.v1` failure in a live-capable operator
+deployment is a journal anomaly. Follow
+[Incident Runbooks](incident-runbooks.md) and publish a redacted postmortem
+when live safety, public privacy, or launch claims are affected.
+````
+
+
 ## Source: `docs/safety-model.md`
 
 ````markdown
@@ -3648,7 +3754,7 @@ Unknown answers mean fail closed.
 | FM-AUTO-009 | MCP client asks ZERO to place an order or mutate state. | MCP safety catalog has no risk-increasing tools; unknown methods are rejected. | None if server remains read-only. | Keep server read-only, revoke unsafe registry submission, patch transcript. | MCP transcript refusal and safety catalog resource. | MCP smoke failure, CI failure. | `engine/tests/test_mcp.py`, `scripts/mcp_transcript.py --check`. |
 | FM-AUTO-010 | Public Network or Intelligence packet leaks private identifiers. | Privacy regression fixtures detect wallet-like, raw order ID, trace token, or private journal fields. | Public artifact exposure until publication is stopped. | Stop publishing, rotate unsafe packet, patch serializer, mark proof stale. | Public packet hash, privacy regression incident export. | P1 privacy regression alert, CI failure. | `engine/tests/test_proof_privacy.py`, `scripts/proof_privacy_regression.py`. |
 | FM-AUTO-011 | Kill switch, pause, flatten, or reduce-only path is unavailable. | Live certification drill fails; cockpit marks emergency controls not ready. | Live mode must refuse risk-increasing actions. Existing exchange positions may need manual exchange action. | Manual exchange close if needed; keep ZERO live disabled until certification passes. | `zero.live_certification.v1`, live cockpit packet, incident postmortem. | `/live-certification`, `/live-cockpit`, P0/P1 runbook. | `engine/tests/test_live_canary_policy.py`, `scripts/live_cockpit_drill_verify.py`. |
-| FM-AUTO-012 | Journal chain, signature, or timestamp anchor fails verification. | Journal verifier detects missing head, broken previous hash, invalid signature, or stale anchor. | Audit trust for the affected interval. Live mode must refuse if the decision journal is unverifiable. | Stop writers, preserve artifact, restore last verified head, publish redacted postmortem if live safety was affected. | `zero.journal.verification_failure.v1`, verifier report, incident postmortem. | CLI live-preflight refusal, incident alert. | Not complete: hash-chained signed journal and timestamp anchoring are the next trust-moat implementation cycle. |
+| FM-AUTO-012 | Journal chain, signature, or timestamp anchor fails verification. | `zero.decision_journal.verification.v1` detects missing head, broken previous hash, invalid signature, missing required signature, or stale anchor. | Audit trust for the affected interval. Live mode must refuse if the decision journal is unverifiable. | Stop writers, preserve artifact, restore last verified head, publish redacted postmortem if live safety was affected. | `zero.decision_journal.verification.v1`, verifier report, incident postmortem. | CLI live-preflight refusal, incident alert. | `engine/tests/test_journal.py`, `scripts/journal_verify.py`; external timestamp anchoring remains required before 100/100. |
 
 ## Coverage Bar For 100/100
 
@@ -4040,15 +4146,17 @@ packet.
 
 **Full ZERO operating-system contract readiness: 100/100.**
 
-**Autonomous trust readiness: 92/100.**
+**Autonomous trust readiness: 95/100.**
 
 The stricter trust bar is intentionally higher than contract completeness. The
 repo now documents autonomous-loop bounds, a failure-mode taxonomy, and a
-postmortem publication policy, but it should not claim the final autonomous
-trust moat until the decision journal is hash-chained, signed, and periodically
-timestamp-anchored; MCP registry submission/listing evidence is public; and
-every safety gate has deterministic or property-based coverage for the failure
-modes in [Failure Modes Of The Autonomous Loop](failure-modes-autonomous-loop.md).
+postmortem publication policy. Decision journals are hash-chained, locally
+signable, and verifier-backed. ZERO should not claim the final autonomous trust
+moat until journal heads are periodically anchored to an external trusted
+timestamp service or public chain; MCP registry submission/listing evidence is
+public; and every safety gate has deterministic or property-based coverage for
+the failure modes in
+[Failure Modes Of The Autonomous Loop](failure-modes-autonomous-loop.md).
 
 It is still not a hosted custody product, and real capital operation remains
 self-custodial and operator-owned. The public repo must not imply that a new
@@ -4111,13 +4219,14 @@ ZERO is 100/100 when a new serious operator can:
 
 ## Execution Cycles
 
-Forecast after Cycle 40: **0 major public-repo product cycles remain before the
+Forecast after Cycle 41: **0 major public-repo product cycles remain before the
 repo can be treated as a complete ZERO autonomous operating-system launch
 artifact. 3 trust-moat cycles remain before the autonomous trust score should
-return to 100/100:** journal cryptography, MCP registry listing evidence, and
-property-based safety-gate coverage. External work still includes third-party
-review, package registry ownership, hosted Network, paid Intelligence
-deployment, and optional raw exchange disclosure for commercial diligence.
+return to 100/100:** external journal-head anchoring, MCP registry listing
+evidence, and property-based safety-gate coverage. External work still includes
+third-party review, package registry ownership, hosted Network, paid
+Intelligence deployment, and optional raw exchange disclosure for commercial
+diligence.
 
 | Cycle | Target | Historical Target Score |
 |---|---|---:|
@@ -4744,7 +4853,7 @@ speed, scale, history, and reliability.
 | Safety and risk | 96 | autonomous-loop failure taxonomy exists; real exchange chaos drills, property-based safety-gate tests, and external review remain |
 | API contracts | 100 | public runtime contracts are complete; hosted compatibility is commercial launch work |
 | Deployment | 96 | live Railway proof, external production log-drain evidence |
-| Observability and audit | 92 | checksum-chained runtime bus and signed evidence bundles exist; decision-journal hash chaining, signatures, timestamp anchoring, metrics backend, and log drains remain |
+| Observability and audit | 96 | checksum-chained runtime bus, hash-chained signable decision journal, local timestamp binding, verifier, and signed evidence bundles exist; external timestamp anchoring, metrics backend, and log drains remain |
 | Security and custody | 91 | external review, key-handling drill evidence |
 | ZERO Network | 82 | deterministic public proof-chain pack plus profile identity verifier exist; hosted identity service, public pages, and production ingestion service remain |
 | ZERO Intelligence | 70 | production hosted service persistence, billing provider, history storage, terms |

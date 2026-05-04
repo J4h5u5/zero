@@ -36,6 +36,7 @@ SOURCES = (
     "docs/mcp/transcript.jsonl",
     "docs/api-compatibility.md",
     "docs/runtime-bus.md",
+    "docs/journal-integrity.md",
     "docs/safety-model.md",
     "docs/threat-model.md",
     "docs/failure-modes-autonomous-loop.md",

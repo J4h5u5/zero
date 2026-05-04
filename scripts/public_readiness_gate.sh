@@ -65,6 +65,7 @@ required=(
   docs/mcp.md
   docs/mcp/transcript.jsonl
   docs/agent-architecture.md
+  docs/journal-integrity.md
   docs/memory-core.md
   docs/genesis.md
   docs/evolve.md
@@ -108,6 +109,7 @@ required=(
   scripts/contributor_board_check.py
   scripts/codeowners_check.py
   scripts/homebrew_formula_check.py
+  scripts/journal_verify.py
   scripts/stale_artifact_check.sh
   scripts/live_trading_evidence.py
   .github/dependabot.yml
@@ -156,9 +158,11 @@ file_contains "Autonomous operating system for self-custodial onchain operations
 file_contains "paper mode" README.md
 file_contains "Self-evolution" docs/private-engine-capability-gap-audit.md
 file_contains "Full ZERO operating-system contract readiness: 100/100" docs/production-readiness.md
-file_contains "Autonomous trust readiness: 92/100" docs/production-readiness.md
+file_contains "Autonomous trust readiness: 95/100" docs/production-readiness.md
 file_contains "Failure Modes Of The Autonomous Loop" docs/failure-modes-autonomous-loop.md
 file_contains "FM-AUTO-004" docs/failure-modes-autonomous-loop.md
+file_contains "zero.decision_journal.entry.v1" docs/journal-integrity.md
+file_contains "zero.decision_journal.verification.v1" docs/failure-modes-autonomous-loop.md
 file_contains "Agent Architecture" docs/agent-architecture.md
 file_contains "Publication Policy" docs/incident-postmortems/README.md
 file_contains "zero.runtime.production_parity.v1" docs/production-readiness.md

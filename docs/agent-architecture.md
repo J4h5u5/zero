@@ -73,7 +73,7 @@ areas need safety review, tests, and explicit operator-visible refusal paths:
 
 | State | Owner | Durability requirement |
 |---|---|---|
-| Decision journal | Operator runtime | Append-only now; hash-chained and signed in the next trust cycle. |
+| Decision journal | Operator runtime | Append-only, hash-chained, locally signed when configured, and verifier-backed. External timestamp anchoring remains the next trust cycle. |
 | Runtime bus | Runtime | Checksum-chained and replayable from disk. |
 | Memory | Operator runtime | Local, redacted, and source-attributed. |
 | Genesis journal | Operator runtime | Append-only, reviewable, and plan-only. |

@@ -310,6 +310,7 @@ docs-check:
     test -f docs/mcp/transcript.jsonl
     test -f docs/api-compatibility.md
     test -f docs/runtime-bus.md
+    test -f docs/journal-integrity.md
     test -f docs/memory-core.md
     test -f docs/genesis.md
     test -f docs/evolve.md
@@ -444,6 +445,7 @@ docs-check:
     test -x scripts/homebrew_formula_check.py
     test -x scripts/release_provenance.py
     test -x scripts/release_verify.py
+    test -x scripts/journal_verify.py
     test -x scripts/release_evidence.py
     test -x scripts/generate_llms_full.py
     test -x scripts/proof_pack.py

@@ -25,6 +25,7 @@ required_files=(
   "scripts/codeowners_check.py"
   "scripts/contributor_board_check.py"
   "scripts/homebrew_formula_check.py"
+  "scripts/journal_verify.py"
   "scripts/stale_artifact_check.sh"
   "scripts/live_trading_evidence.py"
   "llms.txt"
@@ -58,6 +59,7 @@ required_files=(
   "docs/mcp.md"
   "docs/mcp/transcript.jsonl"
   "docs/agent-architecture.md"
+  "docs/journal-integrity.md"
   "docs/memory-core.md"
   "docs/genesis.md"
   "docs/evolve.md"
@@ -103,6 +105,10 @@ contains "Unexpected Live Order" docs/incident-runbooks.md
 contains "Bad Release Artifact" docs/incident-runbooks.md
 contains "Failure Modes Of The Autonomous Loop" docs/failure-modes-autonomous-loop.md
 contains "FM-AUTO-004" docs/failure-modes-autonomous-loop.md
+contains "zero.decision_journal.verification.v1" docs/failure-modes-autonomous-loop.md
+contains "zero.decision_journal.entry.v1" docs/journal-integrity.md
+contains "scripts/journal_verify.py verify" docs/journal-integrity.md
+contains "ZERO_JOURNAL_SIGNING_KEY" docs/journal-integrity.md
 contains "Detection" docs/failure-modes-autonomous-loop.md
 contains "Blast radius" docs/failure-modes-autonomous-loop.md
 contains "Rollback" docs/failure-modes-autonomous-loop.md

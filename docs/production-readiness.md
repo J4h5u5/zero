@@ -47,15 +47,17 @@ packet.
 
 **Full ZERO operating-system contract readiness: 100/100.**
 
-**Autonomous trust readiness: 92/100.**
+**Autonomous trust readiness: 95/100.**
 
 The stricter trust bar is intentionally higher than contract completeness. The
 repo now documents autonomous-loop bounds, a failure-mode taxonomy, and a
-postmortem publication policy, but it should not claim the final autonomous
-trust moat until the decision journal is hash-chained, signed, and periodically
-timestamp-anchored; MCP registry submission/listing evidence is public; and
-every safety gate has deterministic or property-based coverage for the failure
-modes in [Failure Modes Of The Autonomous Loop](failure-modes-autonomous-loop.md).
+postmortem publication policy. Decision journals are hash-chained, locally
+signable, and verifier-backed. ZERO should not claim the final autonomous trust
+moat until journal heads are periodically anchored to an external trusted
+timestamp service or public chain; MCP registry submission/listing evidence is
+public; and every safety gate has deterministic or property-based coverage for
+the failure modes in
+[Failure Modes Of The Autonomous Loop](failure-modes-autonomous-loop.md).
 
 It is still not a hosted custody product, and real capital operation remains
 self-custodial and operator-owned. The public repo must not imply that a new
@@ -118,13 +120,14 @@ ZERO is 100/100 when a new serious operator can:
 
 ## Execution Cycles
 
-Forecast after Cycle 40: **0 major public-repo product cycles remain before the
+Forecast after Cycle 41: **0 major public-repo product cycles remain before the
 repo can be treated as a complete ZERO autonomous operating-system launch
 artifact. 3 trust-moat cycles remain before the autonomous trust score should
-return to 100/100:** journal cryptography, MCP registry listing evidence, and
-property-based safety-gate coverage. External work still includes third-party
-review, package registry ownership, hosted Network, paid Intelligence
-deployment, and optional raw exchange disclosure for commercial diligence.
+return to 100/100:** external journal-head anchoring, MCP registry listing
+evidence, and property-based safety-gate coverage. External work still includes
+third-party review, package registry ownership, hosted Network, paid
+Intelligence deployment, and optional raw exchange disclosure for commercial
+diligence.
 
 | Cycle | Target | Historical Target Score |
 |---|---|---:|

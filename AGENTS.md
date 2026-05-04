@@ -18,6 +18,7 @@ Before editing, read:
 - `docs/open-core-boundary.md`
 - `docs/safety-model.md`
 - `docs/failure-modes-autonomous-loop.md`
+- `docs/journal-integrity.md`
 - `docs/autonomous-os-plan.md`
 - `docs/agentic-contribution.md`
 - `docs/llms.txt`
@@ -44,6 +45,9 @@ Before editing, read:
   `docs/failure-modes-autonomous-loop.md` when they introduce a new failure
   mode or change detection, blast radius, rollback, journal evidence, alerting,
   or test coverage.
+- Decision journals must stay hash-chained and verifiable. Do not remove
+  `zero.decision_journal.entry.v1` envelopes, signature hooks, or verification
+  refusal paths.
 
 ## Product Boundary
 
@@ -151,7 +155,7 @@ The controlling plan is `docs/autonomous-os-plan.md`.
 
 The current trust-hardening priorities are:
 
-1. hash-chained, signed, and timestamp-anchored decision journals;
+1. external timestamp anchoring for journal heads;
 2. MCP registry submission and listing evidence;
 3. property-based tests for safety gates and malformed venue responses;
 4. postmortem publication when live safety, journal integrity, privacy, or

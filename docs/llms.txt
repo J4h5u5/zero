@@ -40,6 +40,7 @@
 - [Architecture](architecture.md)
 - [Agent Architecture](agent-architecture.md)
 - [Runtime Bus](runtime-bus.md)
+- [Journal Integrity](journal-integrity.md)
 - [Memory Core](memory-core.md)
 - [Genesis](genesis.md)
 - [Research Command Chain](research.md)
