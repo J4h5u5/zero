@@ -48,8 +48,9 @@ Current verified public demo:
 
 The template packet is
 [`contracts/distribution/railway-template.json`](../contracts/distribution/railway-template.json).
-It records the public demo URL, latest verified deployment id, required
-variables, volume mount, doctor summary, and evidence verification result.
+It records the public demo URL, point-in-time verified deployment id, required
+variables, volume mount, autodeploy config, doctor summary, and evidence
+verification result.
 
 Regenerate and check it after deployment-affecting changes:
 

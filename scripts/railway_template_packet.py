@@ -12,7 +12,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "contracts" / "distribution" / "railway-template.json"
 SCHEMA_VERSION = "zero.railway_template_packet.v1"
-GENERATED_AT = "2026-05-04T19:13:25Z"
+GENERATED_AT = "2026-05-04T19:21:22Z"
 PUBLIC_DEMO_URL = "https://zero-production-5214.up.railway.app"
 
 
@@ -73,8 +73,14 @@ def build_packet() -> dict[str, Any]:
             "project": "fabulous-enchantment",
             "service": "zero",
             "environment": "production",
-            "latest_verified_deployment": "6c0de989-efc5-4a3b-94e0-1e400210d5e3",
-            "latest_evidence_bundle": "artifacts/deployment-evidence/20260504T191325Z",
+            "verified_deployment_at_generation": "ea8424de-f5e3-4227-84a3-67970f5b0cfd",
+            "evidence_bundle_at_generation": "artifacts/deployment-evidence/20260504T192122Z",
+            "autodeploy_config": {
+                "builder": "DOCKERFILE",
+                "dockerfile_path": "Dockerfile",
+                "healthcheck_path": "/health",
+                "start_command": "/app/scripts/railway_start.sh",
+            },
             "doctor_summary": {"ok": 17, "warn": 1, "fail": 0},
             "evidence_verify": {"ok": True, "checks": 60, "fail": 0},
             "partner_application": "prepared_not_submitted",

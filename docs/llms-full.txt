@@ -2229,8 +2229,9 @@ Current verified public demo:
 
 The latest Railway Template Publish Packet is committed at
 [`contracts/distribution/railway-template.json`](../contracts/distribution/railway-template.json).
-It records the live demo URL, verified deployment id, evidence bundle path,
-doctor result, required variables, and marketplace publish steps.
+It records the live demo URL, point-in-time verified deployment id, evidence
+bundle path, doctor result, required variables, autodeploy config, and
+marketplace publish steps.
 
 ## Common Use Cases
 
@@ -2335,7 +2336,8 @@ inspectable, interruptible, and paper-first by default.
 
 The packet schema is `zero.railway_template_packet.v1`. Regenerate it after any
 template-impacting deployment, Railway variable change, domain change, or
-marketplace copy change:
+marketplace copy change. Deployment ids are point-in-time evidence; always run
+the doctor against the live URL before sharing the current service:
 
 ```bash
 scripts/railway_template_packet.py --output contracts/distribution/railway-template.json

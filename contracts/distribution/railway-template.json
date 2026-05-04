@@ -24,7 +24,7 @@
     "template_docs_name_public_demo": true,
     "template_icon_present": true
   },
-  "generated_at": "2026-05-04T19:13:25Z",
+  "generated_at": "2026-05-04T19:21:22Z",
   "marketplace": {
     "create_flow": "Project Settings -> Generate Template from Project",
     "partner_application_url": "https://railway.com/partners",
@@ -55,19 +55,24 @@
   },
   "schema_version": "zero.railway_template_packet.v1",
   "summary": {
+    "autodeploy_config": {
+      "builder": "DOCKERFILE",
+      "dockerfile_path": "Dockerfile",
+      "healthcheck_path": "/health",
+      "start_command": "/app/scripts/railway_start.sh"
+    },
     "doctor_summary": {
       "fail": 0,
       "ok": 17,
       "warn": 1
     },
     "environment": "production",
+    "evidence_bundle_at_generation": "artifacts/deployment-evidence/20260504T192122Z",
     "evidence_verify": {
       "checks": 60,
       "fail": 0,
       "ok": true
     },
-    "latest_evidence_bundle": "artifacts/deployment-evidence/20260504T191325Z",
-    "latest_verified_deployment": "6c0de989-efc5-4a3b-94e0-1e400210d5e3",
     "partner_application": "prepared_not_submitted",
     "partner_application_packet": "docs/railway-partner.md",
     "project": "fabulous-enchantment",
@@ -75,6 +80,7 @@
     "service": "zero",
     "status": "ready_for_marketplace_publish",
     "template_name": "ZERO Paper Runtime",
+    "verified_deployment_at_generation": "ea8424de-f5e3-4227-84a3-67970f5b0cfd",
     "workspace": "zero"
   },
   "template_variables": {
