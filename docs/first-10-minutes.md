@@ -24,6 +24,12 @@ source .venv/bin/activate
 just bootstrap
 ```
 
+Use Codespaces if you want a no-install inspection path:
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/zero-intel/zero)
+
+The devcontainer starts in paper mode and runs the docs gate during setup.
+
 ## 1. Run The Paper Engine
 
 ```bash

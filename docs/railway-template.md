@@ -14,6 +14,14 @@ custody funds and does not need exchange keys. The deployment is useful for
 operator onboarding, public demos, proof capture, Railway doctor checks, and
 agentic contribution work against a real HTTP runtime.
 
+Current verified public demo:
+[https://zero-production-5214.up.railway.app](https://zero-production-5214.up.railway.app)
+
+The latest Railway Template Publish Packet is committed at
+[`contracts/distribution/railway-template.json`](../contracts/distribution/railway-template.json).
+It records the live demo URL, verified deployment id, evidence bundle path,
+doctor result, required variables, and marketplace publish steps.
+
 ## Common Use Cases
 
 - Paper-mode operator demos with live read-only Hyperliquid mids.
@@ -67,6 +75,30 @@ agentic contribution work against a real HTTP runtime.
 | `ZERO_INTELLIGENCE_API_ACCOUNT_ID` | optional | `acct_railway` | Public-safe local account label for reference packets. |
 | `ZERO_INTELLIGENCE_WEBHOOK_SIGNING_KEY` | optional | `${{secret(64, "abcdef0123456789")}}` | Demo HMAC key for webhook fixture signatures. Never reuse production keys. |
 
+## Railway Template Publish Packet
+
+The packet schema is `zero.railway_template_packet.v1`. Regenerate it after any
+template-impacting deployment, Railway variable change, domain change, or
+marketplace copy change:
+
+```bash
+scripts/railway_template_packet.py --output contracts/distribution/railway-template.json
+scripts/railway_template_packet.py --check
+```
+
+Before replacing the README deploy button placeholder with Railway's issued
+template URL, verify the live demo:
+
+```bash
+scripts/railway_doctor.py https://zero-production-5214.up.railway.app
+scripts/deployment_evidence.sh https://zero-production-5214.up.railway.app --railway-logs
+scripts/deployment_evidence_verify.py artifacts/deployment-evidence/<timestamp>
+```
+
+The expected public demo posture is `17 ok / 1 warn / 0 fail`: the warning is
+the tokened paid-scope Intelligence check when no demo bearer token is supplied.
+Live mode must remain refused and risk-increasing actions must remain blocked.
+
 ### Publish Checklist
 
 1. Install and authenticate the Railway CLI:
@@ -87,7 +119,8 @@ scripts/railway_cli_preflight.py
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template/<template-code>?utm_medium=integration&utm_source=button&utm_campaign=zero)
 ```
 
-7. Keep [CHANGELOG.md](../CHANGELOG.md) current before merging template-impacting changes to `main`.
+7. Keep [docs/release.md](release.md) and the template packet current before
+   merging template-impacting changes to `main`.
 
 ## Why Deploy ZERO on Railway?
 

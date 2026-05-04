@@ -10,6 +10,11 @@ accounts, or private deployment access.
 - `just`
 - Git
 
+If you do not want to install local tools, open the repo in GitHub Codespaces
+or another devcontainer-compatible editor. The devcontainer installs Python,
+Rust, `just`, the editable engine package, and CLI dependencies. See
+[`../.devcontainer/README.md`](../.devcontainer/README.md).
+
 ## First Run
 
 ```bash

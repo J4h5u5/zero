@@ -1,0 +1,35 @@
+{
+  "name": "ZERO",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "rust-lang.rust-analyzer",
+        "ms-python.python",
+        "charliermarsh.ruff",
+        "tamasfe.even-better-toml"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+        "terminal.integrated.defaultProfile.linux": "bash"
+      }
+    }
+  },
+  "forwardPorts": [
+    8765
+  ],
+  "portsAttributes": {
+    "8765": {
+      "label": "ZERO paper API",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "python3 -m venv .venv && . .venv/bin/activate && python -m pip install --upgrade pip && python -m pip install -e 'engine[dev]' && cargo fetch --manifest-path cli/Cargo.toml && just docs-check",
+  "remoteEnv": {
+    "PATH": "${containerWorkspaceFolder}/.venv/bin:${containerEnv:PATH}",
+    "ZERO_MODE": "paper"
+  }
+}

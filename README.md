@@ -35,9 +35,18 @@ ZERO is prepared for a Railway template rollout: Dockerfile build,
 `railway.toml`, `/health`, durable `/data` journal volume, Railway doctor,
 redacted deployment evidence packs, and paper-mode live-risk refusal.
 
+Live public paper demo:
+[https://zero-production-5214.up.railway.app](https://zero-production-5214.up.railway.app)
+
 Until the public Railway template URL is issued, deploy from the GitHub repo and
 use [docs/railway-template.md](docs/railway-template.md) as the marketplace
-configuration source of truth.
+configuration source of truth. The current Railway Template Publish Packet is
+tracked in
+[contracts/distribution/railway-template.json](contracts/distribution/railway-template.json).
+
+```bash
+scripts/railway_doctor.py https://zero-production-5214.up.railway.app
+```
 
 ZERO has three non-negotiable product rules:
 
@@ -388,8 +397,25 @@ uvx zero-engine --smoke
 uvx --from zero-engine zero-mcp --smoke
 ```
 
+Container users can run the paper runtime directly from source:
+
+```bash
+docker build -t zero-paper .
+docker run --rm -p 8765:8765 -e PORT=8765 zero-paper
+```
+
 crates.io, Docker Hub, and GHCR remain unpublished until ownership and rollback
 evidence are recorded in [docs/registry-launch.md](docs/registry-launch.md).
+
+## No-Install Contributor Path
+
+Use GitHub Codespaces or any devcontainer-compatible editor to open this repo
+without installing Python, Rust, or `just` locally:
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/zero-intel/zero)
+
+The container installs the editable engine package, Rust CLI dependencies, and
+the local docs gate. See [.devcontainer/README.md](.devcontainer/README.md).
 
 ## Source Quickstart
 

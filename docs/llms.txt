@@ -33,6 +33,7 @@
 - [Proof Packs](proof/README.md)
 - [Railway Template](railway-template.md)
 - [Railway Deploy](railway-deploy.md)
+- [Railway Template Packet](../contracts/distribution/railway-template.json)
 - [Release](release.md)
 - [Release Verification](release-verification.md)
 
@@ -84,6 +85,7 @@
 
 - [Agentic Contribution](agentic-contribution.md)
 - [Contributor Issue Board](contributor-issue-board.md)
+- [Dev Container](../.devcontainer/README.md)
 - [Issue Templates](../.github/ISSUE_TEMPLATE/agent_task.yml)
 - [Label Taxonomy](label-taxonomy.md)
 - [Full LLM Context](llms-full.txt)

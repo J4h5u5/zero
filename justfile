@@ -171,6 +171,9 @@ registry-readiness:
     scripts/mcp_registry_packet.py --check
     scripts/mcp_registry_listing_check.py --json >/dev/null
 
+railway-template-packet:
+    scripts/railway_template_packet.py --check
+
 mcp-registry-listing-check:
     scripts/mcp_registry_listing_check.py --json
 
@@ -283,6 +286,9 @@ docs-check:
     test -f .claude/commands/new-strategy.md
     test -f .github/copilot-instructions.md
     test -f .github/workflows/mcp-registry.yml
+    test -f .devcontainer/Dockerfile
+    test -f .devcontainer/devcontainer.json
+    test -f .devcontainer/README.md
     test -f .github/ISSUE_TEMPLATE/agent_task.yml
     test -f .github/ISSUE_TEMPLATE/bug_report.yml
     test -f .github/ISSUE_TEMPLATE/design_review.yml
@@ -450,10 +456,12 @@ docs-check:
     test -f contracts/intelligence/model_gateway_audit.json
     test -f contracts/distribution/registry-launch.json
     test -f contracts/distribution/mcp-registry.json
+    test -f contracts/distribution/railway-template.json
     test -f server.json
     test -f openapi/zero-paper-api.v1.yaml
     test -x scripts/assemble_release_assets.sh
     test -x scripts/install.sh
+    test -x scripts/railway_template_packet.py
     test -x scripts/demo_capture.sh
     test -x scripts/issue_template_check.py
     test -x scripts/label_taxonomy_check.py

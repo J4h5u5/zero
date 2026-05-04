@@ -93,6 +93,9 @@ required=(
   docs/incident-postmortems/README.md
   docs/incident-postmortems/TEMPLATE.md
   .cursor/rules/global.mdc
+  .devcontainer/Dockerfile
+  .devcontainer/devcontainer.json
+  .devcontainer/README.md
   .github/PULL_REQUEST_TEMPLATE.md
   .github/ISSUE_TEMPLATE/agent_task.yml
   .github/ISSUE_TEMPLATE/bug_report.yml
@@ -112,6 +115,7 @@ required=(
   scripts/homebrew_formula_check.py
   scripts/mcp_registry_packet.py
   scripts/mcp_registry_listing_check.py
+  scripts/railway_template_packet.py
   scripts/railway_cli_preflight.py
   scripts/journal_verify.py
   scripts/journal_anchor_cadence.py
@@ -130,6 +134,7 @@ required=(
   contracts/network/stale-profile.html
   contracts/distribution/registry-launch.json
   contracts/distribution/mcp-registry.json
+  contracts/distribution/railway-template.json
   server.json
   examples/network-empty-profile/README.md
   examples/network-empty-profile/build.py
@@ -210,6 +215,13 @@ file_contains "zero.live_trading_evidence.v1" docs/proof/live/live-trading-evide
 file_contains "redacted private live evidence" docs/production-readiness.md
 file_contains "Do not publish this private monorepo wholesale" docs/public-upgrade.md
 file_contains "brew tap zero-intel/zero" README.md
+file_contains "https://zero-production-5214.up.railway.app" README.md
+file_contains "zero.railway_template_packet.v1" contracts/distribution/railway-template.json
+file_contains "ready_for_marketplace_publish" contracts/distribution/railway-template.json
+file_contains "ZERO Paper Runtime" contracts/distribution/railway-template.json
+file_contains "Railway Template Publish Packet" docs/railway-template.md
+file_contains "Open in GitHub Codespaces" README.md
+file_contains "devcontainer" docs/local-development.md
 file_contains "brew tap zero-intel/zero" docs/release.md
 file_contains "The public runtime defaults to paper mode" Formula/zero.rb
 file_contains "Add a deterministic funding-rate adapter fixture" docs/contributor-issue-board.md

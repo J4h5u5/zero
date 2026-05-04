@@ -99,9 +99,18 @@ ZERO is prepared for a Railway template rollout: Dockerfile build,
 `railway.toml`, `/health`, durable `/data` journal volume, Railway doctor,
 redacted deployment evidence packs, and paper-mode live-risk refusal.
 
+Live public paper demo:
+[https://zero-production-5214.up.railway.app](https://zero-production-5214.up.railway.app)
+
 Until the public Railway template URL is issued, deploy from the GitHub repo and
 use [docs/railway-template.md](docs/railway-template.md) as the marketplace
-configuration source of truth.
+configuration source of truth. The current Railway Template Publish Packet is
+tracked in
+[contracts/distribution/railway-template.json](contracts/distribution/railway-template.json).
+
+```bash
+scripts/railway_doctor.py https://zero-production-5214.up.railway.app
+```
 
 ZERO has three non-negotiable product rules:
 
@@ -452,8 +461,25 @@ uvx zero-engine --smoke
 uvx --from zero-engine zero-mcp --smoke
 ```
 
+Container users can run the paper runtime directly from source:
+
+```bash
+docker build -t zero-paper .
+docker run --rm -p 8765:8765 -e PORT=8765 zero-paper
+```
+
 crates.io, Docker Hub, and GHCR remain unpublished until ownership and rollback
 evidence are recorded in [docs/registry-launch.md](docs/registry-launch.md).
+
+## No-Install Contributor Path
+
+Use GitHub Codespaces or any devcontainer-compatible editor to open this repo
+without installing Python, Rust, or `just` locally:
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/zero-intel/zero)
+
+The container installs the editable engine package, Rust CLI dependencies, and
+the local docs gate. See [.devcontainer/README.md](.devcontainer/README.md).
 
 ## Source Quickstart
 
@@ -1183,6 +1209,7 @@ Out of scope:
 - [Proof Packs](proof/README.md)
 - [Railway Template](railway-template.md)
 - [Railway Deploy](railway-deploy.md)
+- [Railway Template Packet](../contracts/distribution/railway-template.json)
 - [Release](release.md)
 - [Release Verification](release-verification.md)
 
@@ -1234,6 +1261,7 @@ Out of scope:
 
 - [Agentic Contribution](agentic-contribution.md)
 - [Contributor Issue Board](contributor-issue-board.md)
+- [Dev Container](../.devcontainer/README.md)
 - [Issue Templates](../.github/ISSUE_TEMPLATE/agent_task.yml)
 - [Label Taxonomy](label-taxonomy.md)
 - [Full LLM Context](llms-full.txt)
@@ -1268,6 +1296,12 @@ python3 -m venv .venv
 source .venv/bin/activate
 just bootstrap
 ```
+
+Use Codespaces if you want a no-install inspection path:
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/zero-intel/zero)
+
+The devcontainer starts in paper mode and runs the docs gate during setup.
 
 ## 1. Run The Paper Engine
 
@@ -1417,6 +1451,11 @@ accounts, or private deployment access.
 - Rust toolchain from `cli/rust-toolchain.toml`
 - `just`
 - Git
+
+If you do not want to install local tools, open the repo in GitHub Codespaces
+or another devcontainer-compatible editor. The devcontainer installs Python,
+Rust, `just`, the editable engine package, and CLI dependencies. See
+[`../.devcontainer/README.md`](../.devcontainer/README.md).
 
 ## First Run
 
@@ -2182,6 +2221,14 @@ custody funds and does not need exchange keys. The deployment is useful for
 operator onboarding, public demos, proof capture, Railway doctor checks, and
 agentic contribution work against a real HTTP runtime.
 
+Current verified public demo:
+[https://zero-production-5214.up.railway.app](https://zero-production-5214.up.railway.app)
+
+The latest Railway Template Publish Packet is committed at
+[`contracts/distribution/railway-template.json`](../contracts/distribution/railway-template.json).
+It records the live demo URL, verified deployment id, evidence bundle path,
+doctor result, required variables, and marketplace publish steps.
+
 ## Common Use Cases
 
 - Paper-mode operator demos with live read-only Hyperliquid mids.
@@ -2235,6 +2282,30 @@ agentic contribution work against a real HTTP runtime.
 | `ZERO_INTELLIGENCE_API_ACCOUNT_ID` | optional | `acct_railway` | Public-safe local account label for reference packets. |
 | `ZERO_INTELLIGENCE_WEBHOOK_SIGNING_KEY` | optional | `${{secret(64, "abcdef0123456789")}}` | Demo HMAC key for webhook fixture signatures. Never reuse production keys. |
 
+## Railway Template Publish Packet
+
+The packet schema is `zero.railway_template_packet.v1`. Regenerate it after any
+template-impacting deployment, Railway variable change, domain change, or
+marketplace copy change:
+
+```bash
+scripts/railway_template_packet.py --output contracts/distribution/railway-template.json
+scripts/railway_template_packet.py --check
+```
+
+Before replacing the README deploy button placeholder with Railway's issued
+template URL, verify the live demo:
+
+```bash
+scripts/railway_doctor.py https://zero-production-5214.up.railway.app
+scripts/deployment_evidence.sh https://zero-production-5214.up.railway.app --railway-logs
+scripts/deployment_evidence_verify.py artifacts/deployment-evidence/<timestamp>
+```
+
+The expected public demo posture is `17 ok / 1 warn / 0 fail`: the warning is
+the tokened paid-scope Intelligence check when no demo bearer token is supplied.
+Live mode must remain refused and risk-increasing actions must remain blocked.
+
 ### Publish Checklist
 
 1. Install and authenticate the Railway CLI:
@@ -2255,7 +2326,8 @@ scripts/railway_cli_preflight.py
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template/<template-code>?utm_medium=integration&utm_source=button&utm_campaign=zero)
 ```
 
-7. Keep [CHANGELOG.md](../CHANGELOG.md) current before merging template-impacting changes to `main`.
+7. Keep [docs/release.md](release.md) and the template packet current before
+   merging template-impacting changes to `main`.
 
 ## Why Deploy ZERO on Railway?
 

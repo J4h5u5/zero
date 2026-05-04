@@ -76,7 +76,11 @@ required_files=(
   "contracts/network/stale-profile.html"
   "contracts/distribution/registry-launch.json"
   "contracts/distribution/mcp-registry.json"
+  "contracts/distribution/railway-template.json"
   "server.json"
+  ".devcontainer/Dockerfile"
+  ".devcontainer/devcontainer.json"
+  ".devcontainer/README.md"
   "examples/network-empty-profile/README.md"
   "examples/network-empty-profile/build.py"
   "examples/network-empty-profile/empty-profile.json"
@@ -139,8 +143,12 @@ contains "Dependency And Supply Chain Policy" docs/dependency-policy.md
 contains "Vulnerability Response" docs/dependency-policy.md
 contains "Homebrew Formula Requirements" docs/distribution.md
 contains "Registry Launch Packet" docs/distribution.md
+contains "Railway Template Channel" docs/distribution.md
+contains "Railway Template Publish Packet" docs/railway-template.md
 contains "scripts/homebrew_formula.py" docs/distribution.md
 contains "zero.registry_launch_packet.v1" docs/registry-launch.md
+contains "zero.railway_template_packet.v1" contracts/distribution/railway-template.json
+contains "ready_for_marketplace_publish" contracts/distribution/railway-template.json
 contains "zero.mcp_registry_packet.v1" docs/mcp-registry.md
 contains "zero.mcp_registry_listing_check.v1" docs/mcp-registry.md
 contains "io.github.zero-intel/zero" docs/mcp-registry.md
@@ -155,6 +163,8 @@ contains "\"channel\": \"container_registry\"" contracts/distribution/registry-l
 contains "brew tap zero-intel/zero" docs/distribution.md
 contains "brew tap zero-intel/zero" docs/release.md
 contains "brew tap zero-intel/zero" README.md
+contains "https://zero-production-5214.up.railway.app" README.md
+contains "Open in GitHub Codespaces" README.md
 contains "Trusted Publishing" docs/distribution.md
 contains "cargo owner" docs/distribution.md
 contains "GitHub artifact attestations" docs/release.md
@@ -332,6 +342,7 @@ python3 -m py_compile scripts/release_evidence.py
 python3 -m py_compile scripts/registry_readiness.py
 python3 -m py_compile scripts/mcp_registry_packet.py
 python3 -m py_compile scripts/mcp_registry_listing_check.py
+python3 -m py_compile scripts/railway_template_packet.py
 python3 -m py_compile scripts/release_provenance.py
 python3 -m py_compile scripts/homebrew_formula.py
 python3 -m py_compile scripts/homebrew_formula_check.py
@@ -363,6 +374,7 @@ rm -rf scripts/__pycache__
 scripts/registry_readiness.py >/dev/null
 scripts/mcp_registry_packet.py --check
 scripts/mcp_registry_listing_check.py --json >/dev/null
+scripts/railway_template_packet.py --check
 PYTHONPATH="$PWD/engine/src" scripts/mcp_transcript.py --check
 scripts/generate_llms_full.py --check
 PYTHONPATH="$PWD/engine/src" scripts/proof_pack.py --check
