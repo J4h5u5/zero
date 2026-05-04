@@ -4,6 +4,10 @@ Railway is the preferred hosted path for ZERO paper mode. It gives operators a
 publicly reachable runtime without introducing ZERO-hosted custody or a private
 control plane.
 
+For marketplace publishing, use [railway-template.md](railway-template.md) as
+the template overview, variable map, volume checklist, and deploy-button source
+of truth.
+
 This deployment is still paper-only:
 
 - no private keys;

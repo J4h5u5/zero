@@ -27,6 +27,7 @@ SOURCES = (
     "docs/agent-architecture.md",
     "docs/cli-quickstart.md",
     "docs/cli-doctor-troubleshooting.md",
+    "docs/railway-template.md",
     "docs/api.md",
     "docs/memory-core.md",
     "docs/genesis.md",

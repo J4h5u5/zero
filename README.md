@@ -29,6 +29,16 @@ just paper-api-smoke
 just public-proof
 ```
 
+## One-Click Paper Rollout
+
+ZERO is prepared for a Railway template rollout: Dockerfile build,
+`railway.toml`, `/health`, durable `/data` journal volume, Railway doctor,
+redacted deployment evidence packs, and paper-mode live-risk refusal.
+
+Until the public Railway template URL is issued, deploy from the GitHub repo and
+use [docs/railway-template.md](docs/railway-template.md) as the marketplace
+configuration source of truth.
+
 ZERO has three non-negotiable product rules:
 
 - The engine is open source and useful without a hosted ZERO control plane.
@@ -112,7 +122,7 @@ ZERO turns that workflow into an explicit operating system:
 - A safety model that makes risk-reducing actions fast and risk-increasing
   actions deliberate.
 - A public proof surface for profiles, leaderboards, and verification.
-- A commercial intelligence layer built from verified autonomous behavior.
+- A free growth-mode intelligence layer built from verified autonomous behavior.
 
 The default mode is paper. Live operation is self-custodial, explicit, and
 guarded by preflight checks.
@@ -125,7 +135,7 @@ guarded by preflight checks.
 | ZERO Terminal | Rust CLI/TUI for setup, diagnostics, state inspection, replay, live cockpit views, and supervised actions. | Open source |
 | ZERO Evolution | Local memory, genesis proposals, research reports, decision-stack review, guardian review, red-team, paper canaries, calibration, promotion plans, local apply receipts, rollback receipts, and evolve loops that let ZERO improve under review. | Memory, genesis, research, decision stack, paper-first evolve gates, local apply, and rollback execution open; protected promotion remains human-reviewed |
 | ZERO Network | Public-safe profiles, empty/active/stale page states, leaderboards, verification badges, profile verification, and deterministic proof-chain packets. | Open source contracts |
-| ZERO Intelligence | Delayed public snapshots plus commercial realtime APIs, history, cohorts, webhooks, exports, and SLAs built from verified autonomous behavior. | Open contracts + paid access |
+| ZERO Intelligence | Delayed public snapshots plus growth-mode free realtime APIs, history, cohorts, webhooks, exports, and future SLAs built from verified autonomous behavior. | Open contracts + free operator-growth access |
 
 ## Capability Boundary
 
@@ -137,7 +147,7 @@ guarded by preflight checks.
 | Live execution | Private operator deployments have live Hyperliquid execution evidence represented by the redacted public packet. New live capital remains operator-owned, self-custodial, and gated by local custody, preflight, journal, kill-switch, reconciliation, and canary policy. |
 | Self-evolution | Local memory, genesis proposal core, research command chain, decision-stack lenses/layers/modifiers, production-parity OODA reporting, and paper-first evolve gates exist now with redacted extraction, append-only journals, guardian classification, hunt/edge/convergence/thesis/score/meta/sharpen reports, public evaluation surfaces, live-shadow fail-closed parity, red-team review, sandbox candidate mutation, paper canary, calibration, promotion plan, rollback plan, promotion verification, explicit local apply, rollback receipts, API readouts, and expanded read-only MCP snapshots for runtime status, parity, health, journal, rejection audit, memory stats, immune state, backtest summary, evidence bundle, and safety catalog. Protected live-code evolution remains human-reviewed. |
 | Public proof | Runnable now through deterministic demo proof packs, redacted Network contracts, deterministic Network proof packs, `zero.live_trading_evidence.v1`, canary bundles, exchange-evidence normalization, recursive checksums, and operator report verification. |
-| Commercial API | Contracted now as ZERO Intelligence; production hosted persistence, billing, warehouse history, and SLAs are commercial work. |
+| Intelligence API | Contracted now as ZERO Intelligence; growth-mode realtime access is free to increase operator density. Future commercial work is higher scale, retention, redistribution, managed persistence, warehouse history, and SLAs. |
 
 ```mermaid
 flowchart LR
@@ -476,11 +486,13 @@ Incident response is covered by
 
 ## Open Core Boundary
 
-ZERO is open infrastructure plus commercial intelligence.
+ZERO is open infrastructure plus free growth-mode intelligence. The future
+business model monetizes scale, retention, redistribution, support, and SLAs,
+not basic operator access while ZERO needs more verified operators.
 
 | Open | Commercial |
 | --- | --- |
-| Runtime engine, safety gates, paper mode, local API, CLI, Docker/Railway deployment, public profile contracts, leaderboards, delayed snapshots, docs, tests, and release tooling. | Realtime Intelligence API, deeper history, cohorts, benchmarks, commercial connectors, higher rate limits, webhooks, bulk exports, redistribution rights, support, reliability commitments, and SLAs. |
+| Runtime engine, safety gates, paper mode, local API, CLI, Docker/Railway deployment, public profile contracts, leaderboards, delayed snapshots, growth-mode realtime Intelligence access, docs, tests, and release tooling. | Future higher limits, deeper history, cohorts, benchmarks, commercial connectors, bulk exports, redistribution rights, support, reliability commitments, and SLAs. |
 
 The open repository must stay useful without a ZERO-hosted control plane. The
 commercial product sells speed, scale, history, reliability, and intelligence
@@ -507,6 +519,7 @@ ZERO is local-first, Railway-first, and Docker-compatible. Operators own their
 deployment project, secrets, exchange credentials, and runtime state.
 
 - [docs/local-development.md](docs/local-development.md)
+- [docs/railway-template.md](docs/railway-template.md)
 - [docs/railway-deploy.md](docs/railway-deploy.md)
 - [docs/distribution.md](docs/distribution.md)
 - [docs/release.md](docs/release.md)

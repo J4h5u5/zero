@@ -20,6 +20,7 @@ Use this bundle for retrieval and coding agents. It is not evidence of live trad
 - `docs/agent-architecture.md`
 - `docs/cli-quickstart.md`
 - `docs/cli-doctor-troubleshooting.md`
+- `docs/railway-template.md`
 - `docs/api.md`
 - `docs/memory-core.md`
 - `docs/genesis.md`
@@ -91,6 +92,16 @@ Run the same checks locally with:
 just paper-api-smoke
 just public-proof
 ```
+
+## One-Click Paper Rollout
+
+ZERO is prepared for a Railway template rollout: Dockerfile build,
+`railway.toml`, `/health`, durable `/data` journal volume, Railway doctor,
+redacted deployment evidence packs, and paper-mode live-risk refusal.
+
+Until the public Railway template URL is issued, deploy from the GitHub repo and
+use [docs/railway-template.md](docs/railway-template.md) as the marketplace
+configuration source of truth.
 
 ZERO has three non-negotiable product rules:
 
@@ -175,7 +186,7 @@ ZERO turns that workflow into an explicit operating system:
 - A safety model that makes risk-reducing actions fast and risk-increasing
   actions deliberate.
 - A public proof surface for profiles, leaderboards, and verification.
-- A commercial intelligence layer built from verified autonomous behavior.
+- A free growth-mode intelligence layer built from verified autonomous behavior.
 
 The default mode is paper. Live operation is self-custodial, explicit, and
 guarded by preflight checks.
@@ -188,7 +199,7 @@ guarded by preflight checks.
 | ZERO Terminal | Rust CLI/TUI for setup, diagnostics, state inspection, replay, live cockpit views, and supervised actions. | Open source |
 | ZERO Evolution | Local memory, genesis proposals, research reports, decision-stack review, guardian review, red-team, paper canaries, calibration, promotion plans, local apply receipts, rollback receipts, and evolve loops that let ZERO improve under review. | Memory, genesis, research, decision stack, paper-first evolve gates, local apply, and rollback execution open; protected promotion remains human-reviewed |
 | ZERO Network | Public-safe profiles, empty/active/stale page states, leaderboards, verification badges, profile verification, and deterministic proof-chain packets. | Open source contracts |
-| ZERO Intelligence | Delayed public snapshots plus commercial realtime APIs, history, cohorts, webhooks, exports, and SLAs built from verified autonomous behavior. | Open contracts + paid access |
+| ZERO Intelligence | Delayed public snapshots plus growth-mode free realtime APIs, history, cohorts, webhooks, exports, and future SLAs built from verified autonomous behavior. | Open contracts + free operator-growth access |
 
 ## Capability Boundary
 
@@ -200,7 +211,7 @@ guarded by preflight checks.
 | Live execution | Private operator deployments have live Hyperliquid execution evidence represented by the redacted public packet. New live capital remains operator-owned, self-custodial, and gated by local custody, preflight, journal, kill-switch, reconciliation, and canary policy. |
 | Self-evolution | Local memory, genesis proposal core, research command chain, decision-stack lenses/layers/modifiers, production-parity OODA reporting, and paper-first evolve gates exist now with redacted extraction, append-only journals, guardian classification, hunt/edge/convergence/thesis/score/meta/sharpen reports, public evaluation surfaces, live-shadow fail-closed parity, red-team review, sandbox candidate mutation, paper canary, calibration, promotion plan, rollback plan, promotion verification, explicit local apply, rollback receipts, API readouts, and expanded read-only MCP snapshots for runtime status, parity, health, journal, rejection audit, memory stats, immune state, backtest summary, evidence bundle, and safety catalog. Protected live-code evolution remains human-reviewed. |
 | Public proof | Runnable now through deterministic demo proof packs, redacted Network contracts, deterministic Network proof packs, `zero.live_trading_evidence.v1`, canary bundles, exchange-evidence normalization, recursive checksums, and operator report verification. |
-| Commercial API | Contracted now as ZERO Intelligence; production hosted persistence, billing, warehouse history, and SLAs are commercial work. |
+| Intelligence API | Contracted now as ZERO Intelligence; growth-mode realtime access is free to increase operator density. Future commercial work is higher scale, retention, redistribution, managed persistence, warehouse history, and SLAs. |
 
 ```mermaid
 flowchart LR
@@ -539,11 +550,13 @@ Incident response is covered by
 
 ## Open Core Boundary
 
-ZERO is open infrastructure plus commercial intelligence.
+ZERO is open infrastructure plus free growth-mode intelligence. The future
+business model monetizes scale, retention, redistribution, support, and SLAs,
+not basic operator access while ZERO needs more verified operators.
 
 | Open | Commercial |
 | --- | --- |
-| Runtime engine, safety gates, paper mode, local API, CLI, Docker/Railway deployment, public profile contracts, leaderboards, delayed snapshots, docs, tests, and release tooling. | Realtime Intelligence API, deeper history, cohorts, benchmarks, commercial connectors, higher rate limits, webhooks, bulk exports, redistribution rights, support, reliability commitments, and SLAs. |
+| Runtime engine, safety gates, paper mode, local API, CLI, Docker/Railway deployment, public profile contracts, leaderboards, delayed snapshots, growth-mode realtime Intelligence access, docs, tests, and release tooling. | Future higher limits, deeper history, cohorts, benchmarks, commercial connectors, bulk exports, redistribution rights, support, reliability commitments, and SLAs. |
 
 The open repository must stay useful without a ZERO-hosted control plane. The
 commercial product sells speed, scale, history, reliability, and intelligence
@@ -570,6 +583,7 @@ ZERO is local-first, Railway-first, and Docker-compatible. Operators own their
 deployment project, secrets, exchange credentials, and runtime state.
 
 - [docs/local-development.md](docs/local-development.md)
+- [docs/railway-template.md](docs/railway-template.md)
 - [docs/railway-deploy.md](docs/railway-deploy.md)
 - [docs/distribution.md](docs/distribution.md)
 - [docs/release.md](docs/release.md)
@@ -1167,6 +1181,7 @@ Out of scope:
 - [CLI Doctor Troubleshooting](cli-doctor-troubleshooting.md)
 - [Demo Terminal](demo-terminal.md)
 - [Proof Packs](proof/README.md)
+- [Railway Template](railway-template.md)
 - [Railway Deploy](railway-deploy.md)
 - [Release](release.md)
 - [Release Verification](release-verification.md)
@@ -2145,6 +2160,101 @@ just paper-api-smoke
 Use `just paper-api-smoke` when changing CLI rendering, API response shape, or
 doctor examples. It starts the local paper API, exercises the CLI path, and
 asserts that live mode still refuses by default.
+````
+
+
+## Source: `docs/railway-template.md`
+
+````markdown
+# Deploy and Host ZERO with Railway
+
+ZERO is an autonomous operating system for self-custodial onchain operations.
+This Railway template runs the public paper runtime: live Hyperliquid prices are
+read-only, execution is simulated, journals are durable, and live-risk endpoints
+fail closed unless an operator-owned local live executor is configured outside
+the template.
+
+## About Hosting ZERO
+
+Hosting ZERO on Railway gives an operator a public paper runtime with a stable
+URL, logs, metrics, health checks, and a persistent journal volume. It does not
+custody funds and does not need exchange keys. The deployment is useful for
+operator onboarding, public demos, proof capture, Railway doctor checks, and
+agentic contribution work against a real HTTP runtime.
+
+## Common Use Cases
+
+- Paper-mode operator demos with live read-only Hyperliquid mids.
+- Public proof capture before sharing a profile or leaderboard claim.
+- Agentic development against a stable remote ZERO runtime.
+- Railway doctor, deployment evidence, and rollback rehearsal practice.
+- ZERO Intelligence contract testing with local aggregate persistence.
+
+## Dependencies for ZERO Hosting
+
+- Railway service sourced from `https://github.com/zero-intel/zero`.
+- Dockerfile build from the repository root.
+- Public HTTP networking enabled for the runtime service.
+- Persistent Railway volume mounted at `/data`.
+- Railway-provided `PORT`; do not hardcode a port.
+
+### Deployment Dependencies
+
+- Railway template docs: https://docs.railway.com/templates
+- Railway template best practices: https://docs.railway.com/templates/best-practices
+- Railway publish/share docs: https://docs.railway.com/templates/publish-and-share
+- ZERO Railway deploy guide: [railway-deploy.md](railway-deploy.md)
+
+### Template Service Settings
+
+| Setting | Value |
+| --- | --- |
+| Template name | `ZERO Paper Runtime` |
+| Service name | `ZERO` |
+| Source | GitHub repository |
+| Repository | `zero-intel/zero` |
+| Branch | `main` |
+| Builder | Dockerfile |
+| Dockerfile path | `Dockerfile` |
+| Start command | from `railway.toml`: `/app/scripts/railway_start.sh` |
+| Healthcheck path | `/health` |
+| Healthcheck timeout | `60` |
+| Public networking | HTTP enabled |
+| Volume mount | `/data` |
+
+### Template Variables
+
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `ZERO_MODE` | yes | `paper` | Keeps the template in paper mode. |
+| `ZERO_JOURNAL_PATH` | yes | `/data/decisions.jsonl` | Durable append-only paper journal on the Railway volume. |
+| `ZERO_HYPERLIQUID_LIVE_PRICES` | yes | `true` | Uses Hyperliquid public mids as read-only market data. |
+| `ZERO_INTELLIGENCE_STORE_PATH` | yes | `/data/zero/intelligence.jsonl` | Durable aggregate store for hosted-compatible Intelligence reference endpoints. |
+| `ZERO_INTELLIGENCE_API_TOKEN` | optional | empty | Disposable demo bearer token for hosted-compatible protected Intelligence routes. |
+| `ZERO_INTELLIGENCE_API_PLAN` | optional | `free` | Reference account plan shown by local hosted-compatible packets. |
+| `ZERO_INTELLIGENCE_API_ACCOUNT_ID` | optional | `acct_railway` | Public-safe local account label for reference packets. |
+| `ZERO_INTELLIGENCE_WEBHOOK_SIGNING_KEY` | optional | `${{secret(64, "abcdef0123456789")}}` | Demo HMAC key for webhook fixture signatures. Never reuse production keys. |
+
+### Publish Checklist
+
+1. Create the template from a Railway project based on this GitHub repository.
+2. Confirm the `/data` volume is attached before the first public deploy.
+3. Publish the template from Railway workspace settings.
+4. Add the live demo project after `scripts/railway_doctor.py "$ZERO_RAILWAY_URL"` passes.
+5. Replace `<template-code>` in the README button with Railway's issued template code:
+
+```md
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template/<template-code>?utm_medium=integration&utm_source=button&utm_campaign=zero)
+```
+
+6. Keep [CHANGELOG.md](../CHANGELOG.md) current before merging template-impacting changes to `main`.
+
+## Why Deploy ZERO on Railway?
+
+Railway gives operators a fast paper-runtime rollout path without asking ZERO
+to host custody infrastructure. Operators keep their own project boundary,
+volume, logs, domains, variables, and billing relationship while ZERO stays
+inspectable, interruptible, and paper-first by default.
 ````
 
 
@@ -4436,7 +4546,7 @@ YYYY-MM-DD-short-slug.md
 ````markdown
 # Open Runtime Boundary
 
-ZERO is an open autonomous operating system plus commercial intelligence.
+ZERO is an open autonomous operating system plus growth-mode free intelligence.
 
 This public repository contains the local-first runtime, operator terminal,
 public proof contracts, and deployment paths that engineers can run, inspect,
@@ -4444,9 +4554,10 @@ test, and extend locally. Deployment should be Railway-first and
 self-custodial: operators own their Railway project, environment variables,
 exchange credentials, and runtime state.
 
-ZERO Intelligence is the commercial product. It sells advantaged access to
-aggregated, verified autonomous behavior through APIs, subscriptions, datasets,
-webhooks, benchmarks, and enterprise support.
+ZERO Intelligence is currently free for verified operators so ZERO can grow the
+operator network and produce better verified behavior. The future commercial
+product sells advantaged scale, retention, redistribution, datasets, webhooks,
+benchmarks, reliability commitments, and enterprise support.
 
 ## Open Source
 
@@ -4461,9 +4572,15 @@ webhooks, benchmarks, and enterprise support.
 - Contributor tests and CI
 - Documentation needed to understand, build, and modify the runtime
 
-## Commercial
+## Growth-Mode Free
 
 - Realtime ZERO Intelligence API
+- Operator onboarding credits
+- Public profiles and leaderboards
+- Delayed public snapshots
+
+## Future Commercial
+
 - Historical intelligence datasets
 - Advanced filters, cohorts, and benchmarks
 - Commercial intelligence connectors and enrichment feeds
@@ -4482,14 +4599,14 @@ webhooks, benchmarks, and enterprise support.
 - Public profiles and leaderboards are part of the public product surface.
 - ZERO Network publication must use redacted proof packets and must not require
   a ZERO-hosted control plane.
-- Delayed ZERO Intelligence snapshots and the local intelligence export
-  contract are public; hosted realtime feeds, history, cohorts, webhooks, bulk
-  exports, and redistribution remain commercial.
+- Delayed ZERO Intelligence snapshots, realtime growth-mode access, and the
+  local intelligence export contract are public-facing; future higher-scale
+  history, cohorts, bulk exports, redistribution, and SLAs remain commercial.
 - Core runtime and venue adapters should be public; commercial connectors should
   enrich, distribute, or integrate ZERO Intelligence rather than gate basic
   runtime operation.
-- Paid features must be based on speed, scale, history, reliability, support, or
-  commercial intelligence access, not on basic runtime use.
+- Future paid features must be based on scale, history, reliability,
+  redistribution, or support, not on basic runtime use or early operator access.
 - A public contributor must be able to run the default test suite from a clean
   checkout.
 
@@ -7441,8 +7558,12 @@ PYTHONPATH="$PWD/engine/src" python3 examples/network-empty-profile/build.py
 ````markdown
 # ZERO Intelligence
 
-ZERO Intelligence is the commercial product built from verified autonomous
-behavior.
+ZERO Intelligence is the data product built from verified autonomous behavior.
+During operator growth, realtime Intelligence access is free so ZERO can
+increase operator density, collect better verified behavior, and make public
+profiles and leaderboards more valuable. Future commercial packaging should
+monetize scale, retention, redistribution, support, and SLAs rather than basic
+operator access.
 
 It is not a hosted deployment product. Operators should be able to run ZERO
 locally, through Docker, or on Railway without paying ZERO and without sending
@@ -7463,9 +7584,16 @@ databases, logs, and billing relationship.
 - Public benchmark pages
 - Delayed or rate-limited public intelligence snapshots
 
-## Commercial Surfaces
+## Growth-Mode Free Surfaces
 
-- Realtime intelligence API
+- Realtime Intelligence API access for verified operators
+- Public profiles and leaderboards
+- Public verification badges
+- Delayed and rate-limited public intelligence snapshots
+- Hosted-compatible Railway/Docker contract testing
+
+## Future Commercial Surfaces
+
 - Historical decision and risk datasets
 - Advanced filters, cohorts, and benchmark analytics
 - Commercial intelligence connectors and enrichment feeds
@@ -7507,19 +7635,21 @@ operation.
 
 ## Packaging
 
-- Free: runtime, CLI, public profiles, public leaderboards, delayed snapshots,
-  and low API quota.
-- Pro Operator: subscription for higher API quota, alerts, webhooks, longer
-  history, saved views, and profile verification features.
-- Team/Fund: subscription plus usage for team API keys, cohort analytics,
-  realtime feeds, exports, and private benchmarks.
-- Enterprise: contract pricing for SLOs, support, compliance needs, custom
-  retention, and commercial redistribution.
+- Growth mode: runtime, CLI, public profiles, public leaderboards, delayed
+  snapshots, realtime Intelligence API access, hosted-compatible Railway
+  contracts, and onboarding credits are free for verified operators.
+- Future operator plans: higher API quota, alerts, webhooks, longer history,
+  saved views, and profile verification features.
+- Future teams/funds: team API keys, cohort analytics, bulk exports, private
+  benchmarks, and redistribution rights.
+- Future enterprise: SLOs, support, compliance needs, custom retention, and
+  commercial redistribution.
 
 ## Hosted API Shape
 
-The paid hosted API should use bearer API keys, explicit scopes, usage events,
-and standard rate-limit headers. The checked contract fixture lives at
+The hosted API should use bearer API keys, explicit scopes, usage events, and
+standard rate-limit headers even while access is free in growth mode. The
+checked contract fixture lives at
 [contracts/intelligence/commercial.json](../contracts/intelligence/commercial.json).
 
 The public server now includes a reference implementation of the hosted API
@@ -7570,9 +7700,9 @@ ZERO_INTELLIGENCE_WEBHOOK_SIGNING_KEY=...
 ZERO_INTELLIGENCE_STORE_PATH=/data/zero/intelligence.jsonl
 ```
 
-The reference implementation enforces paid scopes when a token is configured,
-emits real `x-zero-ratelimit-*` headers, and returns webhook signature fixtures
-with:
+The reference implementation enforces protected scopes when a token is
+configured, emits real `x-zero-ratelimit-*` headers, and returns webhook
+signature fixtures with:
 
 ```text
 x-zero-signature-timestamp
@@ -7625,8 +7755,9 @@ warehouse without changing the public API contract.
 - Model gateway costs must come from operator-configured prices or provider
   usage metadata; the public runtime must not bake stale vendor pricing into
   source code.
-- Paid intelligence should monetize speed, scale, history, reliability, and
-  commercial access, not basic runtime use.
+- Growth-mode intelligence should remain free for operator density.
+- Future paid intelligence should monetize scale, history, reliability,
+  redistribution, and support, not basic runtime use.
 - Core runtime and venue adapters should remain public. Commercial connectors
   should exist for intelligence enrichment, partner integrations, redistribution,
   and enterprise data delivery.
@@ -7634,11 +7765,12 @@ warehouse without changing the public API contract.
 ## Flywheel
 
 ```text
-Open runtime -> verified behavior -> public network proof -> paid intelligence
+Open runtime -> verified behavior -> public network proof -> Intelligence
 ```
 
 The runtime creates behavior. The network verifies behavior. ZERO Intelligence
-turns verified behavior into a commercial API and subscription business.
+turns verified behavior into free operator utility first, then future
+commercial scale, retention, redistribution, and SLA products.
 ````
 
 

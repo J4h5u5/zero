@@ -1,6 +1,6 @@
 # Open Runtime Boundary
 
-ZERO is an open autonomous operating system plus commercial intelligence.
+ZERO is an open autonomous operating system plus growth-mode free intelligence.
 
 This public repository contains the local-first runtime, operator terminal,
 public proof contracts, and deployment paths that engineers can run, inspect,
@@ -8,9 +8,10 @@ test, and extend locally. Deployment should be Railway-first and
 self-custodial: operators own their Railway project, environment variables,
 exchange credentials, and runtime state.
 
-ZERO Intelligence is the commercial product. It sells advantaged access to
-aggregated, verified autonomous behavior through APIs, subscriptions, datasets,
-webhooks, benchmarks, and enterprise support.
+ZERO Intelligence is currently free for verified operators so ZERO can grow the
+operator network and produce better verified behavior. The future commercial
+product sells advantaged scale, retention, redistribution, datasets, webhooks,
+benchmarks, reliability commitments, and enterprise support.
 
 ## Open Source
 
@@ -25,9 +26,15 @@ webhooks, benchmarks, and enterprise support.
 - Contributor tests and CI
 - Documentation needed to understand, build, and modify the runtime
 
-## Commercial
+## Growth-Mode Free
 
 - Realtime ZERO Intelligence API
+- Operator onboarding credits
+- Public profiles and leaderboards
+- Delayed public snapshots
+
+## Future Commercial
+
 - Historical intelligence datasets
 - Advanced filters, cohorts, and benchmarks
 - Commercial intelligence connectors and enrichment feeds
@@ -46,14 +53,14 @@ webhooks, benchmarks, and enterprise support.
 - Public profiles and leaderboards are part of the public product surface.
 - ZERO Network publication must use redacted proof packets and must not require
   a ZERO-hosted control plane.
-- Delayed ZERO Intelligence snapshots and the local intelligence export
-  contract are public; hosted realtime feeds, history, cohorts, webhooks, bulk
-  exports, and redistribution remain commercial.
+- Delayed ZERO Intelligence snapshots, realtime growth-mode access, and the
+  local intelligence export contract are public-facing; future higher-scale
+  history, cohorts, bulk exports, redistribution, and SLAs remain commercial.
 - Core runtime and venue adapters should be public; commercial connectors should
   enrich, distribute, or integrate ZERO Intelligence rather than gate basic
   runtime operation.
-- Paid features must be based on speed, scale, history, reliability, support, or
-  commercial intelligence access, not on basic runtime use.
+- Future paid features must be based on scale, history, reliability,
+  redistribution, or support, not on basic runtime use or early operator access.
 - A public contributor must be able to run the default test suite from a clean
   checkout.
 
