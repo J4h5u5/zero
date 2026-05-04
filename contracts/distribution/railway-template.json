@@ -24,7 +24,7 @@
     "template_docs_name_public_demo": true,
     "template_icon_present": true
   },
-  "generated_at": "2026-05-04T18:40:00Z",
+  "generated_at": "2026-05-04T19:13:25Z",
   "marketplace": {
     "create_flow": "Project Settings -> Generate Template from Project",
     "partner_application_url": "https://railway.com/partners",
@@ -66,8 +66,8 @@
       "fail": 0,
       "ok": true
     },
-    "latest_evidence_bundle": "artifacts/deployment-evidence/20260504T183948Z",
-    "latest_verified_deployment": "4eb07a77-9fc1-4e68-b5ca-6de75057fa3d",
+    "latest_evidence_bundle": "artifacts/deployment-evidence/20260504T191325Z",
+    "latest_verified_deployment": "6c0de989-efc5-4a3b-94e0-1e400210d5e3",
     "partner_application": "prepared_not_submitted",
     "partner_application_packet": "docs/railway-partner.md",
     "project": "fabulous-enchantment",

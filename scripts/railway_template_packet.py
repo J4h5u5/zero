@@ -12,7 +12,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "contracts" / "distribution" / "railway-template.json"
 SCHEMA_VERSION = "zero.railway_template_packet.v1"
-GENERATED_AT = "2026-05-04T18:40:00Z"
+GENERATED_AT = "2026-05-04T19:13:25Z"
 PUBLIC_DEMO_URL = "https://zero-production-5214.up.railway.app"
 
 
@@ -73,8 +73,8 @@ def build_packet() -> dict[str, Any]:
             "project": "fabulous-enchantment",
             "service": "zero",
             "environment": "production",
-            "latest_verified_deployment": "4eb07a77-9fc1-4e68-b5ca-6de75057fa3d",
-            "latest_evidence_bundle": "artifacts/deployment-evidence/20260504T183948Z",
+            "latest_verified_deployment": "6c0de989-efc5-4a3b-94e0-1e400210d5e3",
+            "latest_evidence_bundle": "artifacts/deployment-evidence/20260504T191325Z",
             "doctor_summary": {"ok": 17, "warn": 1, "fail": 0},
             "evidence_verify": {"ok": True, "checks": 60, "fail": 0},
             "partner_application": "prepared_not_submitted",
