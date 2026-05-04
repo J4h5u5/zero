@@ -46,8 +46,8 @@ curl -fsS "${API}/v2/status" | "${PYTHON_BIN}" -m json.tool >/dev/null
 
 (
   cd "${ROOT}/cli"
-  cargo run -q -p zero -- --api "${API}" doctor >/tmp/zero-paper-api-doctor.txt
-  cargo run -q -p zero -- --api "${API}" run status >/tmp/zero-paper-api-status.txt
+  cargo run -q -p zero-os -- --api "${API}" doctor >/tmp/zero-paper-api-doctor.txt
+  cargo run -q -p zero-os -- --api "${API}" run status >/tmp/zero-paper-api-status.txt
 )
 
 curl -fsS \
@@ -317,9 +317,9 @@ OPERATOR_DIR="$(mktemp -d)"
 
 (
   cd "${ROOT}/cli"
-  cargo run -q -p zero -- --api "${API}" run positions >/tmp/zero-paper-api-positions.txt
-  cargo run -q -p zero -- --api "${API}" run live-cockpit >/tmp/zero-paper-api-live-cockpit.txt
-  cargo run -q -p zero -- --api "${API}" run immune >/tmp/zero-paper-api-immune.txt
+  cargo run -q -p zero-os -- --api "${API}" run positions >/tmp/zero-paper-api-positions.txt
+  cargo run -q -p zero-os -- --api "${API}" run live-cockpit >/tmp/zero-paper-api-live-cockpit.txt
+  cargo run -q -p zero-os -- --api "${API}" run immune >/tmp/zero-paper-api-immune.txt
 )
 
 grep -q "BTC" /tmp/zero-paper-api-positions.txt

@@ -47,7 +47,7 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd "$script_dir/.." && pwd)"
 
 echo "building zero under --profile $profile ..." >&2
-( cd "$repo_root" && cargo build -p zero --profile "$profile" ) >/dev/null
+( cd "$repo_root" && cargo build -p zero-os --profile "$profile" ) >/dev/null
 
 # `cargo build --profile release-small` writes to
 # target/release-small/ regardless of host triple when no

@@ -62,9 +62,9 @@ In terminal 2:
 
 ```bash
 cd cli
-cargo run -q -p zero -- --api http://127.0.0.1:8765 doctor
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run status
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run risk
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 doctor
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run status
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run risk
 ```
 
 Expected shape:

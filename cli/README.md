@@ -201,7 +201,7 @@ All four must pass. Additional perf and doc gates
 ```bash
 # Perf tripwires — release-mode regression guards.
 cargo test -p zero-operator-state --release classifier_tick_under_budget -- --include-ignored
-cargo test -p zero --test version_startup --release -- --include-ignored
+cargo test -p zero-os --test version_startup --release -- --include-ignored
 
 # Full criterion distribution.
 cargo bench -p zero-operator-state
@@ -210,7 +210,7 @@ cargo bench -p zero-operator-state
 ./scripts/idle_rss_check.sh --profile release-small
 
 # Command-reference regeneration (CI lane enforces freshness).
-ZERO_REGENERATE_DOCS=1 cargo test -p zero --test commands_doc
+ZERO_REGENERATE_DOCS=1 cargo test -p zero-os --test commands_doc
 ```
 
 ### Honesty discipline

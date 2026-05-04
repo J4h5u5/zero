@@ -28,13 +28,13 @@
 //! Run it explicitly:
 //!
 //! ```bash
-//! cargo test --release -p zero --test version_startup -- --ignored --nocapture
+//! cargo test --release -p zero-os --test version_startup -- --ignored --nocapture
 //! ```
 //!
 //! Or with the small-size profile to verify the shipped binary:
 //!
 //! ```bash
-//! cargo test --profile release-small -p zero --test version_startup \
+//! cargo test --profile release-small -p zero-os --test version_startup \
 //!     -- --ignored --nocapture
 //! ```
 //!

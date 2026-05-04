@@ -58,7 +58,7 @@
 //! For all of these, the fix is:
 //!
 //! ```bash
-//! ZERO_REGENERATE_DOCS=1 cargo test -p zero --test commands_doc
+//! ZERO_REGENERATE_DOCS=1 cargo test -p zero-os --test commands_doc
 //! git diff docs/commands.md   # review the new shape
 //! git add docs/commands.md
 //! ```
@@ -133,7 +133,7 @@ fn generate_commands_md() -> String {
          subcommand in `crates/zero/src/main.rs`:\n\
          \n\
          ```bash\n\
-         ZERO_REGENERATE_DOCS=1 cargo test -p zero --test commands_doc\n\
+         ZERO_REGENERATE_DOCS=1 cargo test -p zero-os --test commands_doc\n\
          ```\n\
          \n\
          The `commands_doc_is_fresh` test runs in the default \
@@ -239,7 +239,7 @@ fn commands_doc_is_fresh() {
     let actual = std::fs::read_to_string(&path).unwrap_or_else(|e| {
         panic!(
             "{} missing or unreadable ({e}). Run: \
-             ZERO_REGENERATE_DOCS=1 cargo test -p zero --test commands_doc",
+             ZERO_REGENERATE_DOCS=1 cargo test -p zero-os --test commands_doc",
             path.display(),
         )
     });
@@ -253,7 +253,7 @@ fn commands_doc_is_fresh() {
         panic!(
             "docs/commands.md is stale ({actual_lines} lines on disk vs \
              {expected_lines} lines generated).\n\
-             Fix: ZERO_REGENERATE_DOCS=1 cargo test -p zero --test commands_doc\n\
+             Fix: ZERO_REGENERATE_DOCS=1 cargo test -p zero-os --test commands_doc\n\
              Then: git add docs/commands.md && git commit"
         );
     }

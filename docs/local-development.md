@@ -73,8 +73,8 @@ Then inspect it from the CLI in another terminal:
 
 ```bash
 cd cli
-cargo run -p zero -- --api http://127.0.0.1:8765 doctor
-cargo run -p zero -- --api http://127.0.0.1:8765 run status
+cargo run -p zero-os -- --api http://127.0.0.1:8765 doctor
+cargo run -p zero-os -- --api http://127.0.0.1:8765 run status
 ```
 
 The same integration check is available as:

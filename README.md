@@ -72,7 +72,7 @@ In another terminal:
 
 ```bash
 cd zero/cli
-cargo run -q -p zero -- --api http://127.0.0.1:8765
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765
 ```
 
 Inside the terminal, press `Ctrl+5` or run `/cockpit-mode` for the live
@@ -451,9 +451,9 @@ Run the CLI:
 
 ```bash
 cd cli
-cargo run -q -p zero -- --api http://127.0.0.1:8765 doctor
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run status
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run risk
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 doctor
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run status
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run risk
 ```
 
 Run the full local gate:
