@@ -70,6 +70,39 @@ def test_momentum_strategy_plugin_example_runs_from_repo_root() -> None:
     assert payload["decisions"][0]["source"] == "strategy-plugin:paper-momentum"
 
 
+def test_paper_sizing_policy_example_runs_from_repo_root() -> None:
+    repo_root = Path(__file__).resolve().parents[2]
+    result = subprocess.run(
+        [sys.executable, "examples/paper-sizing-policy/run.py"],
+        cwd=repo_root,
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    payload = json.loads(result.stdout)
+    decisions = {decision["name"]: decision for decision in payload["decisions"]}
+
+    assert payload["mode"] == "paper"
+    assert payload["policy"] == "deterministic-paper-sizing"
+    assert payload["submits_orders"] is False
+
+    capped = decisions["capped-btc"]
+    assert capped["action"] == "cap"
+    assert capped["input"]["notional_usd"] == 1200
+    assert capped["output"]["notional_usd"] == 500
+
+    rejected = decisions["low-confidence-eth"]
+    assert rejected["action"] == "reject"
+    assert rejected["output"] is None
+    assert rejected["reason"] == "confidence below minimum"
+
+    reduce_only = decisions["reduce-only-btc"]
+    assert reduce_only["action"] == "preserve"
+    assert reduce_only["input"] == reduce_only["output"]
+    assert reduce_only["output"]["reduce_only"] is True
+
+
 def test_network_leaderboard_example_runs_from_repo_root() -> None:
     repo_root = Path(__file__).resolve().parents[2]
     result = subprocess.run(
