@@ -180,6 +180,9 @@ contains "zero.evolve.promotion_verification.v1" docs/evolve.md
 contains "zero.evolve.apply_receipt.v1" docs/evolve.md
 contains "zero.evolve.rollback_receipt.v1" docs/evolve.md
 contains "zero.research.report.v1" docs/research.md
+contains "zero.research.source_classification.v1" docs/research.md
+contains "zero.research.source_quality.v1" docs/research.md
+contains "test_research_source_classifier_rejects_prompt_injection_without_echoing_raw_text" docs/failure-modes-autonomous-loop.md
 contains "zero.decision.stack.v1" docs/decision-stack.md
 contains "zero_get_genesis_proposals" docs/mcp/transcript.jsonl
 contains "zero://genesis/proposals" docs/mcp/transcript.jsonl

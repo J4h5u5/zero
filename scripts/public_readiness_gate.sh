@@ -196,6 +196,9 @@ file_contains "zero.evolve.apply_receipt.v1" docs/evolve.md
 file_contains "zero.evolve.rollback_receipt.v1" docs/evolve.md
 file_contains "zero.runtime.production_parity.v1" docs/runtime-bus.md
 file_contains "zero.research.report.v1" docs/research.md
+file_contains "zero.research.source_classification.v1" docs/research.md
+file_contains "zero.research.source_quality.v1" docs/research.md
+file_contains "test_research_source_classifier_rejects_prompt_injection_without_echoing_raw_text" docs/failure-modes-autonomous-loop.md
 file_contains "zero.decision.stack.v1" docs/decision-stack.md
 file_contains "zero.deployment_identity_evidence.v1" docs/deployment-identity.md
 file_contains "zero.network.profile_verification.v1" docs/zero-network.md

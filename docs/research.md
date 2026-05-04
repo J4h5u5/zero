@@ -5,7 +5,9 @@ loop. It gives operators and coding agents the missing analysis layer between
 local memory, genesis proposals, and evolve gates.
 
 The report artifact uses `zero.research.report.v1`. The API snapshot uses
-`zero.research.snapshot.v1`.
+`zero.research.snapshot.v1`. Source trust decisions use
+`zero.research.source_classification.v1`; aggregate source-quality records use
+`zero.research.source_quality.v1`.
 
 ## Commands
 
@@ -29,9 +31,25 @@ Research is paper-only and read-only.
 - It does not claim live PnL or live edge.
 - It removes private keys, wallet material, venue order ids, raw venue payloads,
   prices, sizes, quantities, and notionals from public artifacts.
+- It classifies source trust before a source can influence paper research.
+  Prompt-injected, untrusted, unsupported performance, or risk-increasing
+  claims are rejected into quarantine metadata without echoing raw source text.
 
 Live research conclusions require signed operator evidence before they can be
 used as public proof.
+
+## Source Quality
+
+Every research report includes `source_quality`:
+
+- `accepted`: fixture, signed-operator, or repository-document sources that can
+  be used for paper research;
+- `rejected`: untrusted or adversarial sources that can only be used for
+  quarantine records and safety review;
+- `raw_content_included=false`: public reports never carry raw source text.
+
+The adversarial fixture coverage lives in
+`engine/tests/test_research.py::test_research_source_classifier_rejects_prompt_injection_without_echoing_raw_text`.
 
 ## Local Example
 

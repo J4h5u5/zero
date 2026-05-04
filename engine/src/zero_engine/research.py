@@ -16,6 +16,7 @@ JsonMap = dict[str, Any]
 
 RESEARCH_SNAPSHOT_SCHEMA_VERSION = "zero.research.snapshot.v1"
 RESEARCH_REPORT_SCHEMA_VERSION = "zero.research.report.v1"
+RESEARCH_SOURCE_CLASSIFICATION_SCHEMA_VERSION = "zero.research.source_classification.v1"
 RESEARCH_STATUS_SCHEMA_VERSION = "zero.research.status.v1"
 COMMANDS = ("hunt", "edge", "convergence", "thesis", "score", "meta", "sharpen")
 FORBIDDEN_OUTPUT_KEYS = {
@@ -29,6 +30,24 @@ FORBIDDEN_OUTPUT_KEYS = {
     "raw_payload",
     "wallet_address",
 }
+INJECTION_MARKERS = {
+    "bypass": "requests_control_bypass",
+    "disable risk": "requests_control_bypass",
+    "disable safety": "requests_control_bypass",
+    "ignore previous": "prompt_injection",
+    "ignore system": "prompt_injection",
+    "private key": "secret_material_claim",
+    "seed phrase": "secret_material_claim",
+    "system prompt": "prompt_injection",
+}
+UNSUPPORTED_CLAIM_MARKERS = {
+    "100% win": "unsupported_performance_claim",
+    "guaranteed pnl": "unsupported_performance_claim",
+    "guaranteed profit": "unsupported_performance_claim",
+    "live edge proven": "unsupported_live_claim",
+    "place live order": "risk_increasing_instruction",
+}
+TRUSTED_SOURCE_TYPES = {"fixture", "operator_signed", "repo_doc"}
 
 
 @dataclass(frozen=True)
@@ -135,6 +154,87 @@ def decision_stats(decisions: Iterable[Mapping[str, Any]]) -> JsonMap:
         "acceptance_rate": round(len(allowed) / len(rows), 4) if rows else 0.0,
         "symbols": dict(sorted(symbols.items())),
         "rejection_reasons": dict(sorted(reasons.items())),
+    }
+
+
+def classify_research_source(source: Mapping[str, Any]) -> JsonMap:
+    """Classify a research source without echoing raw source material."""
+
+    source_type = str(source.get("source_type") or "unknown").strip().lower()
+    source_id = str(source.get("id") or source.get("path") or "unlabeled-source").strip()
+    claims = source.get("claims", [])
+    if isinstance(claims, str):
+        claim_values = [claims]
+    elif isinstance(claims, Iterable):
+        claim_values = [str(claim) for claim in claims]
+    else:
+        claim_values = []
+    source_text = " ".join(
+        [
+            source_id,
+            str(source.get("title") or ""),
+            str(source.get("summary") or ""),
+            *claim_values,
+        ]
+    ).lower()
+
+    reasons: list[str] = []
+    for marker, reason in {**INJECTION_MARKERS, **UNSUPPORTED_CLAIM_MARKERS}.items():
+        if marker in source_text and reason not in reasons:
+            reasons.append(reason)
+    if source_type not in TRUSTED_SOURCE_TYPES:
+        reasons.append("untrusted_source_type")
+    if not claim_values and source_type not in {"fixture", "repo_doc"}:
+        reasons.append("missing_claims")
+
+    accepted = not reasons
+    return {
+        "schema_version": RESEARCH_SOURCE_CLASSIFICATION_SCHEMA_VERSION,
+        "source_id": source_id,
+        "source_type": source_type,
+        "source_hash": stable_hash(dict(source)),
+        "decision": "accepted" if accepted else "rejected",
+        "trusted": accepted,
+        "reasons": reasons,
+        "raw_content_included": False,
+        "allowed_uses": (
+            ["paper_research", "genesis_context"]
+            if accepted
+            else ["quarantine_record", "safety_review"]
+        ),
+    }
+
+
+def classify_fixture_sources(root: Path) -> JsonMap:
+    sources = [
+        {
+            "id": "paper-candles-fixture",
+            "source_type": "fixture",
+            "path": "examples/paper-trading/candles.jsonl",
+            "claims": ["deterministic public candle fixture"],
+        },
+        {
+            "id": "memory-decisions-fixture",
+            "source_type": "fixture",
+            "path": "examples/memory-core/decisions.jsonl",
+            "claims": ["deterministic public paper decision fixture"],
+        },
+        {
+            "id": "research-doc-boundary",
+            "source_type": "repo_doc",
+            "path": "docs/research.md",
+            "claims": ["research is paper-only and read-only"],
+        },
+    ]
+    classifications = [classify_research_source(source) for source in sources]
+    return {
+        "schema_version": "zero.research.source_quality.v1",
+        "mode": "paper-only",
+        "raw_content_included": False,
+        "root_hash": stable_hash({"sources": [source["path"] for source in sources]}),
+        "accepted": sum(1 for item in classifications if item["decision"] == "accepted"),
+        "rejected": sum(1 for item in classifications if item["decision"] == "rejected"),
+        "classifications": classifications,
     }
 
 
@@ -368,6 +468,7 @@ def build_report(repo_root: str | Path, *, now: datetime | None = None) -> JsonM
         command_reports["convergence"], command_reports["edge"], generated_at=generated_at
     )
     command_reports["meta"] = meta(command_reports, generated_at=generated_at)
+    source_quality = classify_fixture_sources(root)
     report = {
         "schema_version": RESEARCH_REPORT_SCHEMA_VERSION,
         "generated_at": isoformat(generated_at),
@@ -388,6 +489,7 @@ def build_report(repo_root: str | Path, *, now: datetime | None = None) -> JsonM
                 "examples/memory-core/decisions.jsonl",
             ],
         },
+        "source_quality": source_quality,
         "reports": command_reports,
         "privacy": privacy(),
     }
@@ -416,7 +518,11 @@ def snapshot_from_fixture(repo_root: str | Path, *, now: datetime | None = None)
             "minimum_sample_met": report["reports"]["edge"]["minimum_sample_met"],
             "convergence_status": report["reports"]["convergence"]["status"],
             "proposal_count": len(report["reports"]["sharpen"]["proposals"]),
+            "source_classifications": report["source_quality"]["accepted"]
+            + report["source_quality"]["rejected"],
+            "rejected_sources": report["source_quality"]["rejected"],
         },
+        "source_quality": report["source_quality"],
         "reports": report["reports"],
         "privacy": report["privacy"],
         "report_hash": report["report_hash"],

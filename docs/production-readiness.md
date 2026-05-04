@@ -57,7 +57,10 @@ covered by public-safe external anchor packets that can require
 Rekor/OpenTimestamps/RFC3161/public-chain receipt references.
 The core safety gates now have bounded property-based coverage for risk-budget
 invariants, malformed Hyperliquid payloads, memory staleness, dry-run order
-validation, and model-gateway retry/privacy behavior. Journal-head anchoring now
+validation, model-gateway retry/privacy behavior, and research-source
+classification. The research chain rejects prompt-injected, unsupported,
+untrusted, or risk-increasing external claims into non-raw quarantine metadata
+before they can influence genesis or evolve context. Journal-head anchoring now
 has a periodic operation that creates or reuses external anchor packets, fails
 closed when live evidence requires an external receipt, and verifies cadence
 state. ZERO should not claim the final autonomous trust moat until the MCP
