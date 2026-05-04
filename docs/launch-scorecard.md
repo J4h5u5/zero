@@ -118,10 +118,10 @@ malformed-input paths.
 ## Intentionally Not Shipped
 
 - Hosted ZERO Network profile pages, signed identity verification, and production ingestion persistence
-- Production hosted realtime ZERO Intelligence API service
+- Production hosted growth-mode ZERO Intelligence API service
 - Production hosted historical intelligence warehouse
-- Hosted intelligence ingestion persistence, billing provider integration, and
-  signed webhook delivery infrastructure
+- Hosted intelligence ingestion persistence, abuse controls, commercial terms,
+  and signed webhook delivery infrastructure
 - Commercial intelligence connectors
 - Enterprise support and SLAs
 

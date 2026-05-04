@@ -112,6 +112,7 @@ required=(
   scripts/homebrew_formula_check.py
   scripts/mcp_registry_packet.py
   scripts/mcp_registry_listing_check.py
+  scripts/railway_cli_preflight.py
   scripts/journal_verify.py
   scripts/journal_anchor_cadence.py
   scripts/stale_artifact_check.sh
@@ -214,6 +215,7 @@ file_contains "The public runtime defaults to paper mode" Formula/zero.rb
 file_contains "Add a deterministic funding-rate adapter fixture" docs/contributor-issue-board.md
 file_contains "Add Homebrew rollback verification docs" docs/contributor-issue-board.md
 file_contains "zero.registry_launch_packet.v1" contracts/distribution/registry-launch.json
+file_contains "zero.railway_cli_preflight.v1" scripts/railway_cli_preflight.py
 file_contains "package_registries_enabled" contracts/distribution/registry-launch.json
 file_contains "zero.mcp_registry_packet.v1" contracts/distribution/mcp-registry.json
 file_contains "zero.mcp_registry_listing_check.v1" docs/mcp-registry.md

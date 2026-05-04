@@ -8,9 +8,9 @@ The current public repo is strong as an open-source product page, contributor
 surface, CLI, paper runtime, and safety-first launch artifact. It is not yet a
 complete autonomous real-capital operating system. The remaining work is
 runtime truth, live exchange evidence, multi-operator isolation, public Network
-ingestion, commercial Intelligence infrastructure, and the public
-self-evolution loop: memory, research, genesis, guardian review, red-team,
-canary, calibration, and evolve.
+ingestion, growth-mode Intelligence infrastructure, future commercial scale
+packaging, and the public self-evolution loop: memory, research, genesis,
+guardian review, red-team, canary, calibration, and evolve.
 
 ## North Star
 
@@ -39,9 +39,9 @@ ZERO reaches 100/100 when a serious operator can:
 - learn from local outcomes through memory, research reports, genesis
   proposals, paper canaries, calibration, and reviewable promotion gates;
 - opt into public ZERO Network publishing without leaking secrets;
-- consume delayed public ZERO Intelligence snapshots for free;
-- pay for realtime ZERO Intelligence API access when speed, history, scale,
-  webhooks, redistribution rights, or support matter.
+- consume delayed and realtime ZERO Intelligence in growth mode for free;
+- move to future commercial ZERO Intelligence packaging only when higher
+  limits, deeper history, webhooks, redistribution rights, or support matter.
 
 ## Product Boundary
 
@@ -61,7 +61,7 @@ Open:
 
 Commercial:
 
-- realtime ZERO Intelligence API
+- higher-scale ZERO Intelligence API access after growth-mode free access
 - historical intelligence datasets
 - cohorts, benchmarks, webhooks, exports, redistribution rights, SLAs, and
   enterprise support
@@ -86,7 +86,7 @@ speed, scale, history, and reliability.
 | Observability and audit | 99 | checksum-chained runtime bus, hash-chained signable decision journal, local timestamp binding, external anchor packet, periodic anchor-cadence operation, verifier, and signed evidence bundles exist; metrics backend and log drains remain |
 | Security and custody | 91 | external review, key-handling drill evidence |
 | ZERO Network | 82 | deterministic public proof-chain pack plus profile identity verifier exist; hosted identity service, public pages, and production ingestion service remain |
-| ZERO Intelligence | 78 | durable JSONL hosted-reference persistence exists; billing provider, warehouse backend, terms, and SLAs remain |
+| ZERO Intelligence | 82 | durable JSONL hosted-reference persistence and growth-mode free access exist; hosted warehouse backend, abuse controls, terms, retention, and SLA policy remain |
 | Release and distribution | 100 | public Homebrew repo tap, PyPI `zero-engine`, and MCP Registry listing exist; crates/container registry ownership remains optional external distribution work |
 | Operator docs | 98 | third-party review and optional raw exchange disclosure |
 
@@ -529,8 +529,8 @@ Current progress:
   coverage, and docs.
 
 Remaining scope before Cycle 24: production hosted service persistence,
-API-key issuer, billing provider integration, warehouse-backed history,
-commercial terms, retention policy, and signed hosted identity verification.
+API-key issuer, warehouse-backed history, abuse controls, commercial terms,
+retention policy, SLA policy, and signed hosted identity verification.
 
 ### Cycle 24: Production Deployment And Remote Operations
 
@@ -571,7 +571,7 @@ Current progress:
 - The doctor checks health, recovery durability, market data source, metrics,
   immune state, live-preflight refusal, live cockpit refusal, public Network
   privacy, delayed Intelligence privacy, hosted-compatible rate-limit headers,
-  paid-scope fail-closed behavior, and optional tokened paid history access.
+  protected-scope fail-closed behavior, and optional tokened history access.
 - Local paper API smoke and Railway smoke now execute the same doctor and
   evidence collector, failing CI on any failed deployment check or leaked trace
   data in the evidence pack.

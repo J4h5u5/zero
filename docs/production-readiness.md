@@ -96,7 +96,7 @@ launch work, not missing public-runtime contracts.
 | Operator safety | 100 | Risk-reducing commands are friction-exempt and risk-increasing commands require interactive friction. |
 | Engine integration | 100 | HTTP, WebSocket, mock engine, contract tests, Rust client decoding for production-parity OODA reports, live receipt packets, live canary policy packets, `/runtime-parity`, `/live-receipts`, and `/live-canary` operator rendering, live risk-reducer endpoints, and redacted private live execution evidence exist. Raw accepted canary records remain external. |
 | Install path | 100 | Release installer exists with checksum and attestation verification, `v0.1.2` was installed from the public GitHub Release into a temporary bin directory, the public Homebrew repo tap installs and tests `zero` from the checksummed GitHub Release asset, and PyPI serves `zero-engine` for agent/MCP installs. crates.io, Docker Hub, and GHCR remain unpublished pending ownership proof. |
-| Diagnostics | 100 | Doctor, JSON output, exit codes, rate-budget checks, operator/credential partition checks, live-preflight diagnostics, live-cockpit next-action/operator rendering, Railway remote doctor, deployment evidence verification, deployment identity verification, deployment evidence log capture/signing, rollback rehearsal checks, paid-scope fail-closed checks, and live-control refusals are covered. External production examples against a linked Railway project remain operations evidence. |
+| Diagnostics | 100 | Doctor, JSON output, exit codes, rate-budget checks, operator/credential partition checks, live-preflight diagnostics, live-cockpit next-action/operator rendering, Railway remote doctor, deployment evidence verification, deployment identity verification, deployment evidence log capture/signing, rollback rehearsal checks, protected-scope fail-closed checks, and live-control refusals are covered. External production examples against a linked Railway project remain operations evidence. |
 | TUI production UX | 100 | Snapshot coverage, status honesty, risk overlays, live-stream pane, and a full-screen live cockpit are covered for the public runtime. External live operator fault drills remain operations evidence. |
 | Non-interactive automation | 100 | `zero run` covers cockpit, receipts, canary policy, runtime parity, breaker, certification, account truth, and risk-reducer workflows while intentionally gating risk-increasing commands. External production examples remain operations evidence. |
 | Documentation freshness | 100 | Command docs, production deployment notes, live-mode API docs, paper/live refusal docs, cockpit drills, canary policy, incident runbooks, and evidence verification docs are current for the public runtime. |
@@ -123,17 +123,17 @@ ZERO is 100/100 when a new serious operator can:
   canaries, calibrate changes, and promote or roll back with reviewable
   evidence;
 - publish verified behavior to ZERO Network;
-- consume delayed public intelligence for free;
-- pay for realtime ZERO Intelligence API access when speed, scale, history, or
-  commercial rights matter.
+- consume delayed and realtime ZERO Intelligence in growth mode for free;
+- move to future commercial ZERO Intelligence packaging when higher limits,
+  deeper history, webhooks, redistribution rights, support, or SLAs matter.
 
 ## Execution Cycles
 
 Forecast after Cycle 46: **0 major public-repo product cycles remain before the
 repo can be treated as a complete ZERO autonomous operating-system launch
 artifact.** External work still includes third-party review, crates/container
-package ownership, hosted Network, paid
-Intelligence deployment, and optional raw exchange disclosure for commercial
+package ownership, hosted Network, growth-mode Intelligence production
+deployment, and optional raw exchange disclosure for commercial
 diligence.
 
 | Cycle | Target | Historical Target Score |

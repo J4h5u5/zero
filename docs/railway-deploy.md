@@ -109,9 +109,9 @@ scripts/railway_doctor.py "$ZERO_RAILWAY_URL" \
 The doctor checks `/health`, `/v2/status`, `/metrics`, `/market/quote`,
 `/immune`, `/live/preflight`, `/live/cockpit`, public ZERO Network packets,
 delayed ZERO Intelligence packets, hosted-compatible `/v1/intelligence/*`
-headers, and paid-scope fail-closed behavior. With a token, it also verifies
-that the paid history scope accepts the configured bearer token without leaking
-the token, trace IDs, private keys, or raw runtime data.
+headers, and protected-scope fail-closed behavior. With a token, it also
+verifies that protected history scope accepts the configured bearer token
+without leaking the token, trace IDs, private keys, or raw runtime data.
 
 Warnings are allowed for local ephemeral test services. A public Railway demo
 should use a mounted `/data` volume so `durable_journal` reports `ok`.
@@ -257,8 +257,9 @@ publish path.
 
 ZERO Intelligence snapshot, catalog, and commercial-contract endpoints are also
 public-safe aggregate contracts. The snapshot is delayed public intelligence.
-The catalog points to `/intelligence/commercial`, which describes the paid
-hosted API boundary for realtime access, history, cohorts, webhooks, exports,
+The catalog points to `/intelligence/commercial`, which describes the
+growth-mode free hosted API boundary for realtime access plus the future
+commercial boundary for higher limits, history, cohorts, webhooks, exports,
 redistribution, usage events, rate limits, and reliability commitments.
 
 The `/v1/intelligence/*` reference endpoints are hosted-compatible:

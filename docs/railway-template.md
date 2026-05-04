@@ -69,17 +69,25 @@ agentic contribution work against a real HTTP runtime.
 
 ### Publish Checklist
 
-1. Create the template from a Railway project based on this GitHub repository.
-2. Confirm the `/data` volume is attached before the first public deploy.
-3. Publish the template from Railway workspace settings.
-4. Add the live demo project after `scripts/railway_doctor.py "$ZERO_RAILWAY_URL"` passes.
-5. Replace `<template-code>` in the README button with Railway's issued template code:
+1. Install and authenticate the Railway CLI:
+
+```bash
+npm install -g @railway/cli
+railway login --browserless
+scripts/railway_cli_preflight.py
+```
+
+2. Create the template from a Railway project based on this GitHub repository.
+3. Confirm the `/data` volume is attached before the first public deploy.
+4. Publish the template from Railway workspace settings.
+5. Add the live demo project after `scripts/railway_doctor.py "$ZERO_RAILWAY_URL"` passes.
+6. Replace `<template-code>` in the README button with Railway's issued template code:
 
 ```md
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template/<template-code>?utm_medium=integration&utm_source=button&utm_campaign=zero)
 ```
 
-6. Keep [CHANGELOG.md](../CHANGELOG.md) current before merging template-impacting changes to `main`.
+7. Keep [CHANGELOG.md](../CHANGELOG.md) current before merging template-impacting changes to `main`.
 
 ## Why Deploy ZERO on Railway?
 
