@@ -5,8 +5,7 @@ manual GitHub OIDC publication workflow. It is listed in the Official MCP
 Registry as `io.github.zero-intel/zero`.
 
 The listing points to the public `zero-engine` PyPI package and uses stdio with
-`uvx`. The Rust CLI is prepared as `zero-os` on crates.io; publication is
-blocked until the crates.io account email is verified. Docker Hub and GHCR
+`uvx`. The Rust CLI is published as `zero-os` on crates.io. Docker Hub and GHCR
 remain blocked until ownership, provenance, and rollback evidence are recorded.
 
 Machine-readable files:

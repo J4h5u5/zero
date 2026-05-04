@@ -88,9 +88,8 @@ The checked launch packet is
 [`contracts/distribution/registry-launch.json`](../contracts/distribution/registry-launch.json).
 It records the current channel state: GitHub Releases are published, the public
 Homebrew tap is ready, `zero-engine` is published on PyPI, `zero-os` and the
-workspace crates are ready for crates.io, and Docker Hub/GHCR remain blocked.
-crates.io publication is currently blocked by crates.io account email
-verification.
+workspace crates are published on crates.io, and Docker Hub/GHCR remain
+blocked.
 
 Regenerate and verify it with:
 
@@ -107,8 +106,8 @@ automated crates.io, Docker Hub, or GHCR publication until this packet and the
 release notes include namespace ownership, least-privilege publishing, clean
 install evidence, rollback steps, and support expectations. PyPI publication
 for `zero-engine` is already enabled through Trusted Publishing. crates.io
-publication uses `CRATESIO_API_TOKEN` manually until tokenless publishing is
-available.
+publication currently uses `CRATESIO_API_TOKEN` manually until tokenless
+publishing is available.
 
 The MCP Registry packet is separate from package registries because it is
 metadata for agents, not an artifact host. ZERO commits `server.json` and
@@ -223,7 +222,7 @@ release-evidence <tag>` goes further: it downloads the release, verifies
 `SHA256SUMS`, verifies release metadata and attestations, rerenders the formula
 from the clean download, and fails if the committed formula has drifted. These
 checks name the already-published PyPI `zero-engine` package and crates.io
-`zero-os` target but do not claim crates.io, Docker Hub, or GHCR publication.
+`zero-os` package but do not claim Docker Hub or GHCR publication.
 
 ## Draft Release Rollback Rehearsal
 
