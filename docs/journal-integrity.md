@@ -78,11 +78,54 @@ Every entry includes a local timestamp-anchor binding to the entry hash and a
 local `anchored_at` clock reading. This is enough to detect local tampering, but
 it is not a trusted external timestamp.
 
-The next trust cycle should add periodic external anchoring for journal heads
-through a trusted timestamp service, Rekor/OpenTimestamps, or a public chain.
-The public contract is already explicit: the anchor must bind the journal head
-hash, anchor time, method, and external reference without exposing raw journal
+External anchoring is handled by a separate public-safe packet:
+`zero.decision_journal.external_anchor.v1`. The packet binds the verified
+journal head hash, entry count, verification-report hash, timestamp method,
+anchor time, and external receipt reference without exposing raw journal
 payloads.
+
+Prepare an anchor packet before sending the journal head to Rekor,
+OpenTimestamps, RFC3161, or a public chain:
+
+```bash
+PYTHONPATH="$PWD/engine/src" scripts/journal_verify.py anchor \
+  .zero/decisions.jsonl \
+  --output .zero/journal-anchor.json \
+  --method opentimestamps \
+  --require-signature \
+  --signing-key-env ZERO_JOURNAL_SIGNING_KEY
+```
+
+After the external service returns a receipt, recreate or update the packet
+with a public-safe reference:
+
+```bash
+PYTHONPATH="$PWD/engine/src" scripts/journal_verify.py anchor \
+  .zero/decisions.jsonl \
+  --output .zero/journal-anchor.json \
+  --method opentimestamps \
+  --anchor-ref ots:sha256:<receipt-digest> \
+  --require-signature \
+  --signing-key-env ZERO_JOURNAL_SIGNING_KEY
+```
+
+Verify the packet against the journal and require an external receipt before
+using it as live-capable evidence:
+
+```bash
+PYTHONPATH="$PWD/engine/src" scripts/journal_verify.py verify-anchor \
+  .zero/decisions.jsonl \
+  .zero/journal-anchor.json \
+  --require-external \
+  --require-signature \
+  --signing-key-env ZERO_JOURNAL_SIGNING_KEY
+```
+
+The verifier fails on anchor hash mutation, journal-head mismatch, entry-count
+mismatch, verification-hash mismatch, and missing external receipt when
+`--require-external` is set. The remaining trust work is operational cadence:
+operators should anchor journal heads periodically and preserve the external
+receipt material outside the trading host.
 
 ## Incident Rule
 

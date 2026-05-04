@@ -110,7 +110,10 @@ contains "Failure Modes Of The Autonomous Loop" docs/failure-modes-autonomous-lo
 contains "FM-AUTO-004" docs/failure-modes-autonomous-loop.md
 contains "zero.decision_journal.verification.v1" docs/failure-modes-autonomous-loop.md
 contains "zero.decision_journal.entry.v1" docs/journal-integrity.md
+contains "zero.decision_journal.external_anchor.v1" docs/journal-integrity.md
+contains "zero.decision_journal.external_anchor.verification.v1" docs/failure-modes-autonomous-loop.md
 contains "scripts/journal_verify.py verify" docs/journal-integrity.md
+contains "scripts/journal_verify.py verify-anchor" docs/journal-integrity.md
 contains "ZERO_JOURNAL_SIGNING_KEY" docs/journal-integrity.md
 contains "Detection" docs/failure-modes-autonomous-loop.md
 contains "Blast radius" docs/failure-modes-autonomous-loop.md

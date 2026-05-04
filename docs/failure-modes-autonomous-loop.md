@@ -52,7 +52,7 @@ Unknown answers mean fail closed.
 | FM-AUTO-009 | MCP client asks ZERO to place an order or mutate state. | MCP safety catalog has no risk-increasing tools; unknown methods are rejected. | None if server remains read-only. | Keep server read-only, revoke unsafe registry submission, patch transcript. | MCP transcript refusal and safety catalog resource. | MCP smoke failure, CI failure. | `engine/tests/test_mcp.py`, `scripts/mcp_transcript.py --check`. |
 | FM-AUTO-010 | Public Network or Intelligence packet leaks private identifiers. | Privacy regression fixtures detect wallet-like, raw order ID, trace token, or private journal fields. | Public artifact exposure until publication is stopped. | Stop publishing, rotate unsafe packet, patch serializer, mark proof stale. | Public packet hash, privacy regression incident export. | P1 privacy regression alert, CI failure. | `engine/tests/test_proof_privacy.py`, `scripts/proof_privacy_regression.py`. |
 | FM-AUTO-011 | Kill switch, pause, flatten, or reduce-only path is unavailable. | Live certification drill fails; cockpit marks emergency controls not ready. | Live mode must refuse risk-increasing actions. Existing exchange positions may need manual exchange action. | Manual exchange close if needed; keep ZERO live disabled until certification passes. | `zero.live_certification.v1`, live cockpit packet, incident postmortem. | `/live-certification`, `/live-cockpit`, P0/P1 runbook. | `engine/tests/test_live_canary_policy.py`, `scripts/live_cockpit_drill_verify.py`. |
-| FM-AUTO-012 | Journal chain, signature, or timestamp anchor fails verification. | `zero.decision_journal.verification.v1` detects missing head, broken previous hash, invalid signature, missing required signature, or stale anchor. | Audit trust for the affected interval. Live mode must refuse if the decision journal is unverifiable. | Stop writers, preserve artifact, restore last verified head, publish redacted postmortem if live safety was affected. | `zero.decision_journal.verification.v1`, verifier report, incident postmortem. | CLI live-preflight refusal, incident alert. | `engine/tests/test_journal.py`, `scripts/journal_verify.py`; external timestamp anchoring remains required before 100/100. |
+| FM-AUTO-012 | Journal chain, signature, or timestamp anchor fails verification. | `zero.decision_journal.verification.v1` detects missing head, broken previous hash, invalid signature, missing required signature, or stale anchor; `zero.decision_journal.external_anchor.verification.v1` detects anchor packet drift or missing external receipt. | Audit trust for the affected interval. Live mode must refuse if the decision journal or required external anchor is unverifiable. | Stop writers, preserve artifact, restore last verified head, publish redacted postmortem if live safety was affected. | `zero.decision_journal.verification.v1`, `zero.decision_journal.external_anchor.v1`, verifier report, incident postmortem. | CLI live-preflight refusal, incident alert. | `engine/tests/test_journal.py`, `scripts/journal_verify.py`; periodic external anchoring cadence remains required before 100/100. |
 
 ## Coverage Bar For 100/100
 
@@ -61,8 +61,8 @@ ZERO reaches the autonomous trust bar only when:
 - every row above has at least one deterministic regression test;
 - safety gates have property-based tests for bounded random inputs;
 - decision journals are hash-chained, signed, and locally verifiable;
-- journal heads are periodically anchored through a trusted timestamp service or
-  public chain;
+- journal-head external anchor packets are periodically attached to trusted
+  timestamp receipts or public-chain references;
 - failures that touch live safety, journal integrity, or public privacy produce
   redacted postmortems in `docs/incident-postmortems/`;
 - the MCP server has a committed registry packet before launch and is tracked

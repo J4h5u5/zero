@@ -144,3 +144,92 @@ def test_decision_journal_cli_verifies_signed_journal(tmp_path: Path) -> None:
     assert payload["ok"] is True
     assert payload["signed_entries"] == 1
     assert payload["signature_verified"] == 1
+
+
+def test_decision_journal_creates_and_verifies_external_anchor(tmp_path: Path) -> None:
+    journal = DecisionJournal(tmp_path / "decisions.jsonl")
+    journal.append(decision_payload("BTC"))
+    journal.append(decision_payload("ETH"))
+
+    anchor = journal.create_external_anchor(
+        method="opentimestamps",
+        anchor_ref="ots:sha256:example-receipt",
+        note="test fixture",
+    )
+    verification = journal.verify_external_anchor(anchor.to_dict(), require_external=True)
+
+    assert anchor.schema_version == "zero.decision_journal.external_anchor.v1"
+    assert anchor.status == "externally_anchored"
+    assert anchor.entries == 2
+    assert verification.ok is True
+    assert verification.externally_anchored is True
+    assert verification.anchor_hash == anchor.to_dict()["anchor_hash"]
+
+
+def test_decision_journal_external_anchor_rejects_head_mismatch(tmp_path: Path) -> None:
+    journal = DecisionJournal(tmp_path / "decisions.jsonl")
+    journal.append(decision_payload("BTC"))
+    anchor = journal.create_external_anchor(method="rekor", anchor_ref="rekor:uuid:test").to_dict()
+    journal.append(decision_payload("ETH"))
+
+    verification = journal.verify_external_anchor(anchor, require_external=True)
+
+    assert verification.ok is False
+    assert verification.reason == "external anchor journal head mismatch"
+
+
+def test_decision_journal_external_anchor_can_require_external_receipt(tmp_path: Path) -> None:
+    journal = DecisionJournal(tmp_path / "decisions.jsonl")
+    journal.append(decision_payload("BTC"))
+    anchor = journal.create_external_anchor(method="opentimestamps").to_dict()
+
+    verification = journal.verify_external_anchor(anchor, require_external=True)
+
+    assert verification.ok is False
+    assert verification.reason == "external timestamp receipt required"
+
+
+def test_decision_journal_cli_creates_and_verifies_external_anchor(tmp_path: Path) -> None:
+    journal = DecisionJournal(tmp_path / "decisions.jsonl")
+    journal.append(decision_payload())
+    anchor_path = tmp_path / "journal-anchor.json"
+
+    subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "zero_engine.journal",
+            "anchor",
+            str(journal.path),
+            "--output",
+            str(anchor_path),
+            "--method",
+            "rekor",
+            "--anchor-ref",
+            "rekor:uuid:test",
+            "--json",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "zero_engine.journal",
+            "verify-anchor",
+            str(journal.path),
+            str(anchor_path),
+            "--require-external",
+            "--json",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+
+    payload = json.loads(result.stdout)
+    assert payload["schema_version"] == "zero.decision_journal.external_anchor.verification.v1"
+    assert payload["ok"] is True
+    assert payload["externally_anchored"] is True

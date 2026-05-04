@@ -162,10 +162,12 @@ file_contains "Autonomous operating system for self-custodial onchain operations
 file_contains "paper mode" README.md
 file_contains "Self-evolution" docs/private-engine-capability-gap-audit.md
 file_contains "Full ZERO operating-system contract readiness: 100/100" docs/production-readiness.md
-file_contains "Autonomous trust readiness: 96/100" docs/production-readiness.md
+file_contains "Autonomous trust readiness: 97/100" docs/production-readiness.md
 file_contains "Failure Modes Of The Autonomous Loop" docs/failure-modes-autonomous-loop.md
 file_contains "FM-AUTO-004" docs/failure-modes-autonomous-loop.md
 file_contains "zero.decision_journal.entry.v1" docs/journal-integrity.md
+file_contains "zero.decision_journal.external_anchor.v1" docs/journal-integrity.md
+file_contains "zero.decision_journal.external_anchor.verification.v1" docs/failure-modes-autonomous-loop.md
 file_contains "zero.decision_journal.verification.v1" docs/failure-modes-autonomous-loop.md
 file_contains "Agent Architecture" docs/agent-architecture.md
 file_contains "Publication Policy" docs/incident-postmortems/README.md
