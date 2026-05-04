@@ -33,6 +33,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON.")
     parser.add_argument(
+        "--env-file",
+        default="",
+        help="Optional dotenv file to read Railway token variables from.",
+    )
+    parser.add_argument(
         "--allow-unauthenticated",
         action="store_true",
         help="Return success when the CLI is installed but auth/linking is pending.",
@@ -53,26 +58,42 @@ def launchctl_getenv(name: str) -> str:
     return child.stdout.strip() if child.returncode == 0 else ""
 
 
-def railway_env() -> dict[str, str]:
+def read_dotenv_token(path: str, name: str) -> str:
+    if not path:
+        return ""
+    try:
+        lines = open(path, encoding="utf-8").read().splitlines()
+    except OSError:
+        return ""
+    prefix = f"{name}="
+    for line in lines:
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#") or not stripped.startswith(prefix):
+            continue
+        return stripped.partition("=")[2].strip().strip('"').strip("'")
+    return ""
+
+
+def railway_env(env_file: str = "") -> dict[str, str]:
     env = os.environ.copy()
     if not env.get("RAILWAY_API_TOKEN"):
-        token = launchctl_getenv("RAILWAY_API_TOKEN")
+        token = read_dotenv_token(env_file, "RAILWAY_API_TOKEN") or launchctl_getenv("RAILWAY_API_TOKEN")
         if token:
             env["RAILWAY_API_TOKEN"] = token
     if not env.get("RAILWAY_TOKEN"):
-        token = launchctl_getenv("RAILWAY_TOKEN")
+        token = read_dotenv_token(env_file, "RAILWAY_TOKEN") or launchctl_getenv("RAILWAY_TOKEN")
         if token:
             env["RAILWAY_TOKEN"] = token
     return env
 
 
-def run(*args: str) -> CommandResult:
+def run(*args: str, env_file: str = "") -> CommandResult:
     child = subprocess.run(
         ["railway", *args],
         check=False,
         text=True,
         capture_output=True,
-        env=railway_env(),
+        env=railway_env(env_file),
         timeout=20,
     )
     return CommandResult(
@@ -137,7 +158,7 @@ def main() -> int:
         emit(packet, args.json)
         return 1
 
-    version = run("--version")
+    version = run("--version", env_file=args.env_file)
     checks.append(
         {
             "name": "cli_installed",
@@ -147,7 +168,7 @@ def main() -> int:
         }
     )
 
-    deploy_help = run("deploy", "--help")
+    deploy_help = run("deploy", "--help", env_file=args.env_file)
     deploy_supported = deploy_help.ok and "--template" in deploy_help.stdout
     checks.append(
         {
@@ -159,7 +180,7 @@ def main() -> int:
         }
     )
 
-    whoami = run("whoami", "--json")
+    whoami = run("whoami", "--json", env_file=args.env_file)
     whoami_payload = parse_json(whoami.stdout)
     authenticated = whoami.ok and whoami_payload is not None
     checks.append(
@@ -173,7 +194,7 @@ def main() -> int:
         }
     )
 
-    status = run("status", "--json")
+    status = run("status", "--json", env_file=args.env_file)
     status_payload = parse_json(status.stdout)
     linked = status.ok and status_payload is not None
     checks.append(
