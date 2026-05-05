@@ -22,8 +22,8 @@ support commitments are stable.
 ## Container Channel State
 
 Docker Hub `getzero/zero` is the primary public container path. GHCR also uses
-the product image name `ghcr.io/zero-intel/zero`, but remains public-pull
-pending. The container runtime remains paper-first by default, with live
+the product image name `ghcr.io/zero-intel/zero` and has anonymous pull
+evidence. The container runtime remains paper-first by default, with live
 operation behind explicit preflight gates.
 
 Container channels require maintainer-owned package names, provenance, rollback
@@ -36,7 +36,7 @@ procedure, public-pull verification, and support expectations before enablement.
 | PyPI | `zero-engine` | name ownership, Trusted Publishing, signed release dry run |
 | crates.io | `zero-os`, `zero-*` crates | namespace review, README/license metadata, least-privilege token, `cargo owner` review |
 | Homebrew | `zero-intel/zero` public repo tap | `Formula/zero.rb` update from release checksums |
-| GHCR | `ghcr.io/zero-intel/zero` | public-pull verification, rollback evidence |
+| GHCR | `ghcr.io/zero-intel/zero` | published, anonymous pull verified |
 | Docker Hub | `getzero/zero` | published, anonymous pull verified |
 | Railway template | `ZERO Paper Runtime` | marketplace publish from verified Railway project |
 
@@ -93,9 +93,9 @@ The checked launch packet is
 It records the current channel state: GitHub Releases are published, the public
 Homebrew tap is ready, `zero-engine` is published on PyPI, `zero-os` and the
 workspace crates are published on crates.io, GHCR is published with
-legacy authenticated GHCR smoke evidence, Docker Hub `getzero/zero` is
-published with anonymous pull evidence, and GHCR product-image publication is
-public-pull pending.
+legacy authenticated GHCR smoke evidence plus product-image anonymous pull
+evidence, and Docker Hub `getzero/zero` is published with anonymous pull
+evidence.
 
 Regenerate and verify it with:
 
@@ -111,9 +111,8 @@ scripts/mcp_registry_listing_check.py --json
 automated crates.io publication or default-on container publication until this
 packet and the release notes include namespace ownership, least-privilege
 publishing, clean install evidence, rollback steps, and support expectations.
-GHCR and Docker Hub publication remain manual workflow paths; Docker Hub has
-anonymous pull evidence and GHCR still needs package visibility administration.
-PyPI publication
+GHCR and Docker Hub publication remain manual workflow paths; both public
+container paths have anonymous pull evidence. PyPI publication
 for `zero-engine` is already enabled through Trusted Publishing. crates.io
 publication currently uses `CRATESIO_API_TOKEN` manually until tokenless
 publishing is available.
@@ -137,9 +136,9 @@ Package channels must be proven before use:
   `zero` is already occupied on crates.io; its installed binary remains `zero`.
 - Homebrew: the tap repository is public, formula review is linked, and the
   formula points to a tagged GitHub Release asset plus its checksum.
-- GHCR: `ghcr.io/zero-intel/zero` is published through the manual container
-  workflow, but anonymous pull currently returns `unauthorized`; it is not the
-  primary public install path.
+- GHCR: `ghcr.io/zero-intel/zero:0.1.2` is published through the manual
+  container workflow, multi-platform, and anonymous pull verified with digest
+  `sha256:048728c531aa79306e8e6b3618c61e3b4a6f74d80fff6da57deabb79bae4ed7b`.
 - Docker Hub: `getzero/zero:0.1.2` is published, multi-platform, and anonymous
   pull verified with digest
   `sha256:d810ae677af04958a95b387e6fbc7ff15baa4d8488b26cfb76b31cc4ee300162`.

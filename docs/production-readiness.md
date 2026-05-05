@@ -30,7 +30,7 @@ for local wallet control, preflight, kill-switches, reconciliation, and review.
 | Security and custody | 100 | No secrets needed for first run; Hyperliquid private keys have operator-scoped keychain/env helpers, redaction tests, a non-secret preflight gate, optional SDK-backed live adapter, threat model, secret-leak runbook, dependency policy, SBOM/provenance metadata, and release provenance policy. External security review remains diligence evidence, not a missing custody contract. |
 | ZERO Network contracts | 100 | Public-safe local profile packets, proof hashes, deployment claim hashes, deployment heartbeat hashes, verification badges, leaderboard rows, opt-in local publish logs, hosted-compatible ingestion, proof validation, duplicate refusal, metric-consistency checks, accepted-only leaderboard output, empty/active/stale public page states, `zero.network.profile_verification.v1` profile-plus-identity verification, and deterministic `zero.network_proof_pack.v1` public proof-chain artifacts exist. Hosted persistence, sybil policy operation, and identity service operation are external product work. |
 | ZERO Intelligence contracts | 100 | Delayed public snapshots, catalog, billing-ready commercial contract, hosted-compatible `/v1/intelligence/*` reads/writes, token-gated paid scopes, actual rate-limit headers, usage events, HMAC-SHA256 webhook signature fixtures, aggregate export jobs, plan/scope model, dataset names, fail-closed model gateway status, model gateway health probes, model gateway audit bundles, mock/local provider conformance, external model adapter contract tests, bounded retry/cost policy, hosted key-management rules, plan boundary, opt-in local export packets, and a durable JSONL reference store behind `ZERO_INTELLIGENCE_STORE_PATH` exist. Billing, warehouse-backed feeds, and webhook delivery are external commercial service work. |
-| Release and distribution | 100 | GitHub release artifacts, checksums, SBOM/provenance bundle, recorded `v0.1.2` clean-download release evidence, published-release evidence command with committed Homebrew formula comparison, release verifier, tamper-detection rehearsal, draft-release rollback rehearsal, committed Homebrew formula, formula drift check, attestations, installer, registry-readiness gate, package dry run, distribution readiness policy, release template hardening checks, dependency policy, PyPI `zero-engine`, published crates.io `zero-os` workspace crates, Official MCP Registry listing, published Docker Hub `getzero/zero` image with anonymous pull evidence, legacy authenticated GHCR smoke evidence, GHCR product-image workflow readiness, and rollback rules exist. GHCR still needs anonymous public-pull verification before it becomes a primary public install path. |
+| Release and distribution | 100 | GitHub release artifacts, checksums, SBOM/provenance bundle, recorded `v0.1.2` clean-download release evidence, published-release evidence command with committed Homebrew formula comparison, release verifier, tamper-detection rehearsal, draft-release rollback rehearsal, committed Homebrew formula, formula drift check, attestations, installer, registry-readiness gate, package dry run, distribution readiness policy, release template hardening checks, dependency policy, PyPI `zero-engine`, published crates.io `zero-os` workspace crates, Official MCP Registry listing, published Docker Hub `getzero/zero` image with anonymous pull evidence, published GHCR `ghcr.io/zero-intel/zero` image with anonymous pull evidence, and rollback rules exist. |
 | Documentation for operators | 100 | Good local docs, operator isolation docs, Hyperliquid read-only boundary docs, live-paper quote docs, immune-system docs, live cockpit docs, live cockpit drill bundle, verifier, and tamper rehearsal, live certification docs, live evidence docs, redacted live trading evidence docs, live canary policy/operator docs, Railway paper deploy, remote-doctor, and evidence-pack docs, restart recovery docs, audit/metrics docs, live-preflight warnings, threat model, and incident runbooks. Missing third-party review evidence only as external proof, not documented workflow. |
 
 **Public repo readiness: 100/100.**
@@ -84,9 +84,9 @@ a complete autonomous operating-system launch artifact: paper runtime,
 production-parity OODA proof, live-readiness gates, live-shadow fail-closed
 evidence, local evolution gates, release evidence, and agentic contribution
 surfaces. Hosted Network persistence, paid Intelligence billing/warehouse
-infrastructure, crates/container publication, third-party security review,
-production log drains, and raw exchange disclosure remain external product and
-launch work, not missing public-runtime contracts.
+infrastructure, third-party security review, production log drains, and raw
+exchange disclosure remain external product and launch work, not missing
+public-runtime contracts.
 
 ## CLI Readiness Detail
 
@@ -95,7 +95,7 @@ launch work, not missing public-runtime contracts.
 | Command surface | 100 | `zero`, `zero init`, `zero doctor`, `zero run`, TUI, and slash-command dispatch cover the public runtime and operator workflows. |
 | Operator safety | 100 | Risk-reducing commands are friction-exempt and risk-increasing commands require interactive friction. |
 | Engine integration | 100 | HTTP, WebSocket, mock engine, contract tests, Rust client decoding for production-parity OODA reports, live receipt packets, live canary policy packets, `/runtime-parity`, `/live-receipts`, and `/live-canary` operator rendering, live risk-reducer endpoints, and redacted private live execution evidence exist. Raw accepted canary records remain external. |
-| Install path | 100 | Release installer exists with checksum and attestation verification, `v0.1.2` was installed from the public GitHub Release into a temporary bin directory, the public Homebrew repo tap installs and tests `zero` from the checksummed GitHub Release asset, PyPI serves `zero-engine` for agent/MCP installs, crates.io serves `zero-os`, which installs the `zero` binary, Docker Hub serves `getzero/zero:0.1.2` with anonymous pull and runtime smoke evidence, and legacy GHCR has authenticated smoke evidence. GHCR product-image anonymous public-pull verification is still required before GHCR becomes a primary public install path. |
+| Install path | 100 | Release installer exists with checksum and attestation verification, `v0.1.2` was installed from the public GitHub Release into a temporary bin directory, the public Homebrew repo tap installs and tests `zero` from the checksummed GitHub Release asset, PyPI serves `zero-engine` for agent/MCP installs, crates.io serves `zero-os`, which installs the `zero` binary, Docker Hub serves `getzero/zero:0.1.2` with anonymous pull and runtime smoke evidence, and GHCR serves `ghcr.io/zero-intel/zero:0.1.2` with anonymous pull and runtime smoke evidence. |
 | Diagnostics | 100 | Doctor, JSON output, exit codes, rate-budget checks, operator/credential partition checks, live-preflight diagnostics, live-cockpit next-action/operator rendering, Railway remote doctor, deployment evidence verification, deployment identity verification, deployment evidence log capture/signing, rollback rehearsal checks, protected-scope fail-closed checks, and live-control refusals are covered. External production examples against a linked Railway project remain operations evidence. |
 | TUI production UX | 100 | Snapshot coverage, status honesty, risk overlays, live-stream pane, and a full-screen live cockpit are covered for the public runtime. External live operator fault drills remain operations evidence. |
 | Non-interactive automation | 100 | `zero run` covers cockpit, receipts, canary policy, runtime parity, breaker, certification, account truth, and risk-reducer workflows while intentionally gating risk-increasing commands. External production examples remain operations evidence. |
@@ -131,10 +131,9 @@ ZERO is 100/100 when a new serious operator can:
 
 Forecast after Cycle 46: **0 major public-repo product cycles remain before the
 repo can be treated as a complete ZERO autonomous operating-system launch
-artifact.** External work still includes third-party review, crates/container
-package ownership, hosted Network, growth-mode Intelligence production
-deployment, and optional raw exchange disclosure for commercial
-diligence.
+artifact.** External work still includes third-party review, hosted Network,
+growth-mode Intelligence production deployment, and optional raw exchange
+disclosure for commercial diligence.
 
 | Cycle | Target | Historical Target Score |
 |---|---|---:|

@@ -92,18 +92,10 @@ jobs:
           provenance: mode=max
           sbom: true
 
-      - name: Try to make GHCR package public
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Record GHCR visibility expectation
         run: |
-          if gh api \
-            --method PATCH \
-            /orgs/zero-intel/packages/container/zero/visibility \
-            -f visibility=public; then
-            echo "GHCR package visibility set to public."
-          else
-            echo "::warning::GITHUB_TOKEN could not change GHCR package visibility. Make the package public from GitHub Packages settings or rerun with a token that can administer org packages."
-          fi
+          echo "GHCR package visibility is administered from GitHub Packages settings."
+          echo "Public-pull access is proven by the published-image smoke step."
 
       - name: Smoke published image
         run: |

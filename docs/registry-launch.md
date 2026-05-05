@@ -3,8 +3,8 @@
 ZERO currently distributes the public runtime through GitHub Releases, the
 public Homebrew tap, `zero-engine` on PyPI, `zero-os` on crates.io, and Docker
 Hub `getzero/zero`. Docker Hub and GHCR use product image names while the
-runtime remains paper-first by default. GHCR remains public-pull pending until
-anonymous pull evidence is recorded.
+runtime remains paper-first by default. Both public container paths now have
+anonymous pull and runtime smoke evidence.
 
 The machine-readable packets are:
 
@@ -33,7 +33,7 @@ scripts/mcp_registry_listing_check.py --json
 | Homebrew tap | ready | `zero-intel/zero` |
 | PyPI | published | `zero-engine` |
 | crates.io | published | `zero-os`, `zero-*` workspace crates |
-| GHCR | published, public-pull pending | `ghcr.io/zero-intel/zero` |
+| GHCR | published | `ghcr.io/zero-intel/zero` |
 | Docker Hub | published | `getzero/zero` |
 | MCP Registry | listed | `io.github.zero-intel/zero` |
 
@@ -70,21 +70,24 @@ Legacy authenticated evidence exists for the previous internal image name:
 - Platforms: `linux/amd64`, `linux/arm64`
 - Smoke evidence: local image and published image both run the paper runtime
   and `examples/paper-trading/run.py`.
-- Limitation: the workflow `GITHUB_TOKEN` could push the package but could not
-  administer package visibility through the GitHub REST API. Treat the image as
-  published but public-pull pending until a maintainer verifies an anonymous
-  `docker pull ghcr.io/zero-intel/zero-paper:0.1.2` from a clean machine.
+- Limitation: this was an internal name and is retained only as historical
+  evidence. Use the product image `ghcr.io/zero-intel/zero`.
 
 Current product-image evidence:
 
 - Image: `ghcr.io/zero-intel/zero:0.1.2`
+- Digest: `sha256:048728c531aa79306e8e6b3618c61e3b4a6f74d80fff6da57deabb79bae4ed7b`
 - Workflow run: <https://github.com/zero-intel/zero/actions/runs/25362037363>
 - Source commit: `f624f03247cb7fd0ff59dbee905017398846d8f1`
 - Smoke evidence: local image and published image both ran in GitHub Actions.
-- Limitation: anonymous `docker pull ghcr.io/zero-intel/zero:0.1.2` still
-  returns `unauthorized`; do not use GHCR as a primary public install path yet.
+- Package visibility: `public`.
+- Anonymous pull evidence: clean Docker config pulled
+  `ghcr.io/zero-intel/zero:0.1.2`.
+- Runtime smoke evidence: default container command and
+  `python /app/examples/paper-trading/run.py` both passed from the pulled
+  image.
 
-Target command after visibility is fixed:
+Public install:
 
 ```bash
 docker pull ghcr.io/zero-intel/zero:0.1.2
@@ -98,9 +101,10 @@ docker buildx imagetools create \
   ghcr.io/zero-intel/zero@sha256:<known-good-digest>
 ```
 
-If the package cannot be made public from repository package settings, use a
-least-privilege maintainer token with package administration scope only for the
-visibility change, then remove the token.
+If GitHub package visibility regresses, first verify the organization package
+creation policy allows public packages, then restore public visibility from the
+package settings page and repeat anonymous pull verification from a clean Docker
+config.
 
 ## Docker Hub
 
