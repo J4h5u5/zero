@@ -415,11 +415,16 @@ docker build -t getzero/zero .
 docker run --rm -p 8765:8765 -e PORT=8765 getzero/zero
 ```
 
-Docker Hub and GHCR use the product image name, not a paper-only demo name:
-`getzero/zero` and `ghcr.io/zero-intel/zero`. The runtime remains paper-first
-by default; live operation stays behind explicit preflight gates. See
-[docs/registry-launch.md](docs/registry-launch.md) for publication state,
-digests, and anonymous-pull evidence.
+Docker Hub is the primary public container path:
+
+```bash
+docker pull getzero/zero:0.1.2
+docker run --rm -p 8765:8765 -e PORT=8765 getzero/zero:0.1.2
+```
+
+The runtime remains paper-first by default; live operation stays behind explicit
+preflight gates. See [docs/registry-launch.md](docs/registry-launch.md) for
+publication state, digests, and anonymous-pull evidence.
 
 ## No-Install Contributor Path
 

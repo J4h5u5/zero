@@ -1,10 +1,10 @@
 # Registry Launch Packet
 
 ZERO currently distributes the public runtime through GitHub Releases, the
-public Homebrew tap, `zero-engine` on PyPI, and `zero-os` on crates.io. Docker
-Hub and GHCR use product image names (`getzero/zero` and
-`ghcr.io/zero-intel/zero`) while the runtime remains paper-first by default.
-Container publication stays manual until anonymous pull evidence is recorded.
+public Homebrew tap, `zero-engine` on PyPI, `zero-os` on crates.io, and Docker
+Hub `getzero/zero`. Docker Hub and GHCR use product image names while the
+runtime remains paper-first by default. GHCR remains public-pull pending until
+anonymous pull evidence is recorded.
 
 The machine-readable packets are:
 
@@ -33,8 +33,8 @@ scripts/mcp_registry_listing_check.py --json
 | Homebrew tap | ready | `zero-intel/zero` |
 | PyPI | published | `zero-engine` |
 | crates.io | published | `zero-os`, `zero-*` workspace crates |
-| GHCR | ready, credentials pending | `ghcr.io/zero-intel/zero` |
-| Docker Hub | ready, credentials pending | `getzero/zero` |
+| GHCR | published, public-pull pending | `ghcr.io/zero-intel/zero` |
+| Docker Hub | published | `getzero/zero` |
 | MCP Registry | listed | `io.github.zero-intel/zero` |
 
 ## Enablement Rule
@@ -75,7 +75,16 @@ Legacy authenticated evidence exists for the previous internal image name:
   published but public-pull pending until a maintainer verifies an anonymous
   `docker pull ghcr.io/zero-intel/zero-paper:0.1.2` from a clean machine.
 
-The next publication target is:
+Current product-image evidence:
+
+- Image: `ghcr.io/zero-intel/zero:0.1.2`
+- Workflow run: <https://github.com/zero-intel/zero/actions/runs/25362037363>
+- Source commit: `f624f03247cb7fd0ff59dbee905017398846d8f1`
+- Smoke evidence: local image and published image both ran in GitHub Actions.
+- Limitation: anonymous `docker pull ghcr.io/zero-intel/zero:0.1.2` still
+  returns `unauthorized`; do not use GHCR as a primary public install path yet.
+
+Target command after visibility is fixed:
 
 ```bash
 docker pull ghcr.io/zero-intel/zero:0.1.2
@@ -97,21 +106,33 @@ visibility change, then remove the token.
 
 Docker Hub publication is wired into the manual
 [`Container Publish`](../.github/workflows/container-publish.yml) workflow for
-maximum marketplace discoverability. It is opt-in with `publish_dockerhub=true`
-and requires these repository secrets:
+maximum marketplace discoverability. It is opt-in with `publish_dockerhub=true`.
+GitHub Actions repository secrets are configured:
 
 - `DOCKERHUB_USERNAME`
 - `DOCKERHUB_TOKEN`
 
-Default candidate image:
+Current evidence:
+
+- Image: `getzero/zero:0.1.2`
+- Digest: `sha256:d810ae677af04958a95b387e6fbc7ff15baa4d8488b26cfb76b31cc4ee300162`
+- Source commit: `f624f03247cb7fd0ff59dbee905017398846d8f1`
+- Workflow run: <https://github.com/zero-intel/zero/actions/runs/25362037363>
+- Platforms: `linux/amd64`, `linux/arm64`
+- Anonymous pull evidence: clean Docker config pulled `getzero/zero:0.1.2`.
+- Smoke evidence: default container command and
+  `python /app/examples/paper-trading/run.py` both passed from the pulled
+  image.
+
+Public install:
 
 ```bash
 docker pull getzero/zero:0.1.2
 ```
 
 If the maintained namespace or repository changes, override the workflow inputs
-`dockerhub_namespace` and `dockerhub_repository`. Before first publication,
-record:
+`dockerhub_namespace` and `dockerhub_repository`. Future publication evidence
+must record:
 
 - namespace owner evidence;
 - token scope and rotation policy;
