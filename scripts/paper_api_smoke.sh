@@ -18,6 +18,27 @@ trap cleanup EXIT
 cd "${ROOT}"
 rm -f "${INTELLIGENCE_STORE}"
 
+port_is_available() {
+  "${PYTHON_BIN}" - "$1" <<'PY'
+import socket
+import sys
+
+port = int(sys.argv[1])
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    try:
+        sock.bind(("127.0.0.1", port))
+    except OSError:
+        raise SystemExit(1)
+raise SystemExit(0)
+PY
+}
+
+if ! port_is_available "${PORT}"; then
+  echo "paper API smoke requires a free port; ${PORT} is already in use" >&2
+  exit 1
+fi
+
 PYTHONPATH="${ROOT}/engine/src${PYTHONPATH:+:${PYTHONPATH}}" \
   ZERO_INTELLIGENCE_API_TOKEN=smoke-intelligence-token \
   ZERO_INTELLIGENCE_API_PLAN=team_fund \
@@ -29,6 +50,11 @@ SERVER_PID="$!"
 
 READY=0
 for _ in {1..50}; do
+  if ! kill -0 "${SERVER_PID}" >/dev/null 2>&1; then
+    echo "paper API process exited before readiness checks completed" >&2
+    cat "${LOG}" >&2 || true
+    exit 1
+  fi
   if curl -fsS "${API}/health" >/dev/null 2>&1; then
     READY=1
     break
