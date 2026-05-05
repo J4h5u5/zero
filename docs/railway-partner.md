@@ -16,6 +16,7 @@ stateful, and useful without exchange keys.
 | Project | `ZERO` |
 | Public repo | `https://github.com/zero-intel/zero` |
 | Template name | `ZERO Paper Runtime` |
+| Template URL | `https://railway.com/deploy/zero-paper-runtime` |
 | Live demo | `https://zero-production-5214.up.railway.app` |
 | Template docs | `docs/railway-template.md` |
 | Evidence packet | `contracts/distribution/railway-template.json` |
@@ -86,6 +87,7 @@ paper journal, and live Hyperliquid public prices in read-only mode. It does
 not require exchange private keys and live execution is refused by default.
 
 Live demo: https://zero-production-5214.up.railway.app
+Template URL: https://railway.com/deploy/zero-paper-runtime
 Template docs: https://github.com/zero-intel/zero/blob/main/docs/railway-template.md
 Evidence packet: https://github.com/zero-intel/zero/blob/main/contracts/distribution/railway-template.json
 ```

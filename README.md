@@ -31,15 +31,19 @@ just public-proof
 
 ## One-Click Paper Rollout
 
-ZERO is prepared for a Railway template rollout: Dockerfile build,
-`railway.toml`, `/health`, durable `/data` journal volume, Railway doctor,
-redacted deployment evidence packs, and paper-mode live-risk refusal.
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/zero-paper-runtime)
+
+ZERO's public Railway template is live: Dockerfile build, `railway.toml`,
+`/health`, durable `/data` journal volume, Railway doctor, redacted deployment
+evidence packs, and paper-mode live-risk refusal.
 
 Live public paper demo:
 [https://zero-production-5214.up.railway.app](https://zero-production-5214.up.railway.app)
 
-Until the public Railway template URL is issued, deploy from the GitHub repo and
-use [docs/railway-template.md](docs/railway-template.md) as the marketplace
+Railway template:
+[https://railway.com/deploy/zero-paper-runtime](https://railway.com/deploy/zero-paper-runtime)
+
+Use [docs/railway-template.md](docs/railway-template.md) as the marketplace
 configuration source of truth. The current Railway Template Publish Packet is
 tracked in
 [contracts/distribution/railway-template.json](contracts/distribution/railway-template.json).

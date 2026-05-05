@@ -38,7 +38,7 @@ procedure, public-pull verification, and support expectations before enablement.
 | Homebrew | `zero-intel/zero` public repo tap | `Formula/zero.rb` update from release checksums |
 | GHCR | `ghcr.io/zero-intel/zero` | published, anonymous pull verified |
 | Docker Hub | `getzero/zero` | published, anonymous pull verified |
-| Railway template | `ZERO Paper Runtime` | marketplace publish from verified Railway project |
+| Railway template | `ZERO Paper Runtime` | published at `https://railway.com/deploy/zero-paper-runtime` |
 
 ## Railway Template Channel
 
@@ -48,6 +48,9 @@ operator-owned billing, and no exchange private keys.
 
 Current verified public demo:
 [https://zero-production-5214.up.railway.app](https://zero-production-5214.up.railway.app)
+
+Published Railway template:
+[https://railway.com/deploy/zero-paper-runtime](https://railway.com/deploy/zero-paper-runtime)
 
 The template packet is
 [`contracts/distribution/railway-template.json`](../contracts/distribution/railway-template.json).

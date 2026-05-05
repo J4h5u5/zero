@@ -17,11 +17,14 @@ agentic contribution work against a real HTTP runtime.
 Current verified public demo:
 [https://zero-production-5214.up.railway.app](https://zero-production-5214.up.railway.app)
 
+Published Railway template:
+[https://railway.com/deploy/zero-paper-runtime](https://railway.com/deploy/zero-paper-runtime)
+
 The latest Railway Template Publish Packet is committed at
 [`contracts/distribution/railway-template.json`](../contracts/distribution/railway-template.json).
 It records the live demo URL, point-in-time verified deployment id, evidence
 bundle path, doctor result, required variables, autodeploy config, and
-marketplace publish steps.
+marketplace publish state.
 
 ## Common Use Cases
 
@@ -52,8 +55,9 @@ marketplace publish steps.
 | --- | --- |
 | Template name | `ZERO Paper Runtime` |
 | Service name | `ZERO` |
-| Template icon | `docs/assets/zero-template-icon.svg` |
-| Service icon | `docs/assets/zero-template-icon.svg` |
+| Template icon | `https://avatars.githubusercontent.com/u/273590449.png` |
+| Service icon | `https://avatars.githubusercontent.com/u/273590449.png` |
+| Fallback repo icon asset | `docs/assets/zero-template-icon.svg` |
 | Source | GitHub repository |
 | Repository | `zero-intel/zero` |
 | Branch | `main` |
@@ -134,8 +138,7 @@ scripts/railway_template_packet.py --output contracts/distribution/railway-templ
 scripts/railway_template_packet.py --check
 ```
 
-Before replacing the README deploy button placeholder with Railway's issued
-template URL, verify the live demo:
+Before sharing the template URL, verify the live demo:
 
 ```bash
 scripts/railway_doctor.py https://zero-production-5214.up.railway.app
@@ -168,10 +171,10 @@ scripts/railway_cli_preflight.py
 7. Apply to the Open Source Partner Program at
    `https://railway.com/partners` using [railway-partner.md](railway-partner.md).
 8. Add the live demo project after `scripts/railway_doctor.py "$ZERO_RAILWAY_URL"` passes.
-9. Replace `<template-code>` in the README button with Railway's issued template code:
+9. Keep the README deploy button pointed at the issued template URL:
 
 ```md
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template/<template-code>?utm_medium=integration&utm_source=button&utm_campaign=zero)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/zero-paper-runtime)
 ```
 
 10. Keep [docs/release.md](release.md) and the template packet current before

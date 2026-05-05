@@ -155,9 +155,10 @@ contains "https://station.railway.com/my-template-queue" docs/railway-partner.md
 contains "scripts/homebrew_formula.py" docs/distribution.md
 contains "zero.registry_launch_packet.v1" docs/registry-launch.md
 contains "zero.railway_template_packet.v1" contracts/distribution/railway-template.json
-contains "ready_for_marketplace_publish" contracts/distribution/railway-template.json
-contains "prepared_not_submitted" contracts/distribution/railway-template.json
+contains "published_on_marketplace" contracts/distribution/railway-template.json
+contains "template_published_partner_pending" contracts/distribution/railway-template.json
 contains "docs/assets/zero-template-icon.svg" contracts/distribution/railway-template.json
+contains "https://railway.com/deploy/zero-paper-runtime" contracts/distribution/railway-template.json
 contains "zero.mcp_registry_packet.v1" docs/mcp-registry.md
 contains "zero.mcp_registry_listing_check.v1" docs/mcp-registry.md
 contains "io.github.zero-intel/zero" docs/mcp-registry.md

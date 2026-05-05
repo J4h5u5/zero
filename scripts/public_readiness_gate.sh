@@ -216,10 +216,12 @@ file_contains "redacted private live evidence" docs/production-readiness.md
 file_contains "Do not publish this private monorepo wholesale" docs/public-upgrade.md
 file_contains "brew tap zero-intel/zero" README.md
 file_contains "https://zero-production-5214.up.railway.app" README.md
+file_contains "https://railway.com/deploy/zero-paper-runtime" README.md
 file_contains "zero.railway_template_packet.v1" contracts/distribution/railway-template.json
-file_contains "ready_for_marketplace_publish" contracts/distribution/railway-template.json
-file_contains "prepared_not_submitted" contracts/distribution/railway-template.json
+file_contains "published_on_marketplace" contracts/distribution/railway-template.json
+file_contains "template_published_partner_pending" contracts/distribution/railway-template.json
 file_contains "ZERO Paper Runtime" contracts/distribution/railway-template.json
+file_contains "https://railway.com/deploy/zero-paper-runtime" contracts/distribution/railway-template.json
 file_contains "Railway Template Publish Packet" docs/railway-template.md
 file_contains "Railway Partner Application Packet" docs/railway-partner.md
 file_contains "Generate Template from Project" docs/railway-template.md

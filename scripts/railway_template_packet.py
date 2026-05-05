@@ -12,8 +12,10 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "contracts" / "distribution" / "railway-template.json"
 SCHEMA_VERSION = "zero.railway_template_packet.v1"
-GENERATED_AT = "2026-05-04T19:21:22Z"
+GENERATED_AT = "2026-05-05T07:51:46Z"
 PUBLIC_DEMO_URL = "https://zero-production-5214.up.railway.app"
+TEMPLATE_URL = "https://railway.com/deploy/zero-paper-runtime"
+TEMPLATE_ICON_URL = "https://avatars.githubusercontent.com/u/273590449.png"
 
 
 def text(path: str) -> str:
@@ -36,15 +38,19 @@ def build_packet() -> dict[str, Any]:
     checks = {
         "schema_version": SCHEMA_VERSION,
         "readme_names_live_demo": PUBLIC_DEMO_URL in readme,
+        "readme_names_template_url": TEMPLATE_URL in readme,
         "readme_names_railway_template_docs": "docs/railway-template.md" in readme,
         "readme_names_partner_packet": "docs/railway-partner.md" in readme,
         "template_docs_name_public_demo": PUBLIC_DEMO_URL in template_docs,
+        "template_docs_name_template_url": TEMPLATE_URL in template_docs,
         "template_docs_name_partner_publish_step": "Railway Template Publish Packet" in template_docs,
         "template_docs_name_dashboard_generation": "Generate Template from Project" in template_docs,
         "template_docs_include_marketplace_overview": "Marketplace Overview Copy" in template_docs,
+        "template_docs_name_marketplace_icon": TEMPLATE_ICON_URL in template_docs,
         "template_docs_name_icon": "docs/assets/zero-template-icon.svg" in template_docs,
         "partner_docs_present": file_exists("docs/railway-partner.md"),
         "partner_docs_name_application_url": "https://railway.com/partners" in partner_docs,
+        "partner_docs_name_template_url": TEMPLATE_URL in partner_docs,
         "partner_docs_name_template_queue": "https://station.railway.com/my-template-queue" in partner_docs,
         "partner_docs_name_support_commitment": "Support Commitment" in partner_docs,
         "deploy_docs_name_doctor": "scripts/railway_doctor.py" in deploy_docs,
@@ -66,8 +72,9 @@ def build_packet() -> dict[str, Any]:
         "schema_version": SCHEMA_VERSION,
         "generated_at": GENERATED_AT,
         "summary": {
-            "status": "ready_for_marketplace_publish",
+            "status": "published_on_marketplace",
             "public_demo_url": PUBLIC_DEMO_URL,
+            "template_url": TEMPLATE_URL,
             "template_name": "ZERO Paper Runtime",
             "workspace": "zero",
             "project": "fabulous-enchantment",
@@ -83,12 +90,15 @@ def build_packet() -> dict[str, Any]:
             },
             "doctor_summary": {"ok": 17, "warn": 1, "fail": 0},
             "evidence_verify": {"ok": True, "checks": 60, "fail": 0},
-            "partner_application": "prepared_not_submitted",
+            "partner_application": "template_published_partner_pending",
             "partner_application_packet": "docs/railway-partner.md",
         },
         "marketplace": {
-            "template_icon": "docs/assets/zero-template-icon.svg",
-            "service_icon": "docs/assets/zero-template-icon.svg",
+            "template_url": TEMPLATE_URL,
+            "deploy_button_markdown": f"[![Deploy on Railway](https://railway.com/button.svg)]({TEMPLATE_URL})",
+            "template_icon": TEMPLATE_ICON_URL,
+            "service_icon": TEMPLATE_ICON_URL,
+            "fallback_repo_icon": "docs/assets/zero-template-icon.svg",
             "create_flow": "Project Settings -> Generate Template from Project",
             "publish_flow": "Railway workspace templates page",
             "partner_application_url": "https://railway.com/partners",
@@ -116,12 +126,12 @@ def build_packet() -> dict[str, Any]:
             "ZERO_DEPLOYMENT_ID": "zero-railway-public-paper",
         },
         "publish_steps": [
-            "Publish the linked Railway project as a template from the Railway dashboard.",
-            "Use docs/railway-template.md as the marketplace copy and variable map.",
-            "Attach the /data volume before public launch.",
+            "Published the linked Railway project as a template from the Railway dashboard.",
+            "Used docs/railway-template.md as the marketplace copy and variable map.",
+            "Attached the /data volume before public launch.",
             "Run scripts/railway_doctor.py against the public URL.",
             "Run scripts/deployment_evidence.sh with --railway-logs and verify the bundle.",
-            "Replace the README template placeholder with Railway's issued template URL.",
+            "Keep the README deploy button pointed at Railway's issued template URL.",
         ],
         "checks": checks,
     }
