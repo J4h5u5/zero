@@ -118,6 +118,16 @@ zero-paper-api --journal .zero/decisions.jsonl --hyperliquid-live-prices
 curl -fsS 'http://127.0.0.1:8765/market/quote?symbol=BTC'
 ```
 
+If `/market/quote` returns `503` with `CERTIFICATE_VERIFY_FAILED` (common on
+some local Python installs), install a CA bundle and restart `zero-paper-api`
+from the same shell:
+
+```bash
+python -m pip install certifi
+export SSL_CERT_FILE="$(python -m certifi)"
+zero-paper-api --journal .zero/decisions.jsonl --hyperliquid-live-prices
+```
+
 This still cannot place exchange orders. If live market data is unavailable or a
 symbol is missing from Hyperliquid `allMids`, paper execution fails closed
 instead of silently using fixture prices.
