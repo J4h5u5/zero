@@ -109,16 +109,35 @@ def build_packet() -> dict[str, Any]:
         },
         {
             "channel": "container_registry",
+            "candidate": "ghcr.io/zero-intel/zero-paper",
+            "status": "published_public_pull_pending",
+            "current_release": "0.1.2",
+            "required_before_enablement": [
+                "GHCR package visibility is public",
+                "anonymous docker pull succeeds from a clean machine",
+                "package visibility administration path is documented",
+            ],
+            "evidence": [
+                "ghcr.io/zero-intel/zero-paper:0.1.2",
+                "sha256:1a9c2f0d2388ad117157b86a70d7db1ff78653d1b9e29c9d936c55efe7666de6",
+                "https://github.com/zero-intel/zero/actions/runs/25360430397",
+                ".github/workflows/container-publish.yml",
+                "docs/registry-launch.md",
+                "docs/distribution.md",
+            ],
+        },
+        {
+            "channel": "docker_hub",
             "candidate": "zero-intel/zero-paper",
             "status": "blocked",
             "current_release": None,
             "required_before_enablement": [
-                "registry namespace is maintainer-controlled",
-                "image name and labels state paper mode by default",
-                "provenance and SBOM are attached to the image publication",
+                "Docker Hub namespace is maintainer-controlled",
+                "Docker Hub token is least-privilege and stored as a GitHub secret",
+                "provenance and SBOM are attached or mirrored in release evidence",
                 "rollback/delete procedure documented in release notes",
             ],
-            "evidence": ["Dockerfile", ".github/workflows/release.yml", "docs/distribution.md"],
+            "evidence": ["Dockerfile", "docs/distribution.md", "docs/registry-launch.md"],
         },
     ]
 
@@ -157,10 +176,10 @@ def build_packet() -> dict[str, Any]:
         "schema_version": SCHEMA_VERSION,
         "generated_at": GENERATED_AT,
         "summary": {
-            "default_distribution": "GitHub Release, public Homebrew tap, PyPI zero-engine, and crates.io zero-os",
+            "default_distribution": "GitHub Release, public Homebrew tap, PyPI zero-engine, crates.io zero-os, and authenticated GHCR smoke evidence",
             "package_registries_enabled": True,
             "current_release": "v0.1.2",
-            "policy": "PyPI zero-engine is published through Trusted Publishing; crates.io zero-os is published manually with a least-privilege token until tokenless publishing is available; Docker Hub and GHCR stay blocked until ownership, provenance, and rollback evidence are recorded.",
+            "policy": "PyPI zero-engine is published through Trusted Publishing; crates.io zero-os is published manually with a least-privilege token until tokenless publishing is available; GHCR zero-paper is published with authenticated smoke evidence but remains public-pull pending until package visibility is verified; Docker Hub stays blocked until ownership, provenance, and rollback evidence are recorded.",
         },
         "channels": channels,
         "checks": checks,

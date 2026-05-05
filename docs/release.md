@@ -325,8 +325,11 @@ The workflow uploads artifacts to the GitHub Actions run and attaches the
 assembled release bundle to a draft GitHub Release. It does not publish to any
 package registry. PyPI publication for `zero-engine` is handled by
 `python-release.yml` through Trusted Publishing. crates.io publication for
-`zero-os` is manual with least-privilege `CRATESIO_API_TOKEN`; Docker Hub and
-GHCR publishing should be added only after repository ownership, provenance,
+`zero-os` is manual with least-privilege `CRATESIO_API_TOKEN`. GHCR publication
+for the paper image is maintainer-triggered through
+`container-publish.yml` and has authenticated smoke evidence; keep it out of
+the primary public install path until anonymous pull access is verified. Docker
+Hub publishing should be added only after repository ownership, provenance,
 rollback, and token permissions are finalized.
 
 ## Homebrew Formula
@@ -361,6 +364,8 @@ ZERO also ships local provenance metadata:
   not claimed, and release-bundle generation does not publish package-registry
   artifacts.
 
-Do not add automated crates.io, Docker Hub, or GHCR publishing until the
-registry channel has an owner, rollback path, least-privilege token plan, and
-documented support expectation in [distribution.md](distribution.md).
+Do not add automated crates.io or Docker Hub publishing until the registry
+channel has an owner, rollback path, least-privilege token plan, and documented
+support expectation in [distribution.md](distribution.md). Keep GHCR manual
+until public-pull verification and package visibility administration are
+recorded in [registry-launch.md](registry-launch.md).

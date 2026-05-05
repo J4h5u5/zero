@@ -1,9 +1,10 @@
 # Registry Launch Packet
 
 ZERO currently distributes the public runtime through GitHub Releases, the
-public Homebrew tap, `zero-engine` on PyPI, and `zero-os` on crates.io. Docker
-Hub and GHCR publication remain blocked until ownership, provenance, and
-rollback evidence are recorded.
+public Homebrew tap, `zero-engine` on PyPI, and `zero-os` on crates.io. GHCR
+has an authenticated, smoke-tested multi-platform paper image, but it is not yet
+the primary public container install path until anonymous pull access is
+verified. Docker Hub remains unpublished.
 
 The machine-readable packets are:
 
@@ -32,7 +33,8 @@ scripts/mcp_registry_listing_check.py --json
 | Homebrew tap | ready | `zero-intel/zero` |
 | PyPI | published | `zero-engine` |
 | crates.io | published | `zero-os`, `zero-*` workspace crates |
-| Container registry | blocked | `zero-intel/zero-paper` |
+| GHCR | published, public-pull pending | `ghcr.io/zero-intel/zero-paper` |
+| Docker Hub | blocked | `zero-intel/zero-paper` |
 | MCP Registry | listed | `io.github.zero-intel/zero` |
 
 ## Enablement Rule
@@ -51,6 +53,39 @@ GHCR/Docker login steps until this packet and the release notes include that
 evidence. PyPI `zero-engine` publication is already handled through Trusted
 Publishing. crates.io publication is performed manually with a least-privilege
 `CRATESIO_API_TOKEN` until a tokenless workflow is available.
+
+## GHCR
+
+The paper runtime image is published through the manual
+[`Container Publish`](../.github/workflows/container-publish.yml) workflow.
+The workflow builds and smokes the local image, pushes a multi-platform image,
+then pulls and smokes the published tag.
+
+Current evidence:
+
+- Image: `ghcr.io/zero-intel/zero-paper:0.1.2`
+- Digest: `sha256:1a9c2f0d2388ad117157b86a70d7db1ff78653d1b9e29c9d936c55efe7666de6`
+- Source commit: `dcff6345320c766717d5cd95cbbf215d0506e288`
+- Workflow run: <https://github.com/zero-intel/zero/actions/runs/25360430397>
+- Platforms: `linux/amd64`, `linux/arm64`
+- Smoke evidence: local image and published image both run the paper runtime
+  and `examples/paper-trading/run.py`.
+- Limitation: the workflow `GITHUB_TOKEN` could push the package but could not
+  administer package visibility through the GitHub REST API. Treat the image as
+  published but public-pull pending until a maintainer verifies an anonymous
+  `docker pull ghcr.io/zero-intel/zero-paper:0.1.2` from a clean machine.
+
+Rollback uses digest promotion:
+
+```bash
+docker buildx imagetools create \
+  -t ghcr.io/zero-intel/zero-paper:latest \
+  ghcr.io/zero-intel/zero-paper@sha256:<known-good-digest>
+```
+
+If the package cannot be made public from repository package settings, use a
+least-privilege maintainer token with package administration scope only for the
+visibility change, then remove the token.
 
 ## crates.io
 
