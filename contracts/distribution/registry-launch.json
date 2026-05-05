@@ -71,11 +71,12 @@
       "status": "published_public_pull_pending"
     },
     {
-      "candidate": "zero-intel/zero-paper",
+      "candidate": "zerointel/zero-paper",
       "channel": "docker_hub",
       "current_release": null,
       "evidence": [
         "Dockerfile",
+        ".github/workflows/container-publish.yml",
         "docs/distribution.md",
         "docs/registry-launch.md"
       ],
@@ -83,9 +84,10 @@
         "Docker Hub namespace is maintainer-controlled",
         "Docker Hub token is least-privilege and stored as a GitHub secret",
         "provenance and SBOM are attached or mirrored in release evidence",
+        "anonymous docker pull succeeds from a clean machine",
         "rollback/delete procedure documented in release notes"
       ],
-      "status": "blocked"
+      "status": "ready_credentials_pending"
     }
   ],
   "checks": {
@@ -113,8 +115,8 @@
   "schema_version": "zero.registry_launch_packet.v1",
   "summary": {
     "current_release": "v0.1.2",
-    "default_distribution": "GitHub Release, public Homebrew tap, PyPI zero-engine, crates.io zero-os, and authenticated GHCR smoke evidence",
+    "default_distribution": "GitHub Release, public Homebrew tap, PyPI zero-engine, crates.io zero-os, authenticated GHCR smoke evidence, and Docker Hub workflow readiness",
     "package_registries_enabled": true,
-    "policy": "PyPI zero-engine is published through Trusted Publishing; crates.io zero-os is published manually with a least-privilege token until tokenless publishing is available; GHCR zero-paper is published with authenticated smoke evidence but remains public-pull pending until package visibility is verified; Docker Hub stays blocked until ownership, provenance, and rollback evidence are recorded."
+    "policy": "PyPI zero-engine is published through Trusted Publishing; crates.io zero-os is published manually with a least-privilege token until tokenless publishing is available; GHCR zero-paper is published with authenticated smoke evidence but remains public-pull pending until package visibility is verified; Docker Hub is wired but remains credentials-pending until ownership, provenance, anonymous pull, and rollback evidence are recorded."
   }
 }

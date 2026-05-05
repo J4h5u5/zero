@@ -128,16 +128,22 @@ def build_packet() -> dict[str, Any]:
         },
         {
             "channel": "docker_hub",
-            "candidate": "zero-intel/zero-paper",
-            "status": "blocked",
+            "candidate": "zerointel/zero-paper",
+            "status": "ready_credentials_pending",
             "current_release": None,
             "required_before_enablement": [
                 "Docker Hub namespace is maintainer-controlled",
                 "Docker Hub token is least-privilege and stored as a GitHub secret",
                 "provenance and SBOM are attached or mirrored in release evidence",
+                "anonymous docker pull succeeds from a clean machine",
                 "rollback/delete procedure documented in release notes",
             ],
-            "evidence": ["Dockerfile", "docs/distribution.md", "docs/registry-launch.md"],
+            "evidence": [
+                "Dockerfile",
+                ".github/workflows/container-publish.yml",
+                "docs/distribution.md",
+                "docs/registry-launch.md",
+            ],
         },
     ]
 
@@ -176,10 +182,10 @@ def build_packet() -> dict[str, Any]:
         "schema_version": SCHEMA_VERSION,
         "generated_at": GENERATED_AT,
         "summary": {
-            "default_distribution": "GitHub Release, public Homebrew tap, PyPI zero-engine, crates.io zero-os, and authenticated GHCR smoke evidence",
+            "default_distribution": "GitHub Release, public Homebrew tap, PyPI zero-engine, crates.io zero-os, authenticated GHCR smoke evidence, and Docker Hub workflow readiness",
             "package_registries_enabled": True,
             "current_release": "v0.1.2",
-            "policy": "PyPI zero-engine is published through Trusted Publishing; crates.io zero-os is published manually with a least-privilege token until tokenless publishing is available; GHCR zero-paper is published with authenticated smoke evidence but remains public-pull pending until package visibility is verified; Docker Hub stays blocked until ownership, provenance, and rollback evidence are recorded.",
+            "policy": "PyPI zero-engine is published through Trusted Publishing; crates.io zero-os is published manually with a least-privilege token until tokenless publishing is available; GHCR zero-paper is published with authenticated smoke evidence but remains public-pull pending until package visibility is verified; Docker Hub is wired but remains credentials-pending until ownership, provenance, anonymous pull, and rollback evidence are recorded.",
         },
         "channels": channels,
         "checks": checks,

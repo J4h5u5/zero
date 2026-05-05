@@ -23,7 +23,8 @@ support commitments are stable.
 
 GHCR has an authenticated, smoke-tested multi-platform paper image, but it is
 not yet the primary public container install path until anonymous pull access is
-verified. Docker Hub is not published.
+verified. Docker Hub publication is wired for maximum marketplace
+discoverability and waits on namespace ownership plus repository secrets.
 
 Container channels require maintainer-owned package names, provenance, rollback
 procedure, public-pull verification, and support expectations before enablement.
@@ -36,7 +37,7 @@ procedure, public-pull verification, and support expectations before enablement.
 | crates.io | `zero-os`, `zero-*` crates | namespace review, README/license metadata, least-privilege token, `cargo owner` review |
 | Homebrew | `zero-intel/zero` public repo tap | `Formula/zero.rb` update from release checksums |
 | GHCR | `ghcr.io/zero-intel/zero-paper` | public-pull verification, rollback evidence, paper-only labeling |
-| Docker Hub | `zero-intel/zero-paper` | registry ownership, provenance, paper-only labeling |
+| Docker Hub | `zerointel/zero-paper` | registry ownership, least-privilege token, provenance, paper-only labeling |
 | Railway template | `ZERO Paper Runtime` | marketplace publish from verified Railway project |
 
 ## Railway Template Channel
@@ -93,7 +94,7 @@ It records the current channel state: GitHub Releases are published, the public
 Homebrew tap is ready, `zero-engine` is published on PyPI, `zero-os` and the
 workspace crates are published on crates.io, GHCR is published with
 authenticated smoke evidence but public-pull verification pending, and Docker
-Hub remains blocked.
+Hub is wired with credentials pending.
 
 Regenerate and verify it with:
 
@@ -106,13 +107,14 @@ scripts/mcp_registry_listing_check.py --json
 ```
 
 `just registry-readiness` runs this check. The release workflow must not add
-automated crates.io or Docker Hub publication until this packet and the release
-notes include namespace ownership, least-privilege publishing, clean install
-evidence, rollback steps, and support expectations. GHCR publication remains a
-manual workflow until anonymous pull access and package visibility
-administration are proven. PyPI publication for `zero-engine` is already enabled
-through Trusted Publishing. crates.io publication currently uses
-`CRATESIO_API_TOKEN` manually until tokenless publishing is available.
+automated crates.io publication or default-on container publication until this
+packet and the release notes include namespace ownership, least-privilege
+publishing, clean install evidence, rollback steps, and support expectations.
+GHCR and Docker Hub publication remain manual workflow paths until anonymous
+pull access and package visibility administration are proven. PyPI publication
+for `zero-engine` is already enabled through Trusted Publishing. crates.io
+publication currently uses `CRATESIO_API_TOKEN` manually until tokenless
+publishing is available.
 
 The MCP Registry packet is separate from package registries because it is
 metadata for agents, not an artifact host. ZERO commits `server.json` and
@@ -136,7 +138,9 @@ Package channels must be proven before use:
 - GHCR: `ghcr.io/zero-intel/zero-paper:0.1.2` is published with provenance,
   SBOM, and published-image smoke evidence. It is not the primary public install
   path until anonymous pull access is verified.
-- Docker Hub: the package namespace is maintainer-controlled, the image name
+- Docker Hub: `zerointel/zero-paper` is the default candidate. Publication is
+  wired behind `publish_dockerhub=true` in `container-publish.yml` and requires
+  `DOCKERHUB_USERNAME` plus `DOCKERHUB_TOKEN` repository secrets. The image name
   includes paper-mode labeling until live runtime evidence exists, and
   provenance is attached to the release notes.
 
@@ -230,8 +234,9 @@ release-evidence <tag>` goes further: it downloads the release, verifies
 `SHA256SUMS`, verifies release metadata and attestations, rerenders the formula
 from the clean download, and fails if the committed formula has drifted. These
 checks name the already-published PyPI `zero-engine` package and crates.io
-`zero-os` package plus the authenticated GHCR smoke evidence. They do not claim
-Docker Hub publication or public anonymous GHCR pull access.
+`zero-os` package plus the authenticated GHCR smoke evidence and Docker Hub
+workflow readiness. They do not claim Docker Hub publication or public anonymous
+GHCR pull access.
 
 ## Draft Release Rollback Rehearsal
 

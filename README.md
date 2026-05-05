@@ -419,8 +419,9 @@ GHCR also has an authenticated, smoke-tested multi-platform paper image:
 `ghcr.io/zero-intel/zero-paper:0.1.2@sha256:1a9c2f0d2388ad117157b86a70d7db1ff78653d1b9e29c9d936c55efe7666de6`.
 Do not treat it as the primary public container install path until anonymous
 pull access is verified in
-[docs/registry-launch.md](docs/registry-launch.md). Docker Hub remains
-unpublished.
+[docs/registry-launch.md](docs/registry-launch.md). Docker Hub is wired for
+manual publication and waits on namespace ownership plus `DOCKERHUB_USERNAME`
+and `DOCKERHUB_TOKEN` repository secrets.
 
 ## No-Install Contributor Path
 
@@ -619,6 +620,7 @@ Machine-readable entrypoints:
 - [AGENTS.md](AGENTS.md)
 - [Agent Commands](.claude/commands/README.md)
 - [Contributor Issue Board](docs/contributor-issue-board.md)
+- [QA Onboarding Checklist](docs/qa-onboarding-checklist.md)
 - [Issue Templates](.github/ISSUE_TEMPLATE/agent_task.yml)
 - [OpenAPI Contract](openapi/zero-paper-api.v1.yaml)
 - [Agent Architecture](docs/agent-architecture.md)
@@ -665,6 +667,7 @@ Machine-readable entrypoints:
 - [ZERO Intelligence](docs/zero-intelligence.md)
 - [Model Gateway](docs/model-gateway.md)
 - [Production Readiness](docs/production-readiness.md)
+- [QA Onboarding Checklist](docs/qa-onboarding-checklist.md)
 - [Public Upgrade Plan](docs/public-upgrade.md)
 - [Autonomous OS Plan](docs/autonomous-os-plan.md)
 - [Capability Gap Audit](docs/private-engine-capability-gap-audit.md)

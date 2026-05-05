@@ -368,6 +368,7 @@ docs-check:
     test -f docs/autonomous-os-plan.md
     test -f docs/agentic-contribution.md
     test -f docs/contributor-issue-board.md
+    test -f docs/qa-onboarding-checklist.md
     test -f docs/label-taxonomy.md
     test -f docs/release.md
     test -f docs/release-verification.md

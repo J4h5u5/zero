@@ -4,7 +4,8 @@ ZERO currently distributes the public runtime through GitHub Releases, the
 public Homebrew tap, `zero-engine` on PyPI, and `zero-os` on crates.io. GHCR
 has an authenticated, smoke-tested multi-platform paper image, but it is not yet
 the primary public container install path until anonymous pull access is
-verified. Docker Hub remains unpublished.
+verified. Docker Hub publication is wired for marketplace discoverability and
+waits on namespace ownership plus repository secrets.
 
 The machine-readable packets are:
 
@@ -34,7 +35,7 @@ scripts/mcp_registry_listing_check.py --json
 | PyPI | published | `zero-engine` |
 | crates.io | published | `zero-os`, `zero-*` workspace crates |
 | GHCR | published, public-pull pending | `ghcr.io/zero-intel/zero-paper` |
-| Docker Hub | blocked | `zero-intel/zero-paper` |
+| Docker Hub | ready, credentials pending | `zerointel/zero-paper` |
 | MCP Registry | listed | `io.github.zero-intel/zero` |
 
 ## Enablement Rule
@@ -48,11 +49,11 @@ the release PR records:
 - rollback, yank, delete, or deprecation procedure for that channel;
 - support expectation and safety wording for paper-first operation.
 
-The release workflow must not grow automated `cargo publish`, `docker push`, or
-GHCR/Docker login steps until this packet and the release notes include that
-evidence. PyPI `zero-engine` publication is already handled through Trusted
-Publishing. crates.io publication is performed manually with a least-privilege
-`CRATESIO_API_TOKEN` until a tokenless workflow is available.
+The release workflow must not grow automated `cargo publish` or default-on
+container publication steps until this packet and the release notes include
+that evidence. PyPI `zero-engine` publication is already handled through
+Trusted Publishing. crates.io publication is performed manually with a
+least-privilege `CRATESIO_API_TOKEN` until a tokenless workflow is available.
 
 ## GHCR
 
@@ -86,6 +87,32 @@ docker buildx imagetools create \
 If the package cannot be made public from repository package settings, use a
 least-privilege maintainer token with package administration scope only for the
 visibility change, then remove the token.
+
+## Docker Hub
+
+Docker Hub publication is wired into the manual
+[`Container Publish`](../.github/workflows/container-publish.yml) workflow for
+maximum marketplace discoverability. It is opt-in with `publish_dockerhub=true`
+and requires these repository secrets:
+
+- `DOCKERHUB_USERNAME`
+- `DOCKERHUB_TOKEN`
+
+Default candidate image:
+
+```bash
+docker pull zerointel/zero-paper:0.1.2
+```
+
+If the maintained namespace is different, override the workflow input
+`dockerhub_namespace`. Before first publication, record:
+
+- namespace owner evidence;
+- token scope and rotation policy;
+- successful workflow run URL;
+- image digest;
+- anonymous `docker pull` evidence from a clean machine;
+- rollback/deprecation command used for the tag.
 
 ## crates.io
 

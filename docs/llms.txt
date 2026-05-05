@@ -86,6 +86,7 @@
 
 - [Agentic Contribution](agentic-contribution.md)
 - [Contributor Issue Board](contributor-issue-board.md)
+- [QA Onboarding Checklist](qa-onboarding-checklist.md)
 - [Dev Container](../.devcontainer/README.md)
 - [Issue Templates](../.github/ISSUE_TEMPLATE/agent_task.yml)
 - [Label Taxonomy](label-taxonomy.md)

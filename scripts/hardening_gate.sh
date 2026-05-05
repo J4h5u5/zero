@@ -58,6 +58,7 @@ required_files=(
   "docs/production-readiness.md"
   "docs/public-upgrade.md"
   "docs/private-engine-capability-gap-audit.md"
+  "docs/qa-onboarding-checklist.md"
   "docs/label-taxonomy.md"
   "docs/launch-issues.md"
   "docs/backlog.md"

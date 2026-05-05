@@ -21,6 +21,7 @@ Before editing, read:
 - `docs/journal-integrity.md`
 - `docs/autonomous-os-plan.md`
 - `docs/agentic-contribution.md`
+- `docs/qa-onboarding-checklist.md`
 - `docs/llms.txt`
 - `docs/llms-full.txt`
 - the nearest docs for the files you are changing
