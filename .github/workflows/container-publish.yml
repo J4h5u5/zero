@@ -18,9 +18,13 @@ on:
         type: boolean
         default: false
       dockerhub_namespace:
-        description: "Docker Hub namespace for the zero-paper image"
+        description: "Docker Hub namespace for the ZERO image"
         required: true
-        default: "zerointel"
+        default: "getzero"
+      dockerhub_repository:
+        description: "Docker Hub repository name for the ZERO image"
+        required: true
+        default: "zero"
 
 permissions:
   contents: read
@@ -30,10 +34,10 @@ permissions:
 
 jobs:
   ghcr:
-    name: Publish GHCR paper image
+    name: Publish GHCR ZERO image
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: ghcr.io/zero-intel/zero-paper
+      IMAGE_NAME: ghcr.io/zero-intel/zero
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - uses: actions/checkout@v6.0.2
@@ -94,7 +98,7 @@ jobs:
         run: |
           if gh api \
             --method PATCH \
-            /orgs/zero-intel/packages/container/zero-paper/visibility \
+            /orgs/zero-intel/packages/container/zero/visibility \
             -f visibility=public; then
             echo "GHCR package visibility set to public."
           else
@@ -119,11 +123,11 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
   dockerhub:
-    name: Publish Docker Hub paper image
+    name: Publish Docker Hub ZERO image
     runs-on: ubuntu-latest
     if: ${{ inputs.publish_dockerhub }}
     env:
-      IMAGE_NAME: docker.io/${{ inputs.dockerhub_namespace }}/zero-paper
+      IMAGE_NAME: docker.io/${{ inputs.dockerhub_namespace }}/${{ inputs.dockerhub_repository }}
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true

@@ -411,17 +411,15 @@ zero --version
 Container users can run the paper runtime directly from source:
 
 ```bash
-docker build -t zero-paper .
-docker run --rm -p 8765:8765 -e PORT=8765 zero-paper
+docker build -t getzero/zero .
+docker run --rm -p 8765:8765 -e PORT=8765 getzero/zero
 ```
 
-GHCR also has an authenticated, smoke-tested multi-platform paper image:
-`ghcr.io/zero-intel/zero-paper:0.1.2@sha256:1a9c2f0d2388ad117157b86a70d7db1ff78653d1b9e29c9d936c55efe7666de6`.
-Do not treat it as the primary public container install path until anonymous
-pull access is verified in
-[docs/registry-launch.md](docs/registry-launch.md). Docker Hub is wired for
-manual publication and waits on namespace ownership plus `DOCKERHUB_USERNAME`
-and `DOCKERHUB_TOKEN` repository secrets.
+Docker Hub and GHCR use the product image name, not a paper-only demo name:
+`getzero/zero` and `ghcr.io/zero-intel/zero`. The runtime remains paper-first
+by default; live operation stays behind explicit preflight gates. See
+[docs/registry-launch.md](docs/registry-launch.md) for publication state,
+digests, and anonymous-pull evidence.
 
 ## No-Install Contributor Path
 

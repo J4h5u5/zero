@@ -39,7 +39,7 @@ just paper-api-smoke
 - [ ] `gh attestation verify zero-linux -R zero-intel/zero` passes.
 - [ ] `gh attestation verify zero-macos -R zero-intel/zero` passes.
 - [ ] After publication, `scripts/release_evidence.py <tag>` passes from a clean download.
-- [ ] PyPI `zero-engine` release, if included, uses `python-release.yml` Trusted Publishing; crates.io `zero-os` publication, if included, records owner evidence and yank steps; GHCR publication, if included, records digest, published-image smoke evidence, public-pull status, and rollback steps; Docker Hub publication remains disabled unless this release explicitly includes an ownership-proof section.
+- [ ] PyPI `zero-engine` release, if included, uses `python-release.yml` Trusted Publishing; crates.io `zero-os` publication, if included, records owner evidence and yank steps; GHCR publication, if included, records digest, published-image smoke evidence, public-pull status, and rollback steps; Docker Hub `getzero/zero` publication remains disabled unless this release explicitly includes an ownership-proof section.
 - [ ] `docs/threat-model.md`, `docs/incident-runbooks.md`, `docs/dependency-policy.md`, and `docs/distribution.md` are reviewed for this release.
 
 ## Known Limitations

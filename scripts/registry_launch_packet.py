@@ -109,18 +109,18 @@ def build_packet() -> dict[str, Any]:
         },
         {
             "channel": "container_registry",
-            "candidate": "ghcr.io/zero-intel/zero-paper",
-            "status": "published_public_pull_pending",
-            "current_release": "0.1.2",
+            "candidate": "ghcr.io/zero-intel/zero",
+            "status": "ready_credentials_pending",
+            "current_release": None,
             "required_before_enablement": [
                 "GHCR package visibility is public",
                 "anonymous docker pull succeeds from a clean machine",
                 "package visibility administration path is documented",
             ],
             "evidence": [
-                "ghcr.io/zero-intel/zero-paper:0.1.2",
-                "sha256:1a9c2f0d2388ad117157b86a70d7db1ff78653d1b9e29c9d936c55efe7666de6",
-                "https://github.com/zero-intel/zero/actions/runs/25360430397",
+                "legacy authenticated smoke: ghcr.io/zero-intel/zero-paper:0.1.2",
+                "legacy digest: sha256:1a9c2f0d2388ad117157b86a70d7db1ff78653d1b9e29c9d936c55efe7666de6",
+                "legacy workflow: https://github.com/zero-intel/zero/actions/runs/25360430397",
                 ".github/workflows/container-publish.yml",
                 "docs/registry-launch.md",
                 "docs/distribution.md",
@@ -128,7 +128,7 @@ def build_packet() -> dict[str, Any]:
         },
         {
             "channel": "docker_hub",
-            "candidate": "zerointel/zero-paper",
+            "candidate": "getzero/zero",
             "status": "ready_credentials_pending",
             "current_release": None,
             "required_before_enablement": [
@@ -182,10 +182,10 @@ def build_packet() -> dict[str, Any]:
         "schema_version": SCHEMA_VERSION,
         "generated_at": GENERATED_AT,
         "summary": {
-            "default_distribution": "GitHub Release, public Homebrew tap, PyPI zero-engine, crates.io zero-os, authenticated GHCR smoke evidence, and Docker Hub workflow readiness",
+            "default_distribution": "GitHub Release, public Homebrew tap, PyPI zero-engine, crates.io zero-os, legacy authenticated GHCR smoke evidence, and Docker Hub/GHCR product-image workflow readiness",
             "package_registries_enabled": True,
             "current_release": "v0.1.2",
-            "policy": "PyPI zero-engine is published through Trusted Publishing; crates.io zero-os is published manually with a least-privilege token until tokenless publishing is available; GHCR zero-paper is published with authenticated smoke evidence but remains public-pull pending until package visibility is verified; Docker Hub is wired but remains credentials-pending until ownership, provenance, anonymous pull, and rollback evidence are recorded.",
+            "policy": "PyPI zero-engine is published through Trusted Publishing; crates.io zero-os is published manually with a least-privilege token until tokenless publishing is available; Docker Hub getzero/zero and GHCR ghcr.io/zero-intel/zero are wired but remain credentials-pending until ownership, provenance, anonymous pull, and rollback evidence are recorded.",
         },
         "channels": channels,
         "checks": checks,

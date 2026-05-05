@@ -1,11 +1,10 @@
 # Registry Launch Packet
 
 ZERO currently distributes the public runtime through GitHub Releases, the
-public Homebrew tap, `zero-engine` on PyPI, and `zero-os` on crates.io. GHCR
-has an authenticated, smoke-tested multi-platform paper image, but it is not yet
-the primary public container install path until anonymous pull access is
-verified. Docker Hub publication is wired for marketplace discoverability and
-waits on namespace ownership plus repository secrets.
+public Homebrew tap, `zero-engine` on PyPI, and `zero-os` on crates.io. Docker
+Hub and GHCR use product image names (`getzero/zero` and
+`ghcr.io/zero-intel/zero`) while the runtime remains paper-first by default.
+Container publication stays manual until anonymous pull evidence is recorded.
 
 The machine-readable packets are:
 
@@ -34,8 +33,8 @@ scripts/mcp_registry_listing_check.py --json
 | Homebrew tap | ready | `zero-intel/zero` |
 | PyPI | published | `zero-engine` |
 | crates.io | published | `zero-os`, `zero-*` workspace crates |
-| GHCR | published, public-pull pending | `ghcr.io/zero-intel/zero-paper` |
-| Docker Hub | ready, credentials pending | `zerointel/zero-paper` |
+| GHCR | ready, credentials pending | `ghcr.io/zero-intel/zero` |
+| Docker Hub | ready, credentials pending | `getzero/zero` |
 | MCP Registry | listed | `io.github.zero-intel/zero` |
 
 ## Enablement Rule
@@ -57,12 +56,12 @@ least-privilege `CRATESIO_API_TOKEN` until a tokenless workflow is available.
 
 ## GHCR
 
-The paper runtime image is published through the manual
+The ZERO runtime image is published through the manual
 [`Container Publish`](../.github/workflows/container-publish.yml) workflow.
 The workflow builds and smokes the local image, pushes a multi-platform image,
 then pulls and smokes the published tag.
 
-Current evidence:
+Legacy authenticated evidence exists for the previous internal image name:
 
 - Image: `ghcr.io/zero-intel/zero-paper:0.1.2`
 - Digest: `sha256:1a9c2f0d2388ad117157b86a70d7db1ff78653d1b9e29c9d936c55efe7666de6`
@@ -76,12 +75,18 @@ Current evidence:
   published but public-pull pending until a maintainer verifies an anonymous
   `docker pull ghcr.io/zero-intel/zero-paper:0.1.2` from a clean machine.
 
+The next publication target is:
+
+```bash
+docker pull ghcr.io/zero-intel/zero:0.1.2
+```
+
 Rollback uses digest promotion:
 
 ```bash
 docker buildx imagetools create \
-  -t ghcr.io/zero-intel/zero-paper:latest \
-  ghcr.io/zero-intel/zero-paper@sha256:<known-good-digest>
+  -t ghcr.io/zero-intel/zero:latest \
+  ghcr.io/zero-intel/zero@sha256:<known-good-digest>
 ```
 
 If the package cannot be made public from repository package settings, use a
@@ -101,11 +106,12 @@ and requires these repository secrets:
 Default candidate image:
 
 ```bash
-docker pull zerointel/zero-paper:0.1.2
+docker pull getzero/zero:0.1.2
 ```
 
-If the maintained namespace is different, override the workflow input
-`dockerhub_namespace`. Before first publication, record:
+If the maintained namespace or repository changes, override the workflow inputs
+`dockerhub_namespace` and `dockerhub_repository`. Before first publication,
+record:
 
 - namespace owner evidence;
 - token scope and rotation policy;
