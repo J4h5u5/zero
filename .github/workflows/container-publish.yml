@@ -79,14 +79,18 @@ jobs:
           provenance: mode=max
           sbom: true
 
-      - name: Make GHCR package public
+      - name: Try to make GHCR package public
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh api \
+          if gh api \
             --method PATCH \
             /orgs/zero-intel/packages/container/zero-paper/visibility \
-            -f visibility=public
+            -f visibility=public; then
+            echo "GHCR package visibility set to public."
+          else
+            echo "::warning::GITHUB_TOKEN could not change GHCR package visibility. Make the package public from GitHub Packages settings or rerun with a token that can administer org packages."
+          fi
 
       - name: Smoke published image
         run: |
