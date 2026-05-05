@@ -143,6 +143,7 @@ def write_daily_root(
             out_path,
             provider=anchor_provider,
             receipt_dir=target_dir.parent / "journal-anchors",
+            day=root_day.isoformat(),
         )
     return out_path
 

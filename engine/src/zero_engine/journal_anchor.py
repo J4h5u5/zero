@@ -181,6 +181,7 @@ def anchor_root(
     *,
     provider: str | None = None,
     receipt_dir: Path | None = None,
+    day: str | None = None,
     webhook_url: str | None = None,
     webhook_token: str | None = None,
 ) -> dict[str, Any] | None:
@@ -189,7 +190,7 @@ def anchor_root(
     if selected in {"", "none", "off", "disabled"}:
         return None
     if selected == "local":
-        return create_local_anchor(root, receipt_dir=receipt_dir or Path("journal-anchors"))
+        return create_local_anchor(root, receipt_dir=receipt_dir or Path("journal-anchors"), day=day)
     if selected == "webhook":
         url = webhook_url or os.environ.get(ANCHOR_WEBHOOK_URL_ENV, "")
         if not url:
@@ -207,6 +208,7 @@ def anchor_root_file(
     *,
     provider: str | None = None,
     receipt_dir: Path | None = None,
+    day: str | None = None,
     webhook_url: str | None = None,
     webhook_token: str | None = None,
 ) -> dict[str, Any] | None:
@@ -217,6 +219,7 @@ def anchor_root_file(
         root,
         provider=provider,
         receipt_dir=receipt_dir,
+        day=day,
         webhook_url=webhook_url,
         webhook_token=webhook_token,
     )
