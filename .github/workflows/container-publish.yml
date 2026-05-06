@@ -1,0 +1,200 @@
+name: Container Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Container version tag to publish"
+        required: true
+        default: "0.1.2"
+      publish_latest:
+        description: "Also publish the latest tag"
+        required: true
+        type: boolean
+        default: true
+      publish_dockerhub:
+        description: "Also publish to Docker Hub when DOCKERHUB_USERNAME and DOCKERHUB_TOKEN are configured"
+        required: true
+        type: boolean
+        default: false
+      dockerhub_namespace:
+        description: "Docker Hub namespace for the ZERO image"
+        required: true
+        default: "getzero"
+      dockerhub_repository:
+        description: "Docker Hub repository name for the ZERO image"
+        required: true
+        default: "zero"
+
+permissions:
+  contents: read
+  packages: write
+  attestations: write
+  id-token: write
+
+jobs:
+  ghcr:
+    name: Publish GHCR ZERO image
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: ghcr.io/zero-intel/zero
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v6.0.2
+
+      - name: Build local smoke image
+        run: docker build -t zero-paper-smoke:${{ github.sha }} .
+
+      - name: Smoke local image
+        run: |
+          docker run --rm zero-paper-smoke:${{ github.sha }}
+          docker run --rm zero-paper-smoke:${{ github.sha }} python /app/examples/paper-trading/run.py
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ github.token }}
+
+      - name: Prepare tags
+        id: tags
+        run: |
+          short_sha="${GITHUB_SHA::7}"
+          {
+            echo 'tags<<EOF'
+            echo "${IMAGE_NAME}:${{ inputs.version }}"
+            echo "${IMAGE_NAME}:sha-${short_sha}"
+            if [[ "${{ inputs.publish_latest }}" == "true" ]]; then
+              echo "${IMAGE_NAME}:latest"
+            fi
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Build and push multi-platform image
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.tags.outputs.tags }}
+          labels: |
+            org.opencontainers.image.title=ZERO Paper Runtime
+            org.opencontainers.image.description=Paper-first ZERO runtime for self-custodial onchain operations.
+            org.opencontainers.image.source=https://github.com/zero-intel/zero
+            org.opencontainers.image.version=${{ inputs.version }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.licenses=Apache-2.0
+          provenance: mode=max
+          sbom: true
+
+      - name: Record GHCR visibility expectation
+        run: |
+          echo "GHCR package visibility is administered from GitHub Packages settings."
+          echo "Public-pull access is proven by the published-image smoke step."
+
+      - name: Smoke published image
+        run: |
+          docker pull "${IMAGE_NAME}:${{ inputs.version }}"
+          docker run --rm "${IMAGE_NAME}:${{ inputs.version }}"
+          docker run --rm "${IMAGE_NAME}:${{ inputs.version }}" python /app/examples/paper-trading/run.py
+
+      - name: Write publication summary
+        run: |
+          {
+            echo "## GHCR publication"
+            echo
+            echo "- Image: \`${IMAGE_NAME}:${{ inputs.version }}\`"
+            echo "- Digest: \`${{ steps.push.outputs.digest }}\`"
+            echo "- Platforms: \`linux/amd64,linux/arm64\`"
+            echo "- Smoke: local image and published image"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  dockerhub:
+    name: Publish Docker Hub ZERO image
+    runs-on: ubuntu-latest
+    if: ${{ inputs.publish_dockerhub }}
+    env:
+      IMAGE_NAME: docker.io/${{ inputs.dockerhub_namespace }}/${{ inputs.dockerhub_repository }}
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v6.0.2
+
+      - name: Require Docker Hub credentials
+        run: |
+          if [[ -z "${DOCKERHUB_USERNAME}" || -z "${DOCKERHUB_TOKEN}" ]]; then
+            echo "::error::Set DOCKERHUB_USERNAME and DOCKERHUB_TOKEN repository secrets before enabling publish_dockerhub."
+            exit 1
+          fi
+
+      - name: Build local smoke image
+        run: docker build -t zero-paper-dockerhub-smoke:${{ github.sha }} .
+
+      - name: Smoke local image
+        run: |
+          docker run --rm zero-paper-dockerhub-smoke:${{ github.sha }}
+          docker run --rm zero-paper-dockerhub-smoke:${{ github.sha }} python /app/examples/paper-trading/run.py
+
+      - uses: docker/setup-qemu-action@v3
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ env.DOCKERHUB_TOKEN }}
+
+      - name: Prepare tags
+        id: tags
+        run: |
+          short_sha="${GITHUB_SHA::7}"
+          {
+            echo 'tags<<EOF'
+            echo "${IMAGE_NAME}:${{ inputs.version }}"
+            echo "${IMAGE_NAME}:sha-${short_sha}"
+            if [[ "${{ inputs.publish_latest }}" == "true" ]]; then
+              echo "${IMAGE_NAME}:latest"
+            fi
+            echo 'EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Build and push multi-platform image
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.tags.outputs.tags }}
+          labels: |
+            org.opencontainers.image.title=ZERO Paper Runtime
+            org.opencontainers.image.description=Paper-first ZERO runtime for self-custodial onchain operations.
+            org.opencontainers.image.source=https://github.com/zero-intel/zero
+            org.opencontainers.image.version=${{ inputs.version }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            org.opencontainers.image.licenses=Apache-2.0
+          provenance: mode=max
+          sbom: true
+
+      - name: Smoke published image
+        run: |
+          docker pull "${IMAGE_NAME}:${{ inputs.version }}"
+          docker run --rm "${IMAGE_NAME}:${{ inputs.version }}"
+          docker run --rm "${IMAGE_NAME}:${{ inputs.version }}" python /app/examples/paper-trading/run.py
+
+      - name: Write publication summary
+        run: |
+          {
+            echo "## Docker Hub publication"
+            echo
+            echo "- Image: \`${IMAGE_NAME}:${{ inputs.version }}\`"
+            echo "- Digest: \`${{ steps.push.outputs.digest }}\`"
+            echo "- Platforms: \`linux/amd64,linux/arm64\`"
+            echo "- Smoke: local image and published image"
+          } >> "$GITHUB_STEP_SUMMARY"

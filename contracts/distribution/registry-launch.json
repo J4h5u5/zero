@@ -27,52 +27,70 @@
     {
       "candidate": "zero-engine",
       "channel": "pypi",
-      "current_release": null,
+      "current_release": "0.1.2",
       "evidence": [
-        "engine/pyproject.toml",
+        "https://pypi.org/project/zero-engine/0.1.2/",
+        "scripts/mcp_registry_listing_check.py --require-pypi-published --json",
         "docs/distribution.md"
       ],
-      "required_before_enablement": [
-        "maintainer-controlled PyPI project or documented name-claim path",
-        "PyPI Trusted Publishing configured for GitHub Actions",
-        "test install from TestPyPI or staged package index",
-        "rollback/deprecation procedure documented in release notes"
-      ],
-      "status": "blocked"
+      "required_before_enablement": [],
+      "status": "published"
     },
     {
-      "candidate": "zero,zero-commands,zero-config,zero-doctor,zero-engine-client,zero-headless,zero-onboarding,zero-operator-state,zero-session,zero-testkit,zero-tui",
+      "candidate": "zero-os,zero-commands,zero-config,zero-doctor,zero-engine-client,zero-headless,zero-onboarding,zero-operator-state,zero-session,zero-testkit,zero-tui",
       "channel": "crates_io",
-      "current_release": null,
+      "current_release": "0.1.2",
       "evidence": [
-        "cli/Cargo.toml",
-        "cli/crates/*/Cargo.toml",
+        "https://crates.io/crates/zero-os/0.1.2",
+        "cargo install zero-os --version 0.1.2",
+        "cargo owner --list zero-os => squaeragent",
+        "CRATESIO_API_TOKEN GitHub secret",
+        "docs/registry-launch.md",
         "docs/distribution.md"
       ],
-      "required_before_enablement": [
-        "crate namespace review completed",
-        "cargo owner evidence recorded after reservation/publication",
-        "publish order documented for the workspace crate graph",
-        "rollback/yank procedure documented in release notes"
-      ],
-      "status": "blocked"
+      "required_before_enablement": [],
+      "status": "published"
     },
     {
-      "candidate": "zero-intel/zero-paper",
+      "candidate": "ghcr.io/zero-intel/zero",
       "channel": "container_registry",
-      "current_release": null,
+      "current_release": "0.1.2",
       "evidence": [
-        "Dockerfile",
-        ".github/workflows/release.yml",
+        "legacy authenticated smoke: ghcr.io/zero-intel/zero-paper:0.1.2",
+        "legacy digest: sha256:1a9c2f0d2388ad117157b86a70d7db1ff78653d1b9e29c9d936c55efe7666de6",
+        "legacy workflow: https://github.com/zero-intel/zero/actions/runs/25360430397",
+        "ghcr.io/zero-intel/zero:0.1.2",
+        "sha256:048728c531aa79306e8e6b3618c61e3b4a6f74d80fff6da57deabb79bae4ed7b",
+        "product workflow: https://github.com/zero-intel/zero/actions/runs/25362037363",
+        "GHCR package visibility public",
+        "anonymous docker pull ghcr.io/zero-intel/zero:0.1.2",
+        "docker run --rm ghcr.io/zero-intel/zero:0.1.2",
+        "docker run --rm ghcr.io/zero-intel/zero:0.1.2 python /app/examples/paper-trading/run.py",
+        ".github/workflows/container-publish.yml",
+        "docs/registry-launch.md",
         "docs/distribution.md"
       ],
-      "required_before_enablement": [
-        "registry namespace is maintainer-controlled",
-        "image name and labels state paper mode by default",
-        "provenance and SBOM are attached to the image publication",
-        "rollback/delete procedure documented in release notes"
+      "required_before_enablement": [],
+      "status": "published"
+    },
+    {
+      "candidate": "getzero/zero",
+      "channel": "docker_hub",
+      "current_release": "0.1.2",
+      "evidence": [
+        "getzero/zero:0.1.2",
+        "sha256:d810ae677af04958a95b387e6fbc7ff15baa4d8488b26cfb76b31cc4ee300162",
+        "https://github.com/zero-intel/zero/actions/runs/25362037363",
+        "anonymous docker pull getzero/zero:0.1.2",
+        "docker run --rm getzero/zero:0.1.2",
+        "docker run --rm getzero/zero:0.1.2 python /app/examples/paper-trading/run.py",
+        "Dockerfile",
+        ".github/workflows/container-publish.yml",
+        "docs/distribution.md",
+        "docs/registry-launch.md"
       ],
-      "status": "blocked"
+      "required_before_enablement": [],
+      "status": "published"
     }
   ],
   "checks": {
@@ -82,8 +100,9 @@
     "docs_name_trusted_publishing": true,
     "docs_release_states_no_registry_publish": true,
     "homebrew_formula_tracks_current_release": true,
-    "package_registry_publication_disabled": true,
+    "package_registry_publication_enabled": true,
     "pypi_candidate_matches_pyproject": true,
+    "pypi_package_published": true,
     "release_evidence_current": true,
     "release_workflow_has_no_cargo_publish": true,
     "release_workflow_has_no_container_push": true,
@@ -99,8 +118,8 @@
   "schema_version": "zero.registry_launch_packet.v1",
   "summary": {
     "current_release": "v0.1.2",
-    "default_distribution": "GitHub Release plus public Homebrew tap",
-    "package_registries_enabled": false,
-    "policy": "Package registries stay blocked until ownership, tokenless publishing, and rollback evidence are recorded."
+    "default_distribution": "GitHub Release, public Homebrew tap, PyPI zero-engine, crates.io zero-os, Docker Hub getzero/zero, and GHCR ghcr.io/zero-intel/zero",
+    "package_registries_enabled": true,
+    "policy": "PyPI zero-engine is published through Trusted Publishing; crates.io zero-os is published manually with a least-privilege token until tokenless publishing is available; Docker Hub getzero/zero and GHCR ghcr.io/zero-intel/zero are published with anonymous pull evidence."
   }
 }

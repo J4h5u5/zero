@@ -4157,30 +4157,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "zero"
-version = "0.1.2"
-dependencies = [
- "anyhow",
- "chrono",
- "clap",
- "serde",
- "serde_json",
- "tokio",
- "tracing",
- "tracing-subscriber",
- "url",
- "zero-commands",
- "zero-config",
- "zero-doctor",
- "zero-engine-client",
- "zero-headless",
- "zero-onboarding",
- "zero-session",
- "zero-testkit",
- "zero-tui",
-]
-
-[[package]]
 name = "zero-commands"
 version = "0.1.2"
 dependencies = [
@@ -4298,6 +4274,30 @@ dependencies = [
  "serde_json",
  "thiserror 2.0.18",
  "tracing",
+]
+
+[[package]]
+name = "zero-os"
+version = "0.1.2"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "clap",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "url",
+ "zero-commands",
+ "zero-config",
+ "zero-doctor",
+ "zero-engine-client",
+ "zero-headless",
+ "zero-onboarding",
+ "zero-session",
+ "zero-testkit",
+ "zero-tui",
 ]
 
 [[package]]

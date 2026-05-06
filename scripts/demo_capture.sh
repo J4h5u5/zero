@@ -27,7 +27,7 @@ run_zero() {
   if [[ -n "${ZERO_BIN}" ]]; then
     "${ZERO_BIN}" --api "${API}" "$@"
   else
-    (cd "${ROOT}/cli" && cargo run -q -p zero -- --api "${API}" "$@")
+    (cd "${ROOT}/cli" && cargo run -q -p zero-os -- --api "${API}" "$@")
   fi
 }
 

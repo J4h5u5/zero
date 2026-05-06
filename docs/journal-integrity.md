@@ -172,6 +172,64 @@ when the state points at a missing or mutated packet, when the journal head no
 longer matches the anchor, or when the cadence is overdue. Preserve external
 receipt material outside the trading host.
 
+## Stream Roots And Public Proof Packs
+
+The decision journal verifier protects one append-only decision file. Launch
+and live-readiness evidence also need a higher-level root over multiple runtime
+streams: trades, events, decisions, rejections, near misses, and genesis
+proposals.
+
+ZERO exposes this as `zero.journal.v1` stream envelopes and
+`zero.journal_root.v1` daily roots:
+
+- `zero-journal-chain` wraps raw JSONL rows in ordered envelopes with
+  `payload_hash`, `prev_hash`, `entry_hash`, and optional Ed25519 signature
+  fields.
+- `zero-journal-sidecar` writes or backfills sibling
+  `journal-chains/*.chain.jsonl` files without changing the raw journal format.
+- `zero-journal-root` reduces verified streams into one signed root hash.
+- `zero-journal-anchor` attaches local, webhook, or OpenTimestamps receipt
+  metadata. Root hashes and signatures exclude the mutable `anchor` field.
+- `zero-journal-proof` emits a public-safe proof pack with counts, head hashes,
+  signature hash, public key id, and anchor metadata, but no raw trade rows,
+  local paths, wallet material, or exchange order IDs.
+
+Build and verify a sidecar over any JSONL stream:
+
+```bash
+zero-journal-sidecar backfill \
+  --input .zero/data/trades.jsonl \
+  --stream trades
+
+zero-journal-sidecar verify \
+  --input .zero/data/journal-chains/trades.trades.chain.jsonl \
+  --stream trades \
+  --raw-input .zero/data/trades.jsonl
+```
+
+Generate a daily root and public proof pack:
+
+```bash
+zero-journal-root \
+  --bus-dir .zero/bus \
+  --data-dir .zero/data \
+  --output-dir .zero/data/journal-roots \
+  --day 2026-05-04
+
+zero-journal-proof \
+  --root .zero/data/journal-roots/journal-root-2026-05-04.json \
+  --output-dir .zero/data/proof-packs
+```
+
+Set `ZERO_JOURNAL_SIGNING_KEY_B64` to a base64/base64url encoded 32-byte
+Ed25519 private key or base64 encoded Ed25519 PEM to sign sidecar entries and
+daily roots. Set `ZERO_JOURNAL_SIGNING_KEY_ID` to a stable operator or
+deployment key id. The private key is never written to roots or proof packs.
+
+Use `ZERO_JOURNAL_ANCHOR_PROVIDER=opentimestamps` for public timestamp
+submission, `webhook` for an operator-controlled timestamp service, `local` for
+local receipt files, or `none` to disable anchoring during tests.
+
 ## Incident Rule
 
 Any `zero.decision_journal.verification.v1` failure in a live-capable operator

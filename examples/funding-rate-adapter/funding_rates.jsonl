@@ -1,0 +1,4 @@
+{"symbol":"BTC-PERP","ts":"2026-05-01T00:00:00Z","rate":0.00011,"interval_hours":8,"venue":"fixture"}
+{"symbol":"BTC-PERP","ts":"2026-05-01T08:00:00Z","rate":0.00014,"interval_hours":8,"venue":"fixture"}
+{"symbol":"ETH-PERP","ts":"2026-05-01T00:00:00Z","rate":-0.00003,"interval_hours":8,"venue":"fixture"}
+{"symbol":"ETH-PERP","ts":"2026-05-01T08:00:00Z","rate":0.00002,"interval_hours":8,"venue":"fixture"}

@@ -25,6 +25,12 @@ strategy-runner-example:
 market-data-adapter-example:
     PYTHONPATH="$PWD/engine/src:$PWD/examples/market-data-adapter" python3 examples/market-data-adapter/run.py
 
+funding-rate-adapter-example:
+    PYTHONPATH="$PWD/examples/funding-rate-adapter" python3 examples/funding-rate-adapter/run.py
+
+intelligence-catalog-page-example:
+    PYTHONPATH="$PWD/engine/src" python3 examples/intelligence-catalog-page/build.py
+
 network-leaderboard-example:
     PYTHONPATH="$PWD/engine/src" python3 examples/network-leaderboard/build.py
 
@@ -102,6 +108,9 @@ decision-stack-example:
 network-pages-smoke:
     scripts/network_pages_smoke.py
 
+intelligence-catalog-page-smoke:
+    scripts/intelligence_catalog_page_smoke.py
+
 paper-api:
     cd engine && python3 -m zero_engine.api
 
@@ -161,6 +170,9 @@ registry-readiness:
     scripts/registry_launch_packet.py --check
     scripts/mcp_registry_packet.py --check
     scripts/mcp_registry_listing_check.py --json >/dev/null
+
+railway-template-packet:
+    scripts/railway_template_packet.py --check
 
 mcp-registry-listing-check:
     scripts/mcp_registry_listing_check.py --json
@@ -274,6 +286,9 @@ docs-check:
     test -f .claude/commands/new-strategy.md
     test -f .github/copilot-instructions.md
     test -f .github/workflows/mcp-registry.yml
+    test -f .devcontainer/Dockerfile
+    test -f .devcontainer/devcontainer.json
+    test -f .devcontainer/README.md
     test -f .github/ISSUE_TEMPLATE/agent_task.yml
     test -f .github/ISSUE_TEMPLATE/bug_report.yml
     test -f .github/ISSUE_TEMPLATE/design_review.yml
@@ -353,6 +368,7 @@ docs-check:
     test -f docs/autonomous-os-plan.md
     test -f docs/agentic-contribution.md
     test -f docs/contributor-issue-board.md
+    test -f docs/qa-onboarding-checklist.md
     test -f docs/label-taxonomy.md
     test -f docs/release.md
     test -f docs/release-verification.md
@@ -382,6 +398,10 @@ docs-check:
     test -f examples/market-data-adapter/adapter.py
     test -f examples/market-data-adapter/candles.jsonl
     test -f examples/market-data-adapter/run.py
+    test -f examples/funding-rate-adapter/README.md
+    test -f examples/funding-rate-adapter/adapter.py
+    test -f examples/funding-rate-adapter/funding_rates.jsonl
+    test -f examples/funding-rate-adapter/run.py
     test -f examples/runtime-loop/README.md
     test -x examples/runtime-loop/run.py
     test -f examples/memory-core/README.md
@@ -405,6 +425,8 @@ docs-check:
     test -f examples/network-leaderboard-page/build.py
     test -f examples/network-index-page/README.md
     test -f examples/network-index-page/build.py
+    test -f examples/intelligence-catalog-page/README.md
+    test -f examples/intelligence-catalog-page/build.py
     test -f contracts/paper-api/v2_status.json
     test -f contracts/paper-api/execute_accepted.json
     test -f contracts/paper-api/execute_rejected.json
@@ -428,16 +450,19 @@ docs-check:
     test -f contracts/network/index.html
     test -f contracts/intelligence/snapshot.json
     test -f contracts/intelligence/catalog.json
+    test -f contracts/intelligence/catalog.html
     test -f contracts/intelligence/commercial.json
     test -f contracts/intelligence/model_gateway.json
     test -f contracts/intelligence/model_gateway_health.json
     test -f contracts/intelligence/model_gateway_audit.json
     test -f contracts/distribution/registry-launch.json
     test -f contracts/distribution/mcp-registry.json
+    test -f contracts/distribution/railway-template.json
     test -f server.json
     test -f openapi/zero-paper-api.v1.yaml
     test -x scripts/assemble_release_assets.sh
     test -x scripts/install.sh
+    test -x scripts/railway_template_packet.py
     test -x scripts/demo_capture.sh
     test -x scripts/issue_template_check.py
     test -x scripts/label_taxonomy_check.py
@@ -447,6 +472,7 @@ docs-check:
     test -x scripts/stale_artifact_check.sh
     test -x scripts/openapi_contract_check.py
     test -x scripts/network_pages_smoke.py
+    test -x scripts/intelligence_catalog_page_smoke.py
     test -x scripts/package_dry_run.sh
     test -x scripts/registry_readiness.py
     test -x scripts/registry_launch_packet.py
@@ -524,4 +550,4 @@ container-smoke:
     docker run --rm zero-public:local
     docker run --rm zero-public:local python /app/examples/paper-trading/run.py
 
-ci: lint test paper-api-smoke fresh-clone-rehearsal example strategy-example strategy-plugin-example momentum-strategy-plugin-example strategy-runner-example market-data-adapter-example runtime-loop-example memory-core-example genesis-example evolve-example research-example decision-stack-example network-leaderboard-example network-profile-page-example network-stale-profile-example network-empty-profile-example network-leaderboard-page-example network-index-page-example network-pages-smoke registry-readiness package-dry-run release-rehearsal draft-release-rehearsal public-readiness
+ci: lint test paper-api-smoke fresh-clone-rehearsal example strategy-example strategy-plugin-example momentum-strategy-plugin-example strategy-runner-example market-data-adapter-example funding-rate-adapter-example intelligence-catalog-page-example runtime-loop-example memory-core-example genesis-example evolve-example research-example decision-stack-example network-leaderboard-example network-profile-page-example network-stale-profile-example network-empty-profile-example network-leaderboard-page-example network-index-page-example network-pages-smoke intelligence-catalog-page-smoke registry-readiness package-dry-run release-rehearsal draft-release-rehearsal public-readiness

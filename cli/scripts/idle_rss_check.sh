@@ -87,7 +87,7 @@ else
 fi
 
 echo "building zero under --profile $profile ..." >&2
-( cd "$repo_root" && cargo build -p zero $cargo_profile_arg ) >/dev/null
+( cd "$repo_root" && cargo build -p zero-os $cargo_profile_arg ) >/dev/null
 
 bin="$bin_dir/zero"
 if [ ! -x "$bin" ]; then

@@ -242,6 +242,9 @@ Acceptance:
 
 Labels: `help wanted`, `contracts`, `design`, `docs`
 
+Status: delivered in
+[examples/intelligence-catalog-page](../examples/intelligence-catalog-page/README.md).
+
 GitHub: [#29](https://github.com/zero-intel/zero/issues/29)
 
 Add a deterministic static page generated from
@@ -261,6 +264,10 @@ Acceptance:
 
 Labels: `help wanted`, `release`, `docs`, `packaging`
 
+Status: delivered in
+[Release Process](release.md#homebrew-rollback-verification) and
+[Distribution Readiness](distribution.md#homebrew-rollback-verification).
+
 GitHub: [#30](https://github.com/zero-intel/zero/issues/30)
 
 Add a short Homebrew rollback verification section for operators who install
@@ -270,7 +277,8 @@ Acceptance:
 
 - The docs show exact rollback or reinstall commands for the public tap path.
 - The docs explain what checksum and formula drift checks prove.
-- The docs do not claim PyPI, crates.io, or container registry publication.
+- The docs name the published PyPI `zero-engine` package and do not claim
+  crates.io or container registry publication.
 - `just docs-check` and `scripts/homebrew_formula_check.py` pass.
 
 ## Completed Maintainer Tasks

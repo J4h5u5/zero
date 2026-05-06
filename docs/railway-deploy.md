@@ -4,6 +4,10 @@ Railway is the preferred hosted path for ZERO paper mode. It gives operators a
 publicly reachable runtime without introducing ZERO-hosted custody or a private
 control plane.
 
+For marketplace publishing, use [railway-template.md](railway-template.md) as
+the template overview, variable map, volume checklist, and deploy-button source
+of truth.
+
 This deployment is still paper-only:
 
 - no private keys;
@@ -44,10 +48,13 @@ ZERO_INTELLIGENCE_API_TOKEN=...
 ZERO_INTELLIGENCE_API_PLAN=team_fund
 ZERO_INTELLIGENCE_API_ACCOUNT_ID=acct_...
 ZERO_INTELLIGENCE_WEBHOOK_SIGNING_KEY=...
+ZERO_INTELLIGENCE_STORE_PATH=/data/zero/intelligence.jsonl
 ```
 
 Do not reuse production tokens in public demos. These variables only exercise
-the hosted-compatible contract surface on your own Railway service.
+the hosted-compatible contract surface on your own Railway service. The store
+path enables append-only aggregate snapshot and usage persistence; it must be
+mounted on a durable Railway volume if you want history to survive restarts.
 
 ## Deploy
 
@@ -102,9 +109,9 @@ scripts/railway_doctor.py "$ZERO_RAILWAY_URL" \
 The doctor checks `/health`, `/v2/status`, `/metrics`, `/market/quote`,
 `/immune`, `/live/preflight`, `/live/cockpit`, public ZERO Network packets,
 delayed ZERO Intelligence packets, hosted-compatible `/v1/intelligence/*`
-headers, and paid-scope fail-closed behavior. With a token, it also verifies
-that the paid history scope accepts the configured bearer token without leaking
-the token, trace IDs, private keys, or raw runtime data.
+headers, and protected-scope fail-closed behavior. With a token, it also
+verifies that protected history scope accepts the configured bearer token
+without leaking the token, trace IDs, private keys, or raw runtime data.
 
 Warnings are allowed for local ephemeral test services. A public Railway demo
 should use a mounted `/data` volume so `durable_journal` reports `ok`.
@@ -250,8 +257,9 @@ publish path.
 
 ZERO Intelligence snapshot, catalog, and commercial-contract endpoints are also
 public-safe aggregate contracts. The snapshot is delayed public intelligence.
-The catalog points to `/intelligence/commercial`, which describes the paid
-hosted API boundary for realtime access, history, cohorts, webhooks, exports,
+The catalog points to `/intelligence/commercial`, which describes the
+growth-mode free hosted API boundary for realtime access plus the future
+commercial boundary for higher limits, history, cohorts, webhooks, exports,
 redistribution, usage events, rate limits, and reliability commitments.
 
 The `/v1/intelligence/*` reference endpoints are hosted-compatible:

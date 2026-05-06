@@ -5,6 +5,7 @@ import json
 import sys
 from collections.abc import Callable
 from datetime import UTC, datetime
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 from typing import Any, TextIO
 
@@ -18,7 +19,7 @@ from zero_engine.research import snapshot_from_fixture as research_snapshot_from
 from zero_engine.runtime import production_parity_snapshot
 
 SERVER_NAME = "zero-mcp"
-SERVER_VERSION = "0.1.2"
+SERVER_VERSION_FALLBACK = "0.1.5"
 DEFAULT_PROTOCOL_VERSION = "2025-06-18"
 SUPPORTED_PROTOCOL_VERSIONS = {"2025-06-18", "2025-11-25"}
 PAPER_TS = 1777646400.0
@@ -33,6 +34,14 @@ MCP_ALLOWED_SURFACE = (
 )
 
 JsonMap = dict[str, Any]
+
+
+def server_version() -> str:
+    """Return the installed package version, with a source-tree fallback."""
+    try:
+        return version("zero-engine")
+    except PackageNotFoundError:
+        return SERVER_VERSION_FALLBACK
 
 
 def parse_mcp_time() -> datetime:
@@ -1063,7 +1072,7 @@ def handle_request(request: JsonMap) -> JsonMap | None:
                     "tools": {"listChanged": False},
                     "resources": {"subscribe": False, "listChanged": False},
                 },
-                "serverInfo": {"name": SERVER_NAME, "version": SERVER_VERSION},
+                "serverInfo": {"name": SERVER_NAME, "version": server_version()},
             },
         )
     if method == "notifications/initialized":

@@ -20,6 +20,7 @@ Use this bundle for retrieval and coding agents. It is not evidence of live trad
 - `docs/agent-architecture.md`
 - `docs/cli-quickstart.md`
 - `docs/cli-doctor-troubleshooting.md`
+- `docs/railway-template.md`
 - `docs/api.md`
 - `docs/memory-core.md`
 - `docs/genesis.md`
@@ -92,6 +93,31 @@ just paper-api-smoke
 just public-proof
 ```
 
+## One-Click Paper Rollout
+
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/zero-paper-runtime)
+
+ZERO's public Railway template is live: Dockerfile build, `railway.toml`,
+`/health`, durable `/data` journal volume, Railway doctor, redacted deployment
+evidence packs, and paper-mode live-risk refusal.
+
+Live public paper demo:
+[https://zero-production-5214.up.railway.app](https://zero-production-5214.up.railway.app)
+
+Railway template:
+[https://railway.com/deploy/zero-paper-runtime](https://railway.com/deploy/zero-paper-runtime)
+
+Use [docs/railway-template.md](docs/railway-template.md) as the marketplace
+configuration source of truth. The current Railway Template Publish Packet is
+tracked in
+[contracts/distribution/railway-template.json](contracts/distribution/railway-template.json).
+The Railway partner submission packet is tracked in
+[docs/railway-partner.md](docs/railway-partner.md).
+
+```bash
+scripts/railway_doctor.py https://zero-production-5214.up.railway.app
+```
+
 ZERO has three non-negotiable product rules:
 
 - The engine is open source and useful without a hosted ZERO control plane.
@@ -114,7 +140,7 @@ In another terminal:
 
 ```bash
 cd zero/cli
-cargo run -q -p zero -- --api http://127.0.0.1:8765
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765
 ```
 
 Inside the terminal, press `Ctrl+5` or run `/cockpit-mode` for the live
@@ -175,7 +201,7 @@ ZERO turns that workflow into an explicit operating system:
 - A safety model that makes risk-reducing actions fast and risk-increasing
   actions deliberate.
 - A public proof surface for profiles, leaderboards, and verification.
-- A commercial intelligence layer built from verified autonomous behavior.
+- A free growth-mode intelligence layer built from verified autonomous behavior.
 
 The default mode is paper. Live operation is self-custodial, explicit, and
 guarded by preflight checks.
@@ -188,7 +214,7 @@ guarded by preflight checks.
 | ZERO Terminal | Rust CLI/TUI for setup, diagnostics, state inspection, replay, live cockpit views, and supervised actions. | Open source |
 | ZERO Evolution | Local memory, genesis proposals, research reports, decision-stack review, guardian review, red-team, paper canaries, calibration, promotion plans, local apply receipts, rollback receipts, and evolve loops that let ZERO improve under review. | Memory, genesis, research, decision stack, paper-first evolve gates, local apply, and rollback execution open; protected promotion remains human-reviewed |
 | ZERO Network | Public-safe profiles, empty/active/stale page states, leaderboards, verification badges, profile verification, and deterministic proof-chain packets. | Open source contracts |
-| ZERO Intelligence | Delayed public snapshots plus commercial realtime APIs, history, cohorts, webhooks, exports, and SLAs built from verified autonomous behavior. | Open contracts + paid access |
+| ZERO Intelligence | Delayed public snapshots plus growth-mode free realtime APIs, history, cohorts, webhooks, exports, and future SLAs built from verified autonomous behavior. | Open contracts + free operator-growth access |
 
 ## Capability Boundary
 
@@ -200,7 +226,7 @@ guarded by preflight checks.
 | Live execution | Private operator deployments have live Hyperliquid execution evidence represented by the redacted public packet. New live capital remains operator-owned, self-custodial, and gated by local custody, preflight, journal, kill-switch, reconciliation, and canary policy. |
 | Self-evolution | Local memory, genesis proposal core, research command chain, decision-stack lenses/layers/modifiers, production-parity OODA reporting, and paper-first evolve gates exist now with redacted extraction, append-only journals, guardian classification, hunt/edge/convergence/thesis/score/meta/sharpen reports, public evaluation surfaces, live-shadow fail-closed parity, red-team review, sandbox candidate mutation, paper canary, calibration, promotion plan, rollback plan, promotion verification, explicit local apply, rollback receipts, API readouts, and expanded read-only MCP snapshots for runtime status, parity, health, journal, rejection audit, memory stats, immune state, backtest summary, evidence bundle, and safety catalog. Protected live-code evolution remains human-reviewed. |
 | Public proof | Runnable now through deterministic demo proof packs, redacted Network contracts, deterministic Network proof packs, `zero.live_trading_evidence.v1`, canary bundles, exchange-evidence normalization, recursive checksums, and operator report verification. |
-| Commercial API | Contracted now as ZERO Intelligence; production hosted persistence, billing, warehouse history, and SLAs are commercial work. |
+| Intelligence API | Contracted now as ZERO Intelligence; growth-mode realtime access is free to increase operator density. Future commercial work is higher scale, retention, redistribution, managed persistence, warehouse history, and SLAs. |
 
 ```mermaid
 flowchart LR
@@ -289,12 +315,15 @@ ZERO should earn trust through behavior that another engineer can verify:
    transcript together.
 3. Verify `docs/proof/network/network-proof-pack.json` against its profile,
    leaderboard, deployment identity, and ingestion artifacts.
-4. Inspect runtime, risk, live cockpit, immune, account, and reconciliation
+4. Generate a signed journal root from local JSONL streams with
+   `zero-journal-root`, attach anchor metadata with `zero-journal-anchor`, and
+   export a redacted proof pack with `zero-journal-proof`.
+5. Inspect runtime, risk, live cockpit, immune, account, and reconciliation
    packets through the CLI/API.
-5. Rehearse a live canary in fail-closed mode.
-6. Attach public-safe exchange-side evidence when an operator-owned live canary
+6. Rehearse a live canary in fail-closed mode.
+7. Attach public-safe exchange-side evidence when an operator-owned live canary
    is ready.
-7. Verify the bundle, recursive checksums, privacy flags, live canary policy,
+8. Verify the bundle, recursive checksums, privacy flags, live canary policy,
    and report with local scripts before publishing anything.
 
 That flow is implemented for refusal-mode rehearsal and redacted live-evidence
@@ -428,11 +457,52 @@ zero --version
 ```
 
 The formula installs the `zero` CLI from the checksummed GitHub Release asset.
-It does not use private package registries.
+It does not use private package registries. Homebrew reinstall and rollback
+commands live in [docs/release.md](docs/release.md#homebrew-rollback-verification).
 
-PyPI, crates.io, Docker Hub, and GHCR are intentionally unpublished until
-ownership and rollback evidence are recorded in
-[docs/registry-launch.md](docs/registry-launch.md).
+`zero-engine` is also published on PyPI for agent/MCP installs:
+
+```bash
+uvx zero-engine --smoke
+uvx --from zero-engine zero-mcp --smoke
+```
+
+The Rust operator terminal is published as `zero-os` on crates.io. The package
+name is `zero-os` because `zero` is already taken on crates.io; the installed
+binary is still `zero`:
+
+```bash
+cargo install zero-os
+zero --version
+```
+
+Container users can run the paper runtime directly from source:
+
+```bash
+docker build -t getzero/zero .
+docker run --rm -p 8765:8765 -e PORT=8765 getzero/zero
+```
+
+Docker Hub is the primary public container path:
+
+```bash
+docker pull getzero/zero:0.1.2
+docker run --rm -p 8765:8765 -e PORT=8765 getzero/zero:0.1.2
+```
+
+The runtime remains paper-first by default; live operation stays behind explicit
+preflight gates. See [docs/registry-launch.md](docs/registry-launch.md) for
+publication state, digests, and anonymous-pull evidence.
+
+## No-Install Contributor Path
+
+Use GitHub Codespaces or any devcontainer-compatible editor to open this repo
+without installing Python, Rust, or `just` locally:
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/zero-intel/zero)
+
+The container installs the editable engine package, Rust CLI dependencies, and
+the local docs gate. See [.devcontainer/README.md](.devcontainer/README.md).
 
 ## Source Quickstart
 
@@ -456,9 +526,9 @@ Run the CLI:
 
 ```bash
 cd cli
-cargo run -q -p zero -- --api http://127.0.0.1:8765 doctor
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run status
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run risk
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 doctor
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run status
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run risk
 ```
 
 Run the full local gate:
@@ -529,11 +599,13 @@ Incident response is covered by
 
 ## Open Core Boundary
 
-ZERO is open infrastructure plus commercial intelligence.
+ZERO is open infrastructure plus free growth-mode intelligence. The future
+business model monetizes scale, retention, redistribution, support, and SLAs,
+not basic operator access while ZERO needs more verified operators.
 
 | Open | Commercial |
 | --- | --- |
-| Runtime engine, safety gates, paper mode, local API, CLI, Docker/Railway deployment, public profile contracts, leaderboards, delayed snapshots, docs, tests, and release tooling. | Realtime Intelligence API, deeper history, cohorts, benchmarks, commercial connectors, higher rate limits, webhooks, bulk exports, redistribution rights, support, reliability commitments, and SLAs. |
+| Runtime engine, safety gates, paper mode, local API, CLI, Docker/Railway deployment, public profile contracts, leaderboards, delayed snapshots, growth-mode realtime Intelligence access, docs, tests, and release tooling. | Future higher limits, deeper history, cohorts, benchmarks, commercial connectors, bulk exports, redistribution rights, support, reliability commitments, and SLAs. |
 
 The open repository must stay useful without a ZERO-hosted control plane. The
 commercial product sells speed, scale, history, reliability, and intelligence
@@ -560,6 +632,7 @@ ZERO is local-first, Railway-first, and Docker-compatible. Operators own their
 deployment project, secrets, exchange credentials, and runtime state.
 
 - [docs/local-development.md](docs/local-development.md)
+- [docs/railway-template.md](docs/railway-template.md)
 - [docs/railway-deploy.md](docs/railway-deploy.md)
 - [docs/distribution.md](docs/distribution.md)
 - [docs/release.md](docs/release.md)
@@ -618,6 +691,7 @@ Machine-readable entrypoints:
 - [AGENTS.md](AGENTS.md)
 - [Agent Commands](.claude/commands/README.md)
 - [Contributor Issue Board](docs/contributor-issue-board.md)
+- [QA Onboarding Checklist](docs/qa-onboarding-checklist.md)
 - [Issue Templates](.github/ISSUE_TEMPLATE/agent_task.yml)
 - [OpenAPI Contract](openapi/zero-paper-api.v1.yaml)
 - [Agent Architecture](docs/agent-architecture.md)
@@ -664,6 +738,7 @@ Machine-readable entrypoints:
 - [ZERO Intelligence](docs/zero-intelligence.md)
 - [Model Gateway](docs/model-gateway.md)
 - [Production Readiness](docs/production-readiness.md)
+- [QA Onboarding Checklist](docs/qa-onboarding-checklist.md)
 - [Public Upgrade Plan](docs/public-upgrade.md)
 - [Autonomous OS Plan](docs/autonomous-os-plan.md)
 - [Capability Gap Audit](docs/private-engine-capability-gap-audit.md)
@@ -705,6 +780,7 @@ Before editing, read:
 - `docs/journal-integrity.md`
 - `docs/autonomous-os-plan.md`
 - `docs/agentic-contribution.md`
+- `docs/qa-onboarding-checklist.md`
 - `docs/llms.txt`
 - `docs/llms-full.txt`
 - the nearest docs for the files you are changing
@@ -1157,7 +1233,10 @@ Out of scope:
 - [CLI Doctor Troubleshooting](cli-doctor-troubleshooting.md)
 - [Demo Terminal](demo-terminal.md)
 - [Proof Packs](proof/README.md)
+- [Railway Template](railway-template.md)
 - [Railway Deploy](railway-deploy.md)
+- [Railway Partner Packet](railway-partner.md)
+- [Railway Template Packet](../contracts/distribution/railway-template.json)
 - [Release](release.md)
 - [Release Verification](release-verification.md)
 
@@ -1209,6 +1288,8 @@ Out of scope:
 
 - [Agentic Contribution](agentic-contribution.md)
 - [Contributor Issue Board](contributor-issue-board.md)
+- [QA Onboarding Checklist](qa-onboarding-checklist.md)
+- [Dev Container](../.devcontainer/README.md)
 - [Issue Templates](../.github/ISSUE_TEMPLATE/agent_task.yml)
 - [Label Taxonomy](label-taxonomy.md)
 - [Full LLM Context](llms-full.txt)
@@ -1244,6 +1325,12 @@ source .venv/bin/activate
 just bootstrap
 ```
 
+Use Codespaces if you want a no-install inspection path:
+
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/zero-intel/zero)
+
+The devcontainer starts in paper mode and runs the docs gate during setup.
+
 ## 1. Run The Paper Engine
 
 ```bash
@@ -1276,9 +1363,9 @@ In terminal 2:
 
 ```bash
 cd cli
-cargo run -q -p zero -- --api http://127.0.0.1:8765 doctor
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run status
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run risk
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 doctor
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run status
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run risk
 ```
 
 Expected shape:
@@ -1393,6 +1480,11 @@ accounts, or private deployment access.
 - `just`
 - Git
 
+If you do not want to install local tools, open the repo in GitHub Codespaces
+or another devcontainer-compatible editor. The devcontainer installs Python,
+Rust, `just`, the editable engine package, and CLI dependencies. See
+[`../.devcontainer/README.md`](../.devcontainer/README.md).
+
 ## First Run
 
 ```bash
@@ -1451,8 +1543,8 @@ Then inspect it from the CLI in another terminal:
 
 ```bash
 cd cli
-cargo run -p zero -- --api http://127.0.0.1:8765 doctor
-cargo run -p zero -- --api http://127.0.0.1:8765 run status
+cargo run -p zero-os -- --api http://127.0.0.1:8765 doctor
+cargo run -p zero-os -- --api http://127.0.0.1:8765 run status
 ```
 
 The same integration check is available as:
@@ -1907,7 +1999,7 @@ Run doctor against the local paper API:
 
 ```bash
 cd cli
-cargo run -q -p zero -- --api http://127.0.0.1:8765 doctor
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 doctor
 ```
 
 Abbreviated output:
@@ -1936,7 +2028,7 @@ missing token, or reports `live_preflight` as not ready, see
 Inspect the engine status:
 
 ```bash
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run status
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run status
 ```
 
 Expected output:
@@ -1950,7 +2042,7 @@ Expected output:
 Inspect the risk line:
 
 ```bash
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run risk
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run risk
 ```
 
 Expected output:
@@ -1991,7 +2083,7 @@ Run doctor against the local paper API without a token:
 ```bash
 unset ZERO_API_TOKEN
 cd cli
-cargo run -q -p zero -- --api http://127.0.0.1:8765 doctor
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 doctor
 ```
 
 Expected safe output snippet:
@@ -2010,7 +2102,7 @@ the environment variable for the current shell:
 
 ```bash
 ZERO_API_TOKEN="<operator-token>" \
-  cargo run -q -p zero -- --api http://127.0.0.1:8765 doctor
+  cargo run -q -p zero-os -- --api http://127.0.0.1:8765 doctor
 ```
 
 Expected output when a token is present and accepted:
@@ -2023,7 +2115,7 @@ Expected output when a token is present and accepted:
 If `auth_verified` fails, rotate or rewrite local config with:
 
 ```bash
-cargo run -q -p zero -- init --force
+cargo run -q -p zero-os -- init --force
 ```
 
 ## Paper API Not Running
@@ -2032,7 +2124,7 @@ If terminal 1 is not running the paper API, doctor cannot reach the engine:
 
 ```bash
 cd cli
-cargo run -q -p zero -- --api http://127.0.0.1:8765 doctor
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 doctor
 ```
 
 Expected safe output snippet:
@@ -2059,7 +2151,7 @@ Then rerun doctor:
 
 ```bash
 cd cli
-cargo run -q -p zero -- --api http://127.0.0.1:8765 doctor
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 doctor
 ```
 
 Expected reachable-engine snippet:
@@ -2079,7 +2171,7 @@ Run doctor:
 
 ```bash
 cd cli
-cargo run -q -p zero -- --api http://127.0.0.1:8765 doctor
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 doctor
 ```
 
 Expected safe output snippet:
@@ -2114,7 +2206,7 @@ For the cockpit-level view:
 
 ```bash
 cd cli
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run live-cockpit
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run live-cockpit
 ```
 
 Expected safe output snippet:
@@ -2126,15 +2218,217 @@ live-cockpit: live_mode=refused  ready=false  risk_allowed=false
 ## Useful Follow-Up Commands
 
 ```bash
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run status
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run risk
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run live-cockpit
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run status
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run risk
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run live-cockpit
 just paper-api-smoke
 ```
 
 Use `just paper-api-smoke` when changing CLI rendering, API response shape, or
 doctor examples. It starts the local paper API, exercises the CLI path, and
 asserts that live mode still refuses by default.
+````
+
+
+## Source: `docs/railway-template.md`
+
+````markdown
+# Deploy and Host ZERO with Railway
+
+ZERO is an autonomous operating system for self-custodial onchain operations.
+This Railway template runs the public paper runtime: live Hyperliquid prices are
+read-only, execution is simulated, journals are durable, and live-risk endpoints
+fail closed unless an operator-owned local live executor is configured outside
+the template.
+
+## About Hosting ZERO
+
+Hosting ZERO on Railway gives an operator a public paper runtime with a stable
+URL, logs, metrics, health checks, and a persistent journal volume. It does not
+custody funds and does not need exchange keys. The deployment is useful for
+operator onboarding, public demos, proof capture, Railway doctor checks, and
+agentic contribution work against a real HTTP runtime.
+
+Current verified public demo:
+[https://zero-production-5214.up.railway.app](https://zero-production-5214.up.railway.app)
+
+Published Railway template:
+[https://railway.com/deploy/zero-paper-runtime](https://railway.com/deploy/zero-paper-runtime)
+
+The latest Railway Template Publish Packet is committed at
+[`contracts/distribution/railway-template.json`](../contracts/distribution/railway-template.json).
+It records the live demo URL, point-in-time verified deployment id, evidence
+bundle path, doctor result, required variables, autodeploy config, and
+marketplace publish state.
+
+## Common Use Cases
+
+- Paper-mode operator demos with live read-only Hyperliquid mids.
+- Public proof capture before sharing a profile or leaderboard claim.
+- Agentic development against a stable remote ZERO runtime.
+- Railway doctor, deployment evidence, and rollback rehearsal practice.
+- ZERO Intelligence contract testing with local aggregate persistence.
+
+## Dependencies for ZERO Hosting
+
+- Railway service sourced from `https://github.com/zero-intel/zero`.
+- Dockerfile build from the repository root.
+- Public HTTP networking enabled for the runtime service.
+- Persistent Railway volume mounted at `/data`.
+- Railway-provided `PORT`; do not hardcode a port.
+
+### Deployment Dependencies
+
+- Railway template docs: https://docs.railway.com/templates
+- Railway template best practices: https://docs.railway.com/templates/best-practices
+- Railway publish/share docs: https://docs.railway.com/templates/publish-and-share
+- ZERO Railway deploy guide: [railway-deploy.md](railway-deploy.md)
+
+### Template Service Settings
+
+| Setting | Value |
+| --- | --- |
+| Template name | `ZERO Paper Runtime` |
+| Service name | `ZERO` |
+| Template icon | `https://avatars.githubusercontent.com/u/273590449.png` |
+| Service icon | `https://avatars.githubusercontent.com/u/273590449.png` |
+| Fallback repo icon asset | `docs/assets/zero-template-icon.svg` |
+| Source | GitHub repository |
+| Repository | `zero-intel/zero` |
+| Branch | `main` |
+| Builder | Dockerfile |
+| Dockerfile path | `Dockerfile` |
+| Start command | from `railway.toml`: `/app/scripts/railway_start.sh` |
+| Healthcheck path | `/health` |
+| Healthcheck timeout | `60` |
+| Public networking | HTTP enabled |
+| Volume mount | `/data` |
+
+### Marketplace Overview Copy
+
+Use this copy in Railway's template overview editor. It follows Railway's
+recommended H1/H2 structure and should stay in sync with this page.
+
+```md
+# Deploy and Host ZERO with Railway
+
+ZERO is an autonomous operating system for self-custodial onchain operations.
+This template runs the public paper runtime: live Hyperliquid prices are
+read-only, execution is simulated, journals persist on a Railway volume, and
+live-risk endpoints fail closed by default.
+
+## About Hosting ZERO
+
+Hosting ZERO on Railway gives operators a public paper runtime with a stable
+URL, logs, metrics, health checks, and a persistent journal volume. It does not
+custody funds and does not need exchange private keys. Use it for operator
+onboarding, public proof capture, agentic development, and first-run demos
+against a real HTTP runtime.
+
+## Common Use Cases
+
+- Paper-mode operator demos with live read-only Hyperliquid mids.
+- Public proof capture before sharing a profile or leaderboard claim.
+- Agentic development against a stable remote ZERO runtime.
+- Railway doctor, deployment evidence, and rollback rehearsal practice.
+
+## Dependencies for ZERO Hosting
+
+- Railway service sourced from `https://github.com/zero-intel/zero`.
+- Dockerfile build from the repository root.
+- Public HTTP networking enabled for the runtime service.
+- Persistent Railway volume mounted at `/data`.
+- Railway-provided `PORT`.
+
+### Why Deploy ZERO on Railway?
+
+Railway gives operators a fast paper-runtime rollout path without asking ZERO
+to host custody infrastructure. Operators keep their own project boundary,
+volume, logs, domains, variables, and billing relationship while ZERO stays
+inspectable, interruptible, and paper-first by default.
+```
+
+### Template Variables
+
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| `ZERO_MODE` | yes | `paper` | Keeps the template in paper mode. |
+| `ZERO_JOURNAL_PATH` | yes | `/data/decisions.jsonl` | Durable append-only paper journal on the Railway volume. |
+| `ZERO_HYPERLIQUID_LIVE_PRICES` | yes | `true` | Uses Hyperliquid public mids as read-only market data. |
+| `ZERO_INTELLIGENCE_STORE_PATH` | yes | `/data/zero/intelligence.jsonl` | Durable aggregate store for hosted-compatible Intelligence reference endpoints. |
+| `ZERO_INTELLIGENCE_API_TOKEN` | optional | empty | Disposable demo bearer token for hosted-compatible protected Intelligence routes. |
+| `ZERO_INTELLIGENCE_API_PLAN` | optional | `free` | Reference account plan shown by local hosted-compatible packets. |
+| `ZERO_INTELLIGENCE_API_ACCOUNT_ID` | optional | `acct_railway` | Public-safe local account label for reference packets. |
+| `ZERO_INTELLIGENCE_WEBHOOK_SIGNING_KEY` | optional | `${{secret(64, "abcdef0123456789")}}` | Demo HMAC key for webhook fixture signatures. Never reuse production keys. |
+
+## Railway Template Publish Packet
+
+The packet schema is `zero.railway_template_packet.v1`. Regenerate it after any
+template-impacting deployment, Railway variable change, domain change, or
+marketplace copy change. Deployment ids are point-in-time evidence; always run
+the doctor against the live URL before sharing the current service:
+
+```bash
+scripts/railway_template_packet.py --output contracts/distribution/railway-template.json
+scripts/railway_template_packet.py --check
+```
+
+Before sharing the template URL, verify the live demo:
+
+```bash
+scripts/railway_doctor.py https://zero-production-5214.up.railway.app
+scripts/deployment_evidence.sh https://zero-production-5214.up.railway.app --railway-logs
+scripts/deployment_evidence_verify.py artifacts/deployment-evidence/<timestamp>
+```
+
+The expected public demo posture is `17 ok / 1 warn / 0 fail`: the warning is
+the tokened paid-scope Intelligence check when no demo bearer token is supplied.
+Live mode must remain refused and risk-increasing actions must remain blocked.
+
+### Publish Checklist
+
+1. Install and authenticate the Railway CLI:
+
+```bash
+npm install -g @railway/cli
+railway login --browserless
+scripts/railway_cli_preflight.py
+```
+
+2. From the live project canvas, open **Settings** and use **Generate Template from Project**.
+   Railway documents template creation through the dashboard,
+   not the normal CLI.
+3. Confirm the generated template keeps the GitHub source, Dockerfile build,
+   `/health` health check, public HTTP networking, and `/data` volume.
+4. Add `docs/assets/zero-template-icon.svg` as the template and service icon.
+5. Paste the Marketplace Overview Copy from this page.
+6. Publish the template from Railway workspace settings.
+7. Apply to the Open Source Partner Program at
+   `https://railway.com/partners` using [railway-partner.md](railway-partner.md).
+8. Add the live demo project after `scripts/railway_doctor.py "$ZERO_RAILWAY_URL"` passes.
+9. Keep the README deploy button pointed at the issued template URL:
+
+```md
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/zero-paper-runtime)
+```
+
+10. Keep [docs/release.md](release.md) and the template packet current before
+   merging template-impacting changes to `main`.
+
+### Partner And Support Packet
+
+Railway's partner program is a manual application. The prepared application
+packet lives in [railway-partner.md](railway-partner.md) and includes the
+maintainer summary, template evidence, support queue commitment, update policy,
+and submission message. After publishing the template, keep the Template Queue
+at https://station.railway.com/my-template-queue clear during launch week.
+
+## Why Deploy ZERO on Railway?
+
+Railway gives operators a fast paper-runtime rollout path without asking ZERO
+to host custody infrastructure. Operators keep their own project boundary,
+volume, logs, domains, variables, and billing relationship while ZERO stays
+inspectable, interruptible, and paper-first by default.
 ````
 
 
@@ -2439,11 +2733,13 @@ ZERO_INTELLIGENCE_API_TOKEN=...
 ZERO_INTELLIGENCE_API_PLAN=team_fund
 ZERO_INTELLIGENCE_API_ACCOUNT_ID=acct_...
 ZERO_INTELLIGENCE_WEBHOOK_SIGNING_KEY=...
+ZERO_INTELLIGENCE_STORE_PATH=/data/zero/intelligence.jsonl
 ```
 
 These endpoints prove auth boundaries, scopes, usage events, rate-limit
-headers, and webhook signing behavior. They do not imply the local runtime is a
-hosted billing system or a historical data warehouse.
+headers, webhook signing behavior, and durable aggregate reference persistence.
+They do not imply the local runtime is a hosted billing system or a production
+warehouse.
 
 `GET /intelligence/model-gateway` returns `zero.model_gateway.status.v1`, a
 public-safe provider and routing status packet. The default mode is
@@ -3217,10 +3513,8 @@ scripts/mcp_registry_packet.py --check
 scripts/mcp_registry_listing_check.py --json
 ```
 
-The packet is `ready_after_pypi_publication`, not listed. The Official MCP
-Registry points metadata at a public package or public remote server; ZERO's
-package registries remain intentionally blocked until ownership, tokenless
-publishing, and rollback evidence are recorded. See
+The packet is `listed`. The Official MCP Registry points metadata at the public
+`zero-engine` PyPI package and uses stdio with `uvx`. See
 [MCP Registry Submission Packet](mcp-registry.md).
 
 ## Tools
@@ -3300,6 +3594,68 @@ All tools declare `canPlaceOrders=false`, `canChangeRuntimeState=false`, and
 
 The smoke command is part of the public readiness gates so this agent surface
 cannot silently drift into a write-capable trading interface.
+
+## Client Setup
+
+These snippets show how to connect local agent tools to the ZERO MCP server
+for read-only inspection. They do not include secrets, tokens, wallets, or live
+execution setup.
+
+### Claude Code / Cursor
+
+Add to your project's `.mcp.json` or MCP settings:
+
+```json
+{
+  "mcpServers": {
+    "zero": {
+      "command": "bash",
+      "args": ["-c", "PYTHONPATH=$PWD/engine/src python3 -m zero_engine.mcp"]
+    }
+  }
+}
+```
+
+Or, if you installed the engine package:
+
+```json
+{
+  "mcpServers": {
+    "zero": {
+      "command": "zero-mcp"
+    }
+  }
+}
+```
+
+### Generic stdio client
+
+Any MCP-compatible client that supports stdio transport can connect:
+
+```bash
+# Start the server
+PYTHONPATH="$PWD/engine/src" python3 -m zero_engine.mcp --smoke
+
+# Or with the installed package
+zero-mcp --smoke
+```
+
+### Supported resources
+
+After connecting, the agent can inspect these ZERO MCP resources:
+
+- `zero://paper/scenario` — bundled deterministic paper scenario
+- `zero://paper/results` — generated paper replay results
+- `zero://runtime/status` — paper runtime status
+- `zero://journal/tail` — paper decision journal tail
+- `zero://proof/demo` — demo proof-pack manifest
+- `zero://mcp/safety` — safety classification for every public tool
+- `zero://docs/strategy-runner` — strategy runner docs
+- `zero://docs/strategy-plugin` — strategy plugin docs
+- `zero://docs/market-data-adapters` — market-data adapter docs
+
+Run `PYTHONPATH="$PWD/engine/src" scripts/mcp_transcript.py --check` to verify
+the server exposes only read-only public tools before connecting your client.
 ````
 
 
@@ -3309,13 +3665,12 @@ cannot silently drift into a write-capable trading interface.
 # MCP Registry Submission Packet
 
 ZERO has a public-safe MCP server, a committed MCP Registry manifest, and a
-manual GitHub OIDC publication workflow. It is not listed in the Official MCP
-Registry yet.
+manual GitHub OIDC publication workflow. It is listed in the Official MCP
+Registry as `io.github.zero-intel/zero`.
 
-The blocker is intentional: the Official MCP Registry metadata points to a
-public package or public remote server, and ZERO package registries remain
-blocked until ownership, tokenless publishing, and rollback evidence are
-recorded.
+The listing points to the public `zero-engine` PyPI package and uses stdio with
+`uvx`. The Rust CLI is published as `zero-os` on crates.io. Docker Hub and GHCR
+remain blocked until ownership, provenance, and rollback evidence are recorded.
 
 Machine-readable files:
 
@@ -3360,8 +3715,8 @@ The PyPI package README carries the MCP package proof string:
 
 ## Current Listing Evidence
 
-As of `2026-05-04T05:59:55Z`, the Official MCP Registry query returns no ZERO
-server and PyPI returns no `zero-engine` package:
+As of `2026-05-04T16:34:39Z`, the Official MCP Registry query returns the ZERO
+server and PyPI serves `zero-engine==0.1.5`:
 
 ```bash
 curl -fsS 'https://registry.modelcontextprotocol.io/v0.1/servers?search=io.github.zero-intel/zero'
@@ -3369,16 +3724,25 @@ curl -fsS 'https://pypi.org/pypi/zero-engine/json'
 ```
 
 ```json
-{"servers":[],"metadata":{"count":0}}
+{"servers":[{"name":"io.github.zero-intel/zero","version":"0.1.5"}],"metadata":{"count":4}}
 ```
 
-That is the expected state until `zero-engine` is published on PyPI and the MCP
-publisher run records a successful listing.
+The MCP Registry Publication workflow `25330669013` published the `0.1.5`
+`server.json` with GitHub OIDC after PyPI Trusted Publishing completed for
+`zero-engine==0.1.5`. The registry currently returns four records for the same
+server name, so the verifier selects the listed record whose version matches
+local `server.json`.
+
+The published MCP runtime also reports the same package version from the
+initialize response:
+
+```json
+{"serverInfo":{"name":"zero-mcp","version":"0.1.5"}}
+```
 
 ## Publish Runbook
 
-Only run this after package-registry publication is deliberately enabled for a
-release:
+Run this after changing `server.json` or package metadata for a new version:
 
 ```bash
 just registry-readiness
@@ -3392,15 +3756,18 @@ curl -fsS 'https://registry.modelcontextprotocol.io/v0.1/servers?search=io.githu
 The preferred path is the manual
 [`MCP Registry Publication`](../.github/workflows/mcp-registry.yml) workflow.
 Run it first with `publish=false` to verify local MCP surfaces, server metadata,
-and current listing state. After the `zero-engine` PyPI package is public and
-its README description contains `mcp-name: io.github.zero-intel/zero`, rerun the
-workflow with `publish=true` and confirmation text
-`publish io.github.zero-intel/zero`. The workflow uses GitHub OIDC, installs
-the official `mcp-publisher`, publishes `server.json`, and then requires
+and current listing state. For a metadata update, rerun the workflow with
+`publish=true` and confirmation text `publish io.github.zero-intel/zero`. The
+workflow uses GitHub OIDC, installs the official `mcp-publisher`, publishes
+`server.json`, and then requires
 `scripts/mcp_registry_listing_check.py --expect-listed` to pass.
 
-Record the workflow URL and listing JSON in the release evidence before calling
-the MCP registry gap closed.
+The Official MCP Registry rejects duplicate publishes for the same
+`name/version` pair. Metadata-only changes must wait for the next server/package
+version; use `publish=false` for verification-only runs between releases.
+
+Record the workflow URL and listing JSON in release evidence for every metadata
+change.
 
 ## Upstream Requirements
 
@@ -3434,7 +3801,7 @@ smoke test are committed gates.
 ## Source: `docs/mcp/transcript.jsonl`
 
 ````markdown
-{"request":{"id":1,"jsonrpc":"2.0","method":"initialize","params":{"capabilities":{},"clientInfo":{"name":"zero-public-transcript","version":"0.1.0"},"protocolVersion":"2025-06-18"}},"response":{"id":1,"jsonrpc":"2.0","result":{"capabilities":{"resources":{"listChanged":false,"subscribe":false},"tools":{"listChanged":false}},"protocolVersion":"2025-06-18","serverInfo":{"name":"zero-mcp","version":"0.1.2"}}}}
+{"request":{"id":1,"jsonrpc":"2.0","method":"initialize","params":{"capabilities":{},"clientInfo":{"name":"zero-public-transcript","version":"0.1.0"},"protocolVersion":"2025-06-18"}},"response":{"id":1,"jsonrpc":"2.0","result":{"capabilities":{"resources":{"listChanged":false,"subscribe":false},"tools":{"listChanged":false}},"protocolVersion":"2025-06-18","serverInfo":{"name":"zero-mcp","version":"0.1.5"}}}}
 {"request":{"id":2,"jsonrpc":"2.0","method":"tools/list","params":{}},"response":{"id":2,"jsonrpc":"2.0","result":{"tools":[{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only list of bundled paper strategies and contributor examples.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_list_strategies","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only paper runtime status derived from the bundled scenario.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_runtime_status","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only production-parity OODA report with disabled live shadow execution.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_runtime_parity","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only paper runtime health, dependency, and breaker status.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_health","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only replay of the deterministic bundled paper scenario.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_paper_results","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only paper position state derived from the bundled scenario.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_position_state","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only paper decision journal tail from the bundled scenario.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_journal_tail","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only paper rejection audit grouped by stage and reason.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_rejection_audit","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only public-safe demo proof-pack manifest.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_proof_pack","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only public-safe ZERO Network proof-chain manifest.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_network_proof_pack","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only public-safe local memory snapshot from bundled paper decisions.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_memory_snapshot","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only aggregate memory stats without entry bodies.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_memory_stats","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only plan-only genesis proposal classifications.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_genesis_proposals","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only paper-first evolve gate status.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_evolve_status","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only paper-only research command-chain report.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_research_report","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only paper-only lens, layer, and modifier decision stack.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_decision_stack","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only paper immune breaker and risk-allowance status.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_immune_status","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only deterministic paper backtest report without PnL claims.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_backtest_report","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only hash-only evidence bundle from the bundled paper runtime.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_evidence_bundle","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"},{"annotations":{"destructiveHint":false,"idempotentHint":true,"openWorldHint":false,"readOnlyHint":true},"canChangeRuntimeState":false,"canPlaceOrders":false,"canReadSecrets":false,"description":"Read-only MCP safety catalog for every public tool.","inputSchema":{"additionalProperties":false,"properties":{},"type":"object"},"name":"zero_get_safety_catalog","requiresOperatorApproval":false,"riskDirection":"none","safetyClass":"read_only_public"}]}}}
 {"request":{"id":3,"jsonrpc":"2.0","method":"tools/call","params":{"arguments":{},"name":"zero_list_strategies"}},"response":{"id":3,"jsonrpc":"2.0","result":{"content":[{"text":"{\n  \"mode\": \"paper\",\n  \"schema_version\": \"zero.mcp.strategies.v1\",\n  \"strategies\": [\n    {\n      \"description\": \"Built-in candle close/open momentum strategy signal.\",\n      \"kind\": \"built_in\",\n      \"name\": \"momentum-close-above-open\",\n      \"paper_only\": true,\n      \"path\": \"engine/src/zero_engine/strategy.py\"\n    },\n    {\n      \"description\": \"Declarative close-above-open paper runner.\",\n      \"kind\": \"declarative_runner\",\n      \"name\": \"close-strength-yaml\",\n      \"paper_only\": true,\n      \"path\": \"examples/strategy-runner/close-strength.yaml\",\n      \"version\": \"0.1.0\"\n    },\n    {\n      \"description\": \"Smallest contributor path for a deterministic paper strategy plugin.\",\n      \"kind\": \"strategy_plugin_example\",\n      \"name\": \"close-strength\",\n      \"paper_only\": true,\n      \"path\": \"examples/strategy-plugin/plugin.py\",\n      \"version\": \"0.1.0\"\n    }\n  ]\n}","type":"text"}],"isError":false}}}
 {"request":{"id":4,"jsonrpc":"2.0","method":"tools/call","params":{"arguments":{},"name":"zero_get_runtime_status"}},"response":{"id":4,"jsonrpc":"2.0","result":{"content":[{"text":"{\n  \"alert\": null,\n  \"approaching\": [],\n  \"blind_spots\": [],\n  \"confidence\": {\n    \"level\": \"paper\",\n    \"score\": 90\n  },\n  \"market\": {\n    \"coins_tradeable\": 3,\n    \"fear_greed\": 50,\n    \"health\": 1.0,\n    \"prediction\": \"stable\",\n    \"regime\": \"PAPER MARKET. Local deterministic demo.\",\n    \"signal\": \"stable\"\n  },\n  \"mode\": \"paper\",\n  \"paper_only\": true,\n  \"positions\": {\n    \"equity\": 10000.0,\n    \"open\": 1,\n    \"unrealized_pnl\": 0.0\n  },\n  \"recovery\": {\n    \"current_decisions\": 4,\n    \"current_fills\": 2,\n    \"current_positions\": 1,\n    \"current_rejections\": 2,\n    \"decisions_recovered\": 0,\n    \"durable\": false,\n    \"fills_recovered\": 0,\n    \"journal_path\": null,\n    \"last_decision_at\": null,\n    \"positions_recovered\": 0,\n    \"rejections_recovered\": 0,\n    \"source\": \"memory\",\n    \"status\": \"ephemeral\"\n  },\n  \"schema_version\": \"zero.mcp.runtime_status.v1\",\n  \"today\": {\n    \"pnl\": 0.0,\n    \"sizing_mult\": 1.0,\n    \"streak\": 0,\n    \"trades\": 2,\n    \"wins\": 0\n  },\n  \"ts\": \"2026-05-01T14:40:00Z\"\n}","type":"text"}],"isError":false}}}
@@ -3838,6 +4205,64 @@ when the state points at a missing or mutated packet, when the journal head no
 longer matches the anchor, or when the cadence is overdue. Preserve external
 receipt material outside the trading host.
 
+## Stream Roots And Public Proof Packs
+
+The decision journal verifier protects one append-only decision file. Launch
+and live-readiness evidence also need a higher-level root over multiple runtime
+streams: trades, events, decisions, rejections, near misses, and genesis
+proposals.
+
+ZERO exposes this as `zero.journal.v1` stream envelopes and
+`zero.journal_root.v1` daily roots:
+
+- `zero-journal-chain` wraps raw JSONL rows in ordered envelopes with
+  `payload_hash`, `prev_hash`, `entry_hash`, and optional Ed25519 signature
+  fields.
+- `zero-journal-sidecar` writes or backfills sibling
+  `journal-chains/*.chain.jsonl` files without changing the raw journal format.
+- `zero-journal-root` reduces verified streams into one signed root hash.
+- `zero-journal-anchor` attaches local, webhook, or OpenTimestamps receipt
+  metadata. Root hashes and signatures exclude the mutable `anchor` field.
+- `zero-journal-proof` emits a public-safe proof pack with counts, head hashes,
+  signature hash, public key id, and anchor metadata, but no raw trade rows,
+  local paths, wallet material, or exchange order IDs.
+
+Build and verify a sidecar over any JSONL stream:
+
+```bash
+zero-journal-sidecar backfill \
+  --input .zero/data/trades.jsonl \
+  --stream trades
+
+zero-journal-sidecar verify \
+  --input .zero/data/journal-chains/trades.trades.chain.jsonl \
+  --stream trades \
+  --raw-input .zero/data/trades.jsonl
+```
+
+Generate a daily root and public proof pack:
+
+```bash
+zero-journal-root \
+  --bus-dir .zero/bus \
+  --data-dir .zero/data \
+  --output-dir .zero/data/journal-roots \
+  --day 2026-05-04
+
+zero-journal-proof \
+  --root .zero/data/journal-roots/journal-root-2026-05-04.json \
+  --output-dir .zero/data/proof-packs
+```
+
+Set `ZERO_JOURNAL_SIGNING_KEY_B64` to a base64/base64url encoded 32-byte
+Ed25519 private key or base64 encoded Ed25519 PEM to sign sidecar entries and
+daily roots. Set `ZERO_JOURNAL_SIGNING_KEY_ID` to a stable operator or
+deployment key id. The private key is never written to roots or proof packs.
+
+Use `ZERO_JOURNAL_ANCHOR_PROVIDER=opentimestamps` for public timestamp
+submission, `webhook` for an operator-controlled timestamp service, `local` for
+local receipt files, or `none` to disable anchoring during tests.
+
 ## Incident Rule
 
 Any `zero.decision_journal.verification.v1` failure in a live-capable operator
@@ -4033,8 +4458,8 @@ ZERO reaches the autonomous trust bar only when:
   state;
 - failures that touch live safety, journal integrity, or public privacy produce
   redacted postmortems in `docs/incident-postmortems/`;
-- the MCP server has a committed registry packet before launch and is tracked
-  until package or remote publication produces a live registry listing.
+- the MCP server has a committed registry packet and live Official MCP Registry
+  listing backed by the public `zero-engine` PyPI package.
 
 ## Operating Rule
 
@@ -4295,7 +4720,7 @@ YYYY-MM-DD-short-slug.md
 ````markdown
 # Open Runtime Boundary
 
-ZERO is an open autonomous operating system plus commercial intelligence.
+ZERO is an open autonomous operating system plus growth-mode free intelligence.
 
 This public repository contains the local-first runtime, operator terminal,
 public proof contracts, and deployment paths that engineers can run, inspect,
@@ -4303,9 +4728,10 @@ test, and extend locally. Deployment should be Railway-first and
 self-custodial: operators own their Railway project, environment variables,
 exchange credentials, and runtime state.
 
-ZERO Intelligence is the commercial product. It sells advantaged access to
-aggregated, verified autonomous behavior through APIs, subscriptions, datasets,
-webhooks, benchmarks, and enterprise support.
+ZERO Intelligence is currently free for verified operators so ZERO can grow the
+operator network and produce better verified behavior. The future commercial
+product sells advantaged scale, retention, redistribution, datasets, webhooks,
+benchmarks, reliability commitments, and enterprise support.
 
 ## Open Source
 
@@ -4320,9 +4746,15 @@ webhooks, benchmarks, and enterprise support.
 - Contributor tests and CI
 - Documentation needed to understand, build, and modify the runtime
 
-## Commercial
+## Growth-Mode Free
 
 - Realtime ZERO Intelligence API
+- Operator onboarding credits
+- Public profiles and leaderboards
+- Delayed public snapshots
+
+## Future Commercial
+
 - Historical intelligence datasets
 - Advanced filters, cohorts, and benchmarks
 - Commercial intelligence connectors and enrichment feeds
@@ -4341,14 +4773,14 @@ webhooks, benchmarks, and enterprise support.
 - Public profiles and leaderboards are part of the public product surface.
 - ZERO Network publication must use redacted proof packets and must not require
   a ZERO-hosted control plane.
-- Delayed ZERO Intelligence snapshots and the local intelligence export
-  contract are public; hosted realtime feeds, history, cohorts, webhooks, bulk
-  exports, and redistribution remain commercial.
+- Delayed ZERO Intelligence snapshots, realtime growth-mode access, and the
+  local intelligence export contract are public-facing; future higher-scale
+  history, cohorts, bulk exports, redistribution, and SLAs remain commercial.
 - Core runtime and venue adapters should be public; commercial connectors should
   enrich, distribute, or integrate ZERO Intelligence rather than gate basic
   runtime operation.
-- Paid features must be based on speed, scale, history, reliability, support, or
-  commercial intelligence access, not on basic runtime use.
+- Future paid features must be based on scale, history, reliability,
+  redistribution, or support, not on basic runtime use or early operator access.
 - A public contributor must be able to run the default test suite from a clean
   checkout.
 
@@ -4395,8 +4827,8 @@ for local wallet control, preflight, kill-switches, reconciliation, and review.
 | Observability and audit | 100 | HTTP trace IDs, operator context packets, operator-local state partitions, live-control action logs, traced paper decisions, metrics, idempotency counters, replay counts, retention/redaction metadata, structured audit export, checksum-chained runtime events, local state snapshots, immune breaker packets, Hyperliquid reconciliation packets, live cockpit packets, live execution receipt hashes, dry-run live certification packets, hash-only signed live evidence bundles, redacted private live trading evidence, live canary policy packets, live canary bundle verification, live cockpit drill replay verification, live cockpit drill tamper rehearsal, public-safe exchange evidence attachment, public-safe operator reports, recursive operator evidence checksums, operator report verification, model gateway health packets, model gateway audit bundles, deployment evidence manifests, and required incident artifacts are documented. Remaining production work is external log drains/signing, not public-runtime audit shape. |
 | Security and custody | 100 | No secrets needed for first run; Hyperliquid private keys have operator-scoped keychain/env helpers, redaction tests, a non-secret preflight gate, optional SDK-backed live adapter, threat model, secret-leak runbook, dependency policy, SBOM/provenance metadata, and release provenance policy. External security review remains diligence evidence, not a missing custody contract. |
 | ZERO Network contracts | 100 | Public-safe local profile packets, proof hashes, deployment claim hashes, deployment heartbeat hashes, verification badges, leaderboard rows, opt-in local publish logs, hosted-compatible ingestion, proof validation, duplicate refusal, metric-consistency checks, accepted-only leaderboard output, empty/active/stale public page states, `zero.network.profile_verification.v1` profile-plus-identity verification, and deterministic `zero.network_proof_pack.v1` public proof-chain artifacts exist. Hosted persistence, sybil policy operation, and identity service operation are external product work. |
-| ZERO Intelligence contracts | 100 | Delayed public snapshots, catalog, billing-ready commercial contract, hosted-compatible `/v1/intelligence/*` reads/writes, token-gated paid scopes, actual rate-limit headers, usage events, HMAC-SHA256 webhook signature fixtures, aggregate export jobs, plan/scope model, dataset names, fail-closed model gateway status, model gateway health probes, model gateway audit bundles, mock/local provider conformance, external model adapter contract tests, bounded retry/cost policy, hosted key-management rules, plan boundary, and opt-in local export packets exist. Production persistence, billing, warehouse-backed feeds, and webhook delivery are external commercial service work. |
-| Release and distribution | 100 | GitHub release artifacts, checksums, SBOM/provenance bundle, recorded `v0.1.2` clean-download release evidence, published-release evidence command with committed Homebrew formula comparison, release verifier, tamper-detection rehearsal, draft-release rollback rehearsal, committed Homebrew formula, formula drift check, attestations, installer, registry-readiness gate, package dry run, distribution readiness policy, release template hardening checks, dependency policy, and rollback rules exist. External package registries remain unpublished pending name ownership and support policy. |
+| ZERO Intelligence contracts | 100 | Delayed public snapshots, catalog, billing-ready commercial contract, hosted-compatible `/v1/intelligence/*` reads/writes, token-gated paid scopes, actual rate-limit headers, usage events, HMAC-SHA256 webhook signature fixtures, aggregate export jobs, plan/scope model, dataset names, fail-closed model gateway status, model gateway health probes, model gateway audit bundles, mock/local provider conformance, external model adapter contract tests, bounded retry/cost policy, hosted key-management rules, plan boundary, opt-in local export packets, and a durable JSONL reference store behind `ZERO_INTELLIGENCE_STORE_PATH` exist. Billing, warehouse-backed feeds, and webhook delivery are external commercial service work. |
+| Release and distribution | 100 | GitHub release artifacts, checksums, SBOM/provenance bundle, recorded `v0.1.2` clean-download release evidence, published-release evidence command with committed Homebrew formula comparison, release verifier, tamper-detection rehearsal, draft-release rollback rehearsal, committed Homebrew formula, formula drift check, attestations, installer, registry-readiness gate, package dry run, distribution readiness policy, release template hardening checks, dependency policy, PyPI `zero-engine`, published crates.io `zero-os` workspace crates, Official MCP Registry listing, published Docker Hub `getzero/zero` image with anonymous pull evidence, published GHCR `ghcr.io/zero-intel/zero` image with anonymous pull evidence, and rollback rules exist. |
 | Documentation for operators | 100 | Good local docs, operator isolation docs, Hyperliquid read-only boundary docs, live-paper quote docs, immune-system docs, live cockpit docs, live cockpit drill bundle, verifier, and tamper rehearsal, live certification docs, live evidence docs, redacted live trading evidence docs, live canary policy/operator docs, Railway paper deploy, remote-doctor, and evidence-pack docs, restart recovery docs, audit/metrics docs, live-preflight warnings, threat model, and incident runbooks. Missing third-party review evidence only as external proof, not documented workflow. |
 
 **Public repo readiness: 100/100.**
@@ -4413,7 +4845,7 @@ packet.
 
 **Full ZERO operating-system contract readiness: 100/100.**
 
-**Autonomous trust readiness: 99/100.**
+**Autonomous trust readiness: 100/100.**
 
 The stricter trust bar is intentionally higher than contract completeness. The
 repo now documents autonomous-loop bounds, a failure-mode taxonomy, and a
@@ -4429,11 +4861,9 @@ untrusted, or risk-increasing external claims into non-raw quarantine metadata
 before they can influence genesis or evolve context. Journal-head anchoring now
 has a periodic operation that creates or reuses external anchor packets, fails
 closed when live evidence requires an external receipt, and verifies cadence
-state. ZERO should not claim the final autonomous trust moat until the MCP
-Registry submission packet is live-listed after PyPI or a public remote MCP
-endpoint is enabled. The manual GitHub OIDC MCP Registry workflow and listing
-verifier now exist, but they fail closed while `zero-engine` is absent from
-PyPI. The tracked failure modes are documented in
+state. The manual GitHub OIDC MCP Registry workflow and listing verifier now
+prove the live listing for `io.github.zero-intel/zero` after `zero-engine`
+PyPI publication. The tracked failure modes are documented in
 [Failure Modes Of The Autonomous Loop](failure-modes-autonomous-loop.md).
 
 It is still not a hosted custody product, and real capital operation remains
@@ -4451,10 +4881,10 @@ For the public repo target, ZERO now has the executable contracts expected from
 a complete autonomous operating-system launch artifact: paper runtime,
 production-parity OODA proof, live-readiness gates, live-shadow fail-closed
 evidence, local evolution gates, release evidence, and agentic contribution
-surfaces. Hosted Network persistence, paid Intelligence infrastructure,
-package-registry publication, third-party security review, production log
-drains, and raw exchange disclosure remain external product and launch work,
-not missing public-runtime contracts.
+surfaces. Hosted Network persistence, paid Intelligence billing/warehouse
+infrastructure, third-party security review, production log drains, and raw
+exchange disclosure remain external product and launch work, not missing
+public-runtime contracts.
 
 ## CLI Readiness Detail
 
@@ -4463,8 +4893,8 @@ not missing public-runtime contracts.
 | Command surface | 100 | `zero`, `zero init`, `zero doctor`, `zero run`, TUI, and slash-command dispatch cover the public runtime and operator workflows. |
 | Operator safety | 100 | Risk-reducing commands are friction-exempt and risk-increasing commands require interactive friction. |
 | Engine integration | 100 | HTTP, WebSocket, mock engine, contract tests, Rust client decoding for production-parity OODA reports, live receipt packets, live canary policy packets, `/runtime-parity`, `/live-receipts`, and `/live-canary` operator rendering, live risk-reducer endpoints, and redacted private live execution evidence exist. Raw accepted canary records remain external. |
-| Install path | 100 | Release installer exists with checksum and attestation verification, `v0.1.2` was installed from the public GitHub Release into a temporary bin directory, and the public Homebrew repo tap installs and tests `zero` from the checksummed GitHub Release asset. External package registries remain unpublished pending ownership proof. |
-| Diagnostics | 100 | Doctor, JSON output, exit codes, rate-budget checks, operator/credential partition checks, live-preflight diagnostics, live-cockpit next-action/operator rendering, Railway remote doctor, deployment evidence verification, deployment identity verification, deployment evidence log capture/signing, rollback rehearsal checks, paid-scope fail-closed checks, and live-control refusals are covered. External production examples against a linked Railway project remain operations evidence. |
+| Install path | 100 | Release installer exists with checksum and attestation verification, `v0.1.2` was installed from the public GitHub Release into a temporary bin directory, the public Homebrew repo tap installs and tests `zero` from the checksummed GitHub Release asset, PyPI serves `zero-engine` for agent/MCP installs, crates.io serves `zero-os`, which installs the `zero` binary, Docker Hub serves `getzero/zero:0.1.2` with anonymous pull and runtime smoke evidence, and GHCR serves `ghcr.io/zero-intel/zero:0.1.2` with anonymous pull and runtime smoke evidence. |
+| Diagnostics | 100 | Doctor, JSON output, exit codes, rate-budget checks, operator/credential partition checks, live-preflight diagnostics, live-cockpit next-action/operator rendering, Railway remote doctor, deployment evidence verification, deployment identity verification, deployment evidence log capture/signing, rollback rehearsal checks, protected-scope fail-closed checks, and live-control refusals are covered. External production examples against a linked Railway project remain operations evidence. |
 | TUI production UX | 100 | Snapshot coverage, status honesty, risk overlays, live-stream pane, and a full-screen live cockpit are covered for the public runtime. External live operator fault drills remain operations evidence. |
 | Non-interactive automation | 100 | `zero run` covers cockpit, receipts, canary policy, runtime parity, breaker, certification, account truth, and risk-reducer workflows while intentionally gating risk-increasing commands. External production examples remain operations evidence. |
 | Documentation freshness | 100 | Command docs, production deployment notes, live-mode API docs, paper/live refusal docs, cockpit drills, canary policy, incident runbooks, and evidence verification docs are current for the public runtime. |
@@ -4491,21 +4921,17 @@ ZERO is 100/100 when a new serious operator can:
   canaries, calibrate changes, and promote or roll back with reviewable
   evidence;
 - publish verified behavior to ZERO Network;
-- consume delayed public intelligence for free;
-- pay for realtime ZERO Intelligence API access when speed, scale, history, or
-  commercial rights matter.
+- consume delayed and realtime ZERO Intelligence in growth mode for free;
+- move to future commercial ZERO Intelligence packaging when higher limits,
+  deeper history, webhooks, redistribution rights, support, or SLAs matter.
 
 ## Execution Cycles
 
-Forecast after Cycle 45: **0 major public-repo product cycles remain before the
+Forecast after Cycle 46: **0 major public-repo product cycles remain before the
 repo can be treated as a complete ZERO autonomous operating-system launch
-artifact. 1 external trust-moat action remains before the autonomous trust score
-should return to 100/100:** publish `zero-engine` on PyPI or enable a public
-remote MCP endpoint, run the MCP Registry publication workflow, and record live
-listing evidence. External work still includes third-party review, package registry
-ownership, hosted Network, paid
-Intelligence deployment, and optional raw exchange disclosure for commercial
-diligence.
+artifact.** External work still includes third-party review, hosted Network,
+growth-mode Intelligence production deployment, and optional raw exchange
+disclosure for commercial diligence.
 
 | Cycle | Target | Historical Target Score |
 |---|---|---:|
@@ -5057,9 +5483,9 @@ The current public repo is strong as an open-source product page, contributor
 surface, CLI, paper runtime, and safety-first launch artifact. It is not yet a
 complete autonomous real-capital operating system. The remaining work is
 runtime truth, live exchange evidence, multi-operator isolation, public Network
-ingestion, commercial Intelligence infrastructure, and the public
-self-evolution loop: memory, research, genesis, guardian review, red-team,
-canary, calibration, and evolve.
+ingestion, growth-mode Intelligence infrastructure, future commercial scale
+packaging, and the public self-evolution loop: memory, research, genesis,
+guardian review, red-team, canary, calibration, and evolve.
 
 ## North Star
 
@@ -5088,9 +5514,9 @@ ZERO reaches 100/100 when a serious operator can:
 - learn from local outcomes through memory, research reports, genesis
   proposals, paper canaries, calibration, and reviewable promotion gates;
 - opt into public ZERO Network publishing without leaking secrets;
-- consume delayed public ZERO Intelligence snapshots for free;
-- pay for realtime ZERO Intelligence API access when speed, history, scale,
-  webhooks, redistribution rights, or support matter.
+- consume delayed and realtime ZERO Intelligence in growth mode for free;
+- move to future commercial ZERO Intelligence packaging only when higher
+  limits, deeper history, webhooks, redistribution rights, or support matter.
 
 ## Product Boundary
 
@@ -5110,7 +5536,7 @@ Open:
 
 Commercial:
 
-- realtime ZERO Intelligence API
+- higher-scale ZERO Intelligence API access after growth-mode free access
 - historical intelligence datasets
 - cohorts, benchmarks, webhooks, exports, redistribution rights, SLAs, and
   enterprise support
@@ -5124,8 +5550,8 @@ speed, scale, history, and reliability.
 
 | Dimension | Current | 100/100 Gap |
 |---|---:|---|
-| Public repo hygiene | 100 | MCP registry packet exists; live registry listing, package ownership evidence, and external review remain business/process tasks |
-| Product narrative | 99 | keep narrative aligned as hosted Network and Intelligence launch |
+| Public repo hygiene | 100 | PyPI `zero-engine`, MCP registry listing, release gates, and public contribution surfaces are live; external review remains business/process work |
+| Product narrative | 100 | keep narrative aligned as hosted Network and Intelligence launch |
 | CLI readiness | 100 | five-mode terminal with full-screen live cockpit exists; raw exchange records remain operator-owned proof |
 | Engine runtime | 100 | public production-parity OODA report plus redacted live trading evidence exist; raw exchange records remain operator-owned external proof |
 | Self-evolution loop | 98 | public memory, research command chain, genesis proposal classification, production-parity OODA reports, local apply, rollback, paper-first evolve gates, agent architecture bounds, and property-based safety coverage exist; protected live-code evolution remains human-reviewed |
@@ -5135,8 +5561,8 @@ speed, scale, history, and reliability.
 | Observability and audit | 99 | checksum-chained runtime bus, hash-chained signable decision journal, local timestamp binding, external anchor packet, periodic anchor-cadence operation, verifier, and signed evidence bundles exist; metrics backend and log drains remain |
 | Security and custody | 91 | external review, key-handling drill evidence |
 | ZERO Network | 82 | deterministic public proof-chain pack plus profile identity verifier exist; hosted identity service, public pages, and production ingestion service remain |
-| ZERO Intelligence | 70 | production hosted service persistence, billing provider, history storage, terms |
-| Release and distribution | 100 | public Homebrew repo tap and MCP registry packet exist; external registry ownership/listing evidence remains outside the public runtime |
+| ZERO Intelligence | 82 | durable JSONL hosted-reference persistence and growth-mode free access exist; hosted warehouse backend, abuse controls, terms, retention, and SLA policy remain |
+| Release and distribution | 100 | public Homebrew repo tap, PyPI `zero-engine`, and MCP Registry listing exist; crates/container registry ownership remains optional external distribution work |
 | Operator docs | 98 | third-party review and optional raw exchange disclosure |
 
 ## Execution Cycles
@@ -5578,8 +6004,8 @@ Current progress:
   coverage, and docs.
 
 Remaining scope before Cycle 24: production hosted service persistence,
-API-key issuer, billing provider integration, warehouse-backed history,
-commercial terms, retention policy, and signed hosted identity verification.
+API-key issuer, warehouse-backed history, abuse controls, commercial terms,
+retention policy, SLA policy, and signed hosted identity verification.
 
 ### Cycle 24: Production Deployment And Remote Operations
 
@@ -5620,7 +6046,7 @@ Current progress:
 - The doctor checks health, recovery durability, market data source, metrics,
   immune state, live-preflight refusal, live cockpit refusal, public Network
   privacy, delayed Intelligence privacy, hosted-compatible rate-limit headers,
-  paid-scope fail-closed behavior, and optional tokened paid history access.
+  protected-scope fail-closed behavior, and optional tokened history access.
 - Local paper API smoke and Railway smoke now execute the same doctor and
   evidence collector, failing CI on any failed deployment check or leaked trace
   data in the evidence pack.
@@ -5684,9 +6110,13 @@ Current progress:
 - Backfilled `v0.1.1` with `SBOM.spdx.json` and `PROVENANCE.json`, verified the
   published release from a clean download, and added `scripts/release_evidence.py`
   so maintainers can rerun checksum, metadata, attestation, and formula evidence.
+- Published `zero-engine==0.1.2` through `zero-engine==0.1.5` on PyPI through
+  Trusted Publishing, then listed `io.github.zero-intel/zero` in the Official
+  MCP Registry with a public `uvx` stdio package reference. The `0.1.5` MCP
+  runtime reports the installed package version from its initialize response.
 
-Remaining scope before Cycle 26: external package-registry ownership evidence
-and external review evidence.
+Remaining scope before Cycle 26: crates/container ownership evidence and
+external review evidence.
 
 ### Cycle 26: External Review And Real-World Evidence
 
@@ -6345,8 +6775,9 @@ Use the GitHub labels when choosing work:
 
 ## Help Wanted
 
-- [#29 Add a static ZERO Intelligence catalog page](https://github.com/zero-intel/zero/issues/29)
-- [#30 Add Homebrew rollback verification docs](https://github.com/zero-intel/zero/issues/30)
+No open seeded help-wanted issues remain. New contributor lanes should be
+opened through [launch issues](launch-issues.md) so acceptance criteria stay
+source-controlled.
 
 ## Completed Seed Issues
 
@@ -6368,6 +6799,11 @@ Use the GitHub labels when choosing work:
   delivered in [ZERO Network Empty Profile Fixture](../examples/network-empty-profile/README.md),
   [ZERO Network Stale Profile Fixture](../examples/network-stale-profile/README.md),
   and [ZERO Network Profile Page Example](../examples/network-profile-page/README.md).
+- [#29 Add a static ZERO Intelligence catalog page](https://github.com/zero-intel/zero/issues/29) -
+  delivered in [ZERO Intelligence Catalog Page](../examples/intelligence-catalog-page/README.md).
+- [#30 Add Homebrew rollback verification docs](https://github.com/zero-intel/zero/issues/30) -
+  delivered in [Release Process](release.md#homebrew-rollback-verification) and
+  [Distribution Readiness](distribution.md#homebrew-rollback-verification).
 
 ## Contribution Rules
 
@@ -7295,8 +7731,12 @@ PYTHONPATH="$PWD/engine/src" python3 examples/network-empty-profile/build.py
 ````markdown
 # ZERO Intelligence
 
-ZERO Intelligence is the commercial product built from verified autonomous
-behavior.
+ZERO Intelligence is the data product built from verified autonomous behavior.
+During operator growth, realtime Intelligence access is free so ZERO can
+increase operator density, collect better verified behavior, and make public
+profiles and leaderboards more valuable. Future commercial packaging should
+monetize scale, retention, redistribution, support, and SLAs rather than basic
+operator access.
 
 It is not a hosted deployment product. Operators should be able to run ZERO
 locally, through Docker, or on Railway without paying ZERO and without sending
@@ -7317,9 +7757,16 @@ databases, logs, and billing relationship.
 - Public benchmark pages
 - Delayed or rate-limited public intelligence snapshots
 
-## Commercial Surfaces
+## Growth-Mode Free Surfaces
 
-- Realtime intelligence API
+- Realtime Intelligence API access for verified operators
+- Public profiles and leaderboards
+- Public verification badges
+- Delayed and rate-limited public intelligence snapshots
+- Hosted-compatible Railway/Docker contract testing
+
+## Future Commercial Surfaces
+
 - Historical decision and risk datasets
 - Advanced filters, cohorts, and benchmark analytics
 - Commercial intelligence connectors and enrichment feeds
@@ -7361,19 +7808,21 @@ operation.
 
 ## Packaging
 
-- Free: runtime, CLI, public profiles, public leaderboards, delayed snapshots,
-  and low API quota.
-- Pro Operator: subscription for higher API quota, alerts, webhooks, longer
-  history, saved views, and profile verification features.
-- Team/Fund: subscription plus usage for team API keys, cohort analytics,
-  realtime feeds, exports, and private benchmarks.
-- Enterprise: contract pricing for SLOs, support, compliance needs, custom
-  retention, and commercial redistribution.
+- Growth mode: runtime, CLI, public profiles, public leaderboards, delayed
+  snapshots, realtime Intelligence API access, hosted-compatible Railway
+  contracts, and onboarding credits are free for verified operators.
+- Future operator plans: higher API quota, alerts, webhooks, longer history,
+  saved views, and profile verification features.
+- Future teams/funds: team API keys, cohort analytics, bulk exports, private
+  benchmarks, and redistribution rights.
+- Future enterprise: SLOs, support, compliance needs, custom retention, and
+  commercial redistribution.
 
 ## Hosted API Shape
 
-The paid hosted API should use bearer API keys, explicit scopes, usage events,
-and standard rate-limit headers. The checked contract fixture lives at
+The hosted API should use bearer API keys, explicit scopes, usage events, and
+standard rate-limit headers even while access is free in growth mode. The
+checked contract fixture lives at
 [contracts/intelligence/commercial.json](../contracts/intelligence/commercial.json).
 
 The public server now includes a reference implementation of the hosted API
@@ -7421,11 +7870,12 @@ ZERO_INTELLIGENCE_API_TOKEN=...
 ZERO_INTELLIGENCE_API_PLAN=team_fund
 ZERO_INTELLIGENCE_API_ACCOUNT_ID=acct_...
 ZERO_INTELLIGENCE_WEBHOOK_SIGNING_KEY=...
+ZERO_INTELLIGENCE_STORE_PATH=/data/zero/intelligence.jsonl
 ```
 
-The reference implementation enforces paid scopes when a token is configured,
-emits real `x-zero-ratelimit-*` headers, and returns webhook signature fixtures
-with:
+The reference implementation enforces protected scopes when a token is
+configured, emits real `x-zero-ratelimit-*` headers, and returns webhook
+signature fixtures with:
 
 ```text
 x-zero-signature-timestamp
@@ -7435,6 +7885,27 @@ x-zero-signature-algorithm
 
 The signature payload is `timestamp + "." + canonical_json_body` signed with
 HMAC-SHA256. The signing key is never returned.
+
+## Durable Reference Store
+
+When `ZERO_INTELLIGENCE_STORE_PATH` is configured, the hosted-compatible
+reference API appends public-safe JSONL records for delayed/realtime snapshots,
+usage events, webhook subscription fixtures, and export jobs. History queries
+then read stored snapshot records before falling back to the current runtime
+snapshot.
+
+The store is intentionally aggregate-only:
+
+- API tokens and webhook signing keys are never written.
+- Account IDs and webhook target URLs are persisted as SHA-256 hashes.
+- Raw journals, trace IDs, idempotency keys, symbols, exchange order IDs,
+  wallet identifiers, and strategy labels remain excluded by the same privacy
+  checks that guard public Network and Intelligence packets.
+
+This is not the final commercial warehouse or billing system. It is the
+durable, stdlib, self-hostable persistence boundary that production hosted
+Intelligence can replace with Postgres, ClickHouse, or another append-only
+warehouse without changing the public API contract.
 
 ## Data Rules
 
@@ -7457,8 +7928,9 @@ HMAC-SHA256. The signing key is never returned.
 - Model gateway costs must come from operator-configured prices or provider
   usage metadata; the public runtime must not bake stale vendor pricing into
   source code.
-- Paid intelligence should monetize speed, scale, history, reliability, and
-  commercial access, not basic runtime use.
+- Growth-mode intelligence should remain free for operator density.
+- Future paid intelligence should monetize scale, history, reliability,
+  redistribution, and support, not basic runtime use.
 - Core runtime and venue adapters should remain public. Commercial connectors
   should exist for intelligence enrichment, partner integrations, redistribution,
   and enterprise data delivery.
@@ -7466,11 +7938,12 @@ HMAC-SHA256. The signing key is never returned.
 ## Flywheel
 
 ```text
-Open runtime -> verified behavior -> public network proof -> paid intelligence
+Open runtime -> verified behavior -> public network proof -> Intelligence
 ```
 
 The runtime creates behavior. The network verifies behavior. ZERO Intelligence
-turns verified behavior into a commercial API and subscription business.
+turns verified behavior into free operator utility first, then future
+commercial scale, retention, redistribution, and SLA products.
 ````
 
 
@@ -7788,11 +8261,58 @@ Homebrew is also supported through the public repo tap:
 ```bash
 brew tap zero-intel/zero https://github.com/zero-intel/zero
 brew install zero
+zero --version
 ```
 
 The formula lives at `Formula/zero.rb`, installs the `zero` CLI from the
 checksummed GitHub Release asset, and does not require private package registry
 access. It is generated from `SHA256SUMS` by `scripts/homebrew_formula.py`.
+
+### Homebrew Rollback Verification
+
+First prove the current public tap path still works from a clean local tap:
+
+```bash
+brew uninstall zero || true
+brew untap zero-intel/zero || true
+brew tap zero-intel/zero https://github.com/zero-intel/zero
+brew install zero-intel/zero/zero
+zero --version
+```
+
+To temporarily roll an operator machine back to the previous formula commit,
+checkout the older `Formula/zero.rb` inside the local Homebrew tap, reinstall,
+and pin the package until the incident is resolved:
+
+```bash
+tap_repo="$(brew --repo zero-intel/zero)"
+git -C "$tap_repo" log --oneline -- Formula/zero.rb
+git -C "$tap_repo" checkout <previous-formula-commit> -- Formula/zero.rb
+brew reinstall --formula zero-intel/zero/zero
+zero --version
+brew pin zero
+```
+
+After the rollback window, return the tap to the published formula and reinstall
+the current release:
+
+```bash
+brew unpin zero || true
+tap_repo="$(brew --repo zero-intel/zero)"
+git -C "$tap_repo" restore Formula/zero.rb
+brew update
+brew reinstall --formula zero-intel/zero/zero
+zero --version
+```
+
+The checksum check proves the installed binary matches the GitHub Release
+checksum recorded in `SHA256SUMS`. The formula drift check proves the committed
+Homebrew formula was generated from that release checksum manifest, still points
+at the public GitHub Release asset, and has not been edited to use a stale
+checksum, stale tag, private tap, or private registry. These checks prove
+release integrity for the public Homebrew path; they do not prove trading
+performance, custody safety, or publication to PyPI, crates.io, Docker Hub, or
+GHCR.
 
 ## Package Dry Run
 
@@ -7821,7 +8341,8 @@ long-lived PyPI tokens to repository secrets or examples.
 Current package-name assumptions:
 
 - PyPI candidate: `zero-engine`
-- crates.io candidates: the `zero-*` workspace crates plus the `zero` binary crate
+- PyPI published package: `zero-engine`
+- crates.io packages: the `zero-*` workspace crates plus the `zero-os` CLI package
 - Homebrew: `zero-intel/zero` public repo tap with `Formula/zero.rb`
 
 ## Release Rehearsal
@@ -7898,10 +8419,15 @@ executable attestations, then deletes the draft release and temporary tag. Use
   `scripts/release_workflow_rehearsal.sh --execute`
 
 The workflow uploads artifacts to the GitHub Actions run and attaches the
-assembled release bundle to a draft GitHub Release. It does not publish to PyPI,
-crates.io, Docker Hub, or GHCR yet. Package publishing should be added only
-after repository ownership, package names, signing, and token permissions are
-finalized.
+assembled release bundle to a draft GitHub Release. It does not publish to any
+package registry. PyPI publication for `zero-engine` is handled by
+`python-release.yml` through Trusted Publishing. crates.io publication for
+`zero-os` is manual with least-privilege `CRATESIO_API_TOKEN`. GHCR publication
+for the paper image is maintainer-triggered through
+`container-publish.yml` and has authenticated smoke evidence; keep it out of
+the primary public install path until anonymous pull access is verified. Docker
+Hub publishing should be added only after repository ownership, provenance,
+rollback, and token permissions are finalized.
 
 ## Homebrew Formula
 
@@ -7932,11 +8458,14 @@ ZERO also ships local provenance metadata:
   release assets.
 - `PROVENANCE.json`: source commit, branch/tag, dirty-state flag, asset hashes,
   and policy assertions that paper mode is default, live execution evidence is
-  not claimed, and package-registry publication remains disabled.
+  not claimed, and release-bundle generation does not publish package-registry
+  artifacts.
 
-Do not publish package-registry artifacts until the registry channel has an
-owner, rollback path, least-privilege token plan, and documented support
-expectation in [distribution.md](distribution.md).
+Do not add automated crates.io or Docker Hub publishing until the registry
+channel has an owner, rollback path, least-privilege token plan, and documented
+support expectation in [distribution.md](distribution.md). Keep GHCR manual
+until public-pull verification and package visibility administration are
+recorded in [registry-launch.md](registry-launch.md).
 ````
 
 

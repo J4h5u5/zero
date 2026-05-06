@@ -14,7 +14,7 @@ Run doctor against the local paper API without a token:
 ```bash
 unset ZERO_API_TOKEN
 cd cli
-cargo run -q -p zero -- --api http://127.0.0.1:8765 doctor
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 doctor
 ```
 
 Expected safe output snippet:
@@ -33,7 +33,7 @@ the environment variable for the current shell:
 
 ```bash
 ZERO_API_TOKEN="<operator-token>" \
-  cargo run -q -p zero -- --api http://127.0.0.1:8765 doctor
+  cargo run -q -p zero-os -- --api http://127.0.0.1:8765 doctor
 ```
 
 Expected output when a token is present and accepted:
@@ -46,7 +46,7 @@ Expected output when a token is present and accepted:
 If `auth_verified` fails, rotate or rewrite local config with:
 
 ```bash
-cargo run -q -p zero -- init --force
+cargo run -q -p zero-os -- init --force
 ```
 
 ## Paper API Not Running
@@ -55,7 +55,7 @@ If terminal 1 is not running the paper API, doctor cannot reach the engine:
 
 ```bash
 cd cli
-cargo run -q -p zero -- --api http://127.0.0.1:8765 doctor
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 doctor
 ```
 
 Expected safe output snippet:
@@ -82,7 +82,7 @@ Then rerun doctor:
 
 ```bash
 cd cli
-cargo run -q -p zero -- --api http://127.0.0.1:8765 doctor
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 doctor
 ```
 
 Expected reachable-engine snippet:
@@ -102,7 +102,7 @@ Run doctor:
 
 ```bash
 cd cli
-cargo run -q -p zero -- --api http://127.0.0.1:8765 doctor
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 doctor
 ```
 
 Expected safe output snippet:
@@ -137,7 +137,7 @@ For the cockpit-level view:
 
 ```bash
 cd cli
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run live-cockpit
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run live-cockpit
 ```
 
 Expected safe output snippet:
@@ -149,9 +149,9 @@ live-cockpit: live_mode=refused  ready=false  risk_allowed=false
 ## Useful Follow-Up Commands
 
 ```bash
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run status
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run risk
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run live-cockpit
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run status
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run risk
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run live-cockpit
 just paper-api-smoke
 ```
 

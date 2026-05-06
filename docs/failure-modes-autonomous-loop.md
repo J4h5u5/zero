@@ -66,8 +66,8 @@ ZERO reaches the autonomous trust bar only when:
   state;
 - failures that touch live safety, journal integrity, or public privacy produce
   redacted postmortems in `docs/incident-postmortems/`;
-- the MCP server has a committed registry packet before launch and is tracked
-  until package or remote publication produces a live registry listing.
+- the MCP server has a committed registry packet and live Official MCP Registry
+  listing backed by the public `zero-engine` PyPI package.
 
 ## Operating Rule
 

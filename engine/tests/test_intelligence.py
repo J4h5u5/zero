@@ -7,7 +7,11 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from zero_engine.api import PaperApi, PaperApiState
-from zero_engine.intelligence import intelligence_catalog, intelligence_commercial_contract
+from zero_engine.intelligence import (
+    intelligence_catalog,
+    intelligence_commercial_contract,
+    public_intelligence_catalog_page,
+)
 from zero_engine.journal import DecisionJournal
 from zero_engine.paper import PaperEngine
 
@@ -174,6 +178,43 @@ def test_hosted_intelligence_reference_allows_paid_scopes_with_bearer_token(tmp_
     assert "test-token" not in json.dumps(payload)
 
 
+def test_hosted_intelligence_store_persists_public_safe_snapshots_and_usage(tmp_path) -> None:
+    api = seed_api(tmp_path)
+    api.state.intelligence_api_token = "test-token"
+    api.state.intelligence_api_plan = "team_fund"
+    api.state.intelligence_api_account_id = "acct_test"
+    api.state.intelligence_store_path = str(tmp_path / "hosted-intelligence.jsonl")
+
+    snapshot_status, snapshot_payload = api.get("/v1/intelligence/snapshots", {})
+    history_status, history_payload = api.get(
+        "/v1/intelligence/history",
+        {"limit": ["10"]},
+        headers={"authorization": "Bearer test-token"},
+    )
+
+    assert snapshot_status == 200
+    assert snapshot_payload["storage"]["status"] == "durable_jsonl_reference"
+    assert history_status == 200
+    assert history_payload["storage"]["status"] == "durable_jsonl_reference"
+    assert history_payload["storage"]["configured"] is True
+    assert history_payload["storage"]["records_returned"] == 1
+    assert history_payload["usage"]["rows_returned"] == 1
+    records = [
+        json.loads(line)
+        for line in Path(api.state.intelligence_store_path).read_text(encoding="utf-8").splitlines()
+    ]
+    assert [record["record_type"] for record in records] == [
+        "snapshot",
+        "usage_event",
+        "usage_event",
+    ]
+    body = json.dumps(records)
+    assert "test-token" not in body
+    assert "acct_test" not in body
+    assert "intelligence-fill" not in body
+    assert "trace-intelligence" not in body
+
+
 def test_hosted_intelligence_webhook_signature_fixture_is_verifiable(tmp_path) -> None:
     api = seed_api(tmp_path)
     api.state.intelligence_api_token = "test-token"
@@ -226,6 +267,35 @@ def test_intelligence_catalog_fixture_is_fresh() -> None:
     )
 
     assert catalog == expected
+
+
+def test_public_intelligence_catalog_page_is_static_and_public_safe() -> None:
+    catalog = intelligence_catalog(
+        generated_at="2026-05-01T00:00:00+00:00",
+        public_delay_s=900,
+    )
+
+    page = public_intelligence_catalog_page(
+        catalog,
+        generated_at="2026-05-01T00:00:00+00:00",
+    )
+
+    assert "<!doctype html>" in page
+    assert "<title>ZERO Intelligence Catalog</title>" in page
+    assert "Public Catalog" in page
+    assert "Commercial Metering" in page
+    assert "Never Metered" in page
+    assert 'href="catalog.json"' in page
+    assert 'href="commercial.json"' in page
+    assert 'href="snapshot.json"' in page
+    assert "<script" not in page
+    assert "hosted realtime availability" in page
+    assert "guaranteed returns" in page
+    body = page.lower()
+    assert "private_key" not in body
+    assert "wallet_address" not in body
+    assert "exchange_order_id" not in body
+    assert "trace_id" not in body
 
 
 def test_intelligence_export_requires_consent_and_path(tmp_path) -> None:

@@ -6,6 +6,7 @@ PORT="${ZERO_PAPER_API_PORT:-8765}"
 API="http://127.0.0.1:${PORT}"
 LOG="${TMPDIR:-/tmp}/zero-paper-api-smoke.log"
 PYTHON_BIN="${PYTHON:-python3}"
+INTELLIGENCE_STORE="${TMPDIR:-/tmp}/zero-paper-api-intelligence-${PORT}.jsonl"
 
 cleanup() {
   if [[ -n "${SERVER_PID:-}" ]]; then
@@ -15,17 +16,45 @@ cleanup() {
 trap cleanup EXIT
 
 cd "${ROOT}"
+rm -f "${INTELLIGENCE_STORE}"
+
+port_is_available() {
+  "${PYTHON_BIN}" - "$1" <<'PY'
+import socket
+import sys
+
+port = int(sys.argv[1])
+with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    try:
+        sock.bind(("127.0.0.1", port))
+    except OSError:
+        raise SystemExit(1)
+raise SystemExit(0)
+PY
+}
+
+if ! port_is_available "${PORT}"; then
+  echo "paper API smoke requires a free port; ${PORT} is already in use" >&2
+  exit 1
+fi
 
 PYTHONPATH="${ROOT}/engine/src${PYTHONPATH:+:${PYTHONPATH}}" \
   ZERO_INTELLIGENCE_API_TOKEN=smoke-intelligence-token \
   ZERO_INTELLIGENCE_API_PLAN=team_fund \
   ZERO_INTELLIGENCE_API_ACCOUNT_ID=acct_smoke \
   ZERO_INTELLIGENCE_WEBHOOK_SIGNING_KEY=smoke-webhook-signing-key \
+  ZERO_INTELLIGENCE_STORE_PATH="${INTELLIGENCE_STORE}" \
   "${PYTHON_BIN}" -m zero_engine.api --port "${PORT}" >"${LOG}" 2>&1 &
 SERVER_PID="$!"
 
 READY=0
 for _ in {1..50}; do
+  if ! kill -0 "${SERVER_PID}" >/dev/null 2>&1; then
+    echo "paper API process exited before readiness checks completed" >&2
+    cat "${LOG}" >&2 || true
+    exit 1
+  fi
   if curl -fsS "${API}/health" >/dev/null 2>&1; then
     READY=1
     break
@@ -43,8 +72,8 @@ curl -fsS "${API}/v2/status" | "${PYTHON_BIN}" -m json.tool >/dev/null
 
 (
   cd "${ROOT}/cli"
-  cargo run -q -p zero -- --api "${API}" doctor >/tmp/zero-paper-api-doctor.txt
-  cargo run -q -p zero -- --api "${API}" run status >/tmp/zero-paper-api-status.txt
+  cargo run -q -p zero-os -- --api "${API}" doctor >/tmp/zero-paper-api-doctor.txt
+  cargo run -q -p zero-os -- --api "${API}" run status >/tmp/zero-paper-api-status.txt
 )
 
 curl -fsS \
@@ -152,7 +181,7 @@ curl -fsS "${API}/intelligence/commercial" \
   | "${PYTHON_BIN}" -c 'import json,sys; p=json.load(sys.stdin); body=json.dumps(p); assert p["schema_version"] == "zero.intelligence.commercial.v1"; assert p["auth"]["runtime_required"] is False; assert p["plans"][0]["id"] == "free"; assert p["plans"][-1]["id"] == "enterprise"; assert "x-zero-ratelimit-policy" in p["rate_limits"]["headers"]; assert p["privacy"]["exchange_credentials_collected"] is False; assert "smoke-1" not in body; assert "trace-" not in body'
 HEADER_FILE="$(mktemp)"
 curl -fsS -D "${HEADER_FILE}" "${API}/v1/intelligence/snapshots" \
-  | "${PYTHON_BIN}" -c 'import json,sys; p=json.load(sys.stdin); body=json.dumps(p); assert p["schema_version"] == "zero.intelligence.hosted.snapshots.v1"; assert p["account"]["plan"] == "free"; assert p["access"]["freshness"] == "delayed"; assert p["usage"]["name"] == "snapshot.delayed.read"; assert p["usage"]["billable"] is False; assert "smoke-1" not in body; assert "trace-" not in body; assert "smoke-intelligence-token" not in body'
+  | "${PYTHON_BIN}" -c 'import json,sys; p=json.load(sys.stdin); body=json.dumps(p); assert p["schema_version"] == "zero.intelligence.hosted.snapshots.v1"; assert p["account"]["plan"] == "free"; assert p["access"]["freshness"] == "delayed"; assert p["usage"]["name"] == "snapshot.delayed.read"; assert p["usage"]["billable"] is False; assert p["storage"]["status"] == "durable_jsonl_reference"; assert "smoke-1" not in body; assert "trace-" not in body; assert "smoke-intelligence-token" not in body'
 grep -qi '^x-zero-ratelimit-policy: free;w=3600' "${HEADER_FILE}"
 rm -f "${HEADER_FILE}"
 "${PYTHON_BIN}" - "${API}" <<'PY'
@@ -176,7 +205,7 @@ PY
 curl -fsS \
   -H "authorization: Bearer smoke-intelligence-token" \
   "${API}/v1/intelligence/history?limit=10" \
-  | "${PYTHON_BIN}" -c 'import json,sys; p=json.load(sys.stdin); body=json.dumps(p); assert p["schema_version"] == "zero.intelligence.hosted.history.v1"; assert p["account"]["id"] == "acct_smoke"; assert p["account"]["plan"] == "team_fund"; assert p["usage"]["name"] == "history.query"; assert p["usage"]["billable"] is True; assert p["storage"]["status"] == "reference_current_runtime_only"; assert "smoke-intelligence-token" not in body'
+  | "${PYTHON_BIN}" -c 'import json,sys; p=json.load(sys.stdin); body=json.dumps(p); assert p["schema_version"] == "zero.intelligence.hosted.history.v1"; assert p["account"]["id"] == "acct_smoke"; assert p["account"]["plan"] == "team_fund"; assert p["usage"]["name"] == "history.query"; assert p["usage"]["billable"] is True; assert p["storage"]["status"] == "durable_jsonl_reference"; assert p["storage"]["records_returned"] >= 1; assert "smoke-intelligence-token" not in body'
 curl -fsS \
   -H "content-type: application/json" \
   -H "authorization: Bearer smoke-intelligence-token" \
@@ -314,9 +343,9 @@ OPERATOR_DIR="$(mktemp -d)"
 
 (
   cd "${ROOT}/cli"
-  cargo run -q -p zero -- --api "${API}" run positions >/tmp/zero-paper-api-positions.txt
-  cargo run -q -p zero -- --api "${API}" run live-cockpit >/tmp/zero-paper-api-live-cockpit.txt
-  cargo run -q -p zero -- --api "${API}" run immune >/tmp/zero-paper-api-immune.txt
+  cargo run -q -p zero-os -- --api "${API}" run positions >/tmp/zero-paper-api-positions.txt
+  cargo run -q -p zero-os -- --api "${API}" run live-cockpit >/tmp/zero-paper-api-live-cockpit.txt
+  cargo run -q -p zero-os -- --api "${API}" run immune >/tmp/zero-paper-api-immune.txt
 )
 
 grep -q "BTC" /tmp/zero-paper-api-positions.txt

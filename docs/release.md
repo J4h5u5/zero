@@ -164,11 +164,58 @@ Homebrew is also supported through the public repo tap:
 ```bash
 brew tap zero-intel/zero https://github.com/zero-intel/zero
 brew install zero
+zero --version
 ```
 
 The formula lives at `Formula/zero.rb`, installs the `zero` CLI from the
 checksummed GitHub Release asset, and does not require private package registry
 access. It is generated from `SHA256SUMS` by `scripts/homebrew_formula.py`.
+
+### Homebrew Rollback Verification
+
+First prove the current public tap path still works from a clean local tap:
+
+```bash
+brew uninstall zero || true
+brew untap zero-intel/zero || true
+brew tap zero-intel/zero https://github.com/zero-intel/zero
+brew install zero-intel/zero/zero
+zero --version
+```
+
+To temporarily roll an operator machine back to the previous formula commit,
+checkout the older `Formula/zero.rb` inside the local Homebrew tap, reinstall,
+and pin the package until the incident is resolved:
+
+```bash
+tap_repo="$(brew --repo zero-intel/zero)"
+git -C "$tap_repo" log --oneline -- Formula/zero.rb
+git -C "$tap_repo" checkout <previous-formula-commit> -- Formula/zero.rb
+brew reinstall --formula zero-intel/zero/zero
+zero --version
+brew pin zero
+```
+
+After the rollback window, return the tap to the published formula and reinstall
+the current release:
+
+```bash
+brew unpin zero || true
+tap_repo="$(brew --repo zero-intel/zero)"
+git -C "$tap_repo" restore Formula/zero.rb
+brew update
+brew reinstall --formula zero-intel/zero/zero
+zero --version
+```
+
+The checksum check proves the installed binary matches the GitHub Release
+checksum recorded in `SHA256SUMS`. The formula drift check proves the committed
+Homebrew formula was generated from that release checksum manifest, still points
+at the public GitHub Release asset, and has not been edited to use a stale
+checksum, stale tag, private tap, or private registry. These checks prove
+release integrity for the public Homebrew path; they do not prove trading
+performance, custody safety, or publication to PyPI, crates.io, Docker Hub, or
+GHCR.
 
 ## Package Dry Run
 
@@ -197,7 +244,8 @@ long-lived PyPI tokens to repository secrets or examples.
 Current package-name assumptions:
 
 - PyPI candidate: `zero-engine`
-- crates.io candidates: the `zero-*` workspace crates plus the `zero` binary crate
+- PyPI published package: `zero-engine`
+- crates.io packages: the `zero-*` workspace crates plus the `zero-os` CLI package
 - Homebrew: `zero-intel/zero` public repo tap with `Formula/zero.rb`
 
 ## Release Rehearsal
@@ -274,10 +322,15 @@ executable attestations, then deletes the draft release and temporary tag. Use
   `scripts/release_workflow_rehearsal.sh --execute`
 
 The workflow uploads artifacts to the GitHub Actions run and attaches the
-assembled release bundle to a draft GitHub Release. It does not publish to PyPI,
-crates.io, Docker Hub, or GHCR yet. Package publishing should be added only
-after repository ownership, package names, signing, and token permissions are
-finalized.
+assembled release bundle to a draft GitHub Release. It does not publish to any
+package registry. PyPI publication for `zero-engine` is handled by
+`python-release.yml` through Trusted Publishing. crates.io publication for
+`zero-os` is manual with least-privilege `CRATESIO_API_TOKEN`. GHCR publication
+for the paper image is maintainer-triggered through
+`container-publish.yml` and has authenticated smoke evidence; keep it out of
+the primary public install path until anonymous pull access is verified. Docker
+Hub publishing should be added only after repository ownership, provenance,
+rollback, and token permissions are finalized.
 
 ## Homebrew Formula
 
@@ -308,8 +361,11 @@ ZERO also ships local provenance metadata:
   release assets.
 - `PROVENANCE.json`: source commit, branch/tag, dirty-state flag, asset hashes,
   and policy assertions that paper mode is default, live execution evidence is
-  not claimed, and package-registry publication remains disabled.
+  not claimed, and release-bundle generation does not publish package-registry
+  artifacts.
 
-Do not publish package-registry artifacts until the registry channel has an
-owner, rollback path, least-privilege token plan, and documented support
-expectation in [distribution.md](distribution.md).
+Do not add automated crates.io or Docker Hub publishing until the registry
+channel has an owner, rollback path, least-privilege token plan, and documented
+support expectation in [distribution.md](distribution.md). Keep GHCR manual
+until public-pull verification and package visibility administration are
+recorded in [registry-launch.md](registry-launch.md).

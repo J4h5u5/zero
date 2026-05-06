@@ -3,7 +3,7 @@
     "mcp_docs_state_read_only": true,
     "package_identifier_matches_pyproject": true,
     "package_registry_base_url_is_pypi": true,
-    "package_registry_publication_still_blocked": true,
+    "package_registry_publication_enabled": true,
     "package_runtime_hint_is_uvx": true,
     "package_transport_is_stdio": true,
     "package_version_matches_server": true,
@@ -22,13 +22,17 @@
   "official_registry": {
     "api": "https://registry.modelcontextprotocol.io",
     "last_query_evidence": {
-      "checked_at": "2026-05-04T05:59:55Z",
-      "interpretation": "not listed yet; expected until the PyPI package is publicly published",
+      "checked_at": "2026-05-04T15:15:58Z",
+      "interpretation": "listed; verified after zero-engine 0.1.5 PyPI publication",
       "response": {
         "metadata": {
-          "count": 0
+          "count": 1
         },
-        "servers": []
+        "servers": [
+          {
+            "name": "io.github.zero-intel/zero"
+          }
+        ]
       }
     },
     "listing_check_command": "scripts/mcp_registry_listing_check.py --json",
@@ -64,7 +68,7 @@
         "transport": {
           "type": "stdio"
         },
-        "version": "0.1.2"
+        "version": "0.1.5"
       }
     ],
     "repository": {
@@ -73,15 +77,14 @@
       "url": "https://github.com/zero-intel/zero"
     },
     "title": "ZERO MCP",
-    "version": "0.1.2",
+    "version": "0.1.5",
     "websiteUrl": "https://getzero.dev"
   },
   "submission": {
     "auth_method": "github-oidc",
     "blocked_until": [
-      "zero-engine is published on PyPI with the engine README carrying the mcp-name proof",
-      "release workflow explicitly enables package publication for the target release",
-      "maintainer-owned GitHub OIDC publish run records registry output"
+      "next server.json metadata change requires a new server/package version",
+      "rerun the MCP Registry Publication workflow after the versioned metadata change"
     ],
     "package_identifier": "zero-engine",
     "package_registry": "pypi",
@@ -92,6 +95,6 @@
       "scripts/mcp_registry_listing_check.py --expect-listed --json"
     ],
     "server_json": "server.json",
-    "status": "ready_after_pypi_publication"
+    "status": "listed"
   }
 }

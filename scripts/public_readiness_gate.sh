@@ -93,6 +93,9 @@ required=(
   docs/incident-postmortems/README.md
   docs/incident-postmortems/TEMPLATE.md
   .cursor/rules/global.mdc
+  .devcontainer/Dockerfile
+  .devcontainer/devcontainer.json
+  .devcontainer/README.md
   .github/PULL_REQUEST_TEMPLATE.md
   .github/ISSUE_TEMPLATE/agent_task.yml
   .github/ISSUE_TEMPLATE/bug_report.yml
@@ -112,6 +115,8 @@ required=(
   scripts/homebrew_formula_check.py
   scripts/mcp_registry_packet.py
   scripts/mcp_registry_listing_check.py
+  scripts/railway_template_packet.py
+  scripts/railway_cli_preflight.py
   scripts/journal_verify.py
   scripts/journal_anchor_cadence.py
   scripts/stale_artifact_check.sh
@@ -129,6 +134,7 @@ required=(
   contracts/network/stale-profile.html
   contracts/distribution/registry-launch.json
   contracts/distribution/mcp-registry.json
+  contracts/distribution/railway-template.json
   server.json
   examples/network-empty-profile/README.md
   examples/network-empty-profile/build.py
@@ -167,7 +173,7 @@ file_contains "Autonomous operating system for self-custodial onchain operations
 file_contains "paper mode" README.md
 file_contains "Self-evolution" docs/private-engine-capability-gap-audit.md
 file_contains "Full ZERO operating-system contract readiness: 100/100" docs/production-readiness.md
-file_contains "Autonomous trust readiness: 99/100" docs/production-readiness.md
+file_contains "Autonomous trust readiness: 100/100" docs/production-readiness.md
 file_contains "Failure Modes Of The Autonomous Loop" docs/failure-modes-autonomous-loop.md
 file_contains "FM-AUTO-004" docs/failure-modes-autonomous-loop.md
 file_contains "zero.decision_journal.entry.v1" docs/journal-integrity.md
@@ -209,18 +215,32 @@ file_contains "zero.live_trading_evidence.v1" docs/proof/live/live-trading-evide
 file_contains "redacted private live evidence" docs/production-readiness.md
 file_contains "Do not publish this private monorepo wholesale" docs/public-upgrade.md
 file_contains "brew tap zero-intel/zero" README.md
+file_contains "https://zero-production-5214.up.railway.app" README.md
+file_contains "https://railway.com/deploy/zero-paper-runtime" README.md
+file_contains "zero.railway_template_packet.v1" contracts/distribution/railway-template.json
+file_contains "published_on_marketplace" contracts/distribution/railway-template.json
+file_contains "template_published_partner_pending" contracts/distribution/railway-template.json
+file_contains "ZERO Paper Runtime" contracts/distribution/railway-template.json
+file_contains "https://railway.com/deploy/zero-paper-runtime" contracts/distribution/railway-template.json
+file_contains "Railway Template Publish Packet" docs/railway-template.md
+file_contains "Railway Partner Application Packet" docs/railway-partner.md
+file_contains "Generate Template from Project" docs/railway-template.md
+file_contains "docs/assets/zero-template-icon.svg" docs/railway-template.md
+file_contains "Open in GitHub Codespaces" README.md
+file_contains "devcontainer" docs/local-development.md
 file_contains "brew tap zero-intel/zero" docs/release.md
 file_contains "The public runtime defaults to paper mode" Formula/zero.rb
 file_contains "Add a deterministic funding-rate adapter fixture" docs/contributor-issue-board.md
 file_contains "Add Homebrew rollback verification docs" docs/contributor-issue-board.md
 file_contains "zero.registry_launch_packet.v1" contracts/distribution/registry-launch.json
+file_contains "zero.railway_cli_preflight.v1" scripts/railway_cli_preflight.py
 file_contains "package_registries_enabled" contracts/distribution/registry-launch.json
 file_contains "zero.mcp_registry_packet.v1" contracts/distribution/mcp-registry.json
 file_contains "zero.mcp_registry_listing_check.v1" docs/mcp-registry.md
 file_contains "io.github.zero-intel/zero" server.json
 file_contains "registryBaseUrl" server.json
 file_contains "runtimeHint" server.json
-file_contains "ready_after_pypi_publication" contracts/distribution/mcp-registry.json
+file_contains '"status": "listed"' contracts/distribution/mcp-registry.json
 file_contains "mcp-name: io.github.zero-intel/zero" engine/README.md
 file_contains "zero.mcp.refusal.v1" docs/mcp.md
 file_contains "zero.mcp.refusal.v1" docs/mcp/transcript.jsonl

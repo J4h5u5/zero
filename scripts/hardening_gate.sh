@@ -58,6 +58,7 @@ required_files=(
   "docs/production-readiness.md"
   "docs/public-upgrade.md"
   "docs/private-engine-capability-gap-audit.md"
+  "docs/qa-onboarding-checklist.md"
   "docs/label-taxonomy.md"
   "docs/launch-issues.md"
   "docs/backlog.md"
@@ -76,7 +77,11 @@ required_files=(
   "contracts/network/stale-profile.html"
   "contracts/distribution/registry-launch.json"
   "contracts/distribution/mcp-registry.json"
+  "contracts/distribution/railway-template.json"
   "server.json"
+  ".devcontainer/Dockerfile"
+  ".devcontainer/devcontainer.json"
+  ".devcontainer/README.md"
   "examples/network-empty-profile/README.md"
   "examples/network-empty-profile/build.py"
   "examples/network-empty-profile/empty-profile.json"
@@ -139,21 +144,38 @@ contains "Dependency And Supply Chain Policy" docs/dependency-policy.md
 contains "Vulnerability Response" docs/dependency-policy.md
 contains "Homebrew Formula Requirements" docs/distribution.md
 contains "Registry Launch Packet" docs/distribution.md
+contains "Railway Template Channel" docs/distribution.md
+contains "Railway Open Source Partner application packet" docs/distribution.md
+contains "Railway Template Publish Packet" docs/railway-template.md
+contains "Generate Template from Project" docs/railway-template.md
+contains "Marketplace Overview Copy" docs/railway-template.md
+contains "Railway Partner Application Packet" docs/railway-partner.md
+contains "https://railway.com/partners" docs/railway-partner.md
+contains "https://station.railway.com/my-template-queue" docs/railway-partner.md
 contains "scripts/homebrew_formula.py" docs/distribution.md
 contains "zero.registry_launch_packet.v1" docs/registry-launch.md
+contains "zero.railway_template_packet.v1" contracts/distribution/railway-template.json
+contains "published_on_marketplace" contracts/distribution/railway-template.json
+contains "template_published_partner_pending" contracts/distribution/railway-template.json
+contains "docs/assets/zero-template-icon.svg" contracts/distribution/railway-template.json
+contains "https://railway.com/deploy/zero-paper-runtime" contracts/distribution/railway-template.json
 contains "zero.mcp_registry_packet.v1" docs/mcp-registry.md
 contains "zero.mcp_registry_listing_check.v1" docs/mcp-registry.md
 contains "io.github.zero-intel/zero" docs/mcp-registry.md
-contains "ready_after_pypi_publication" contracts/distribution/mcp-registry.json
+contains "\"status\": \"listed\"" contracts/distribution/mcp-registry.json
 contains "io.modelcontextprotocol.registry/publisher-provided" server.json
 contains "registryBaseUrl" server.json
 contains "runtimeHint" server.json
 contains "mcp-name: io.github.zero-intel/zero" engine/README.md
 contains "package_registries_enabled" contracts/distribution/registry-launch.json
-contains "\"status\": \"blocked\"" contracts/distribution/registry-launch.json
+contains "\"channel\": \"crates_io\"" contracts/distribution/registry-launch.json
+contains "\"channel\": \"container_registry\"" contracts/distribution/registry-launch.json
 contains "brew tap zero-intel/zero" docs/distribution.md
 contains "brew tap zero-intel/zero" docs/release.md
 contains "brew tap zero-intel/zero" README.md
+contains "https://zero-production-5214.up.railway.app" README.md
+contains "Open in GitHub Codespaces" README.md
+contains "docs/railway-partner.md" README.md
 contains "Trusted Publishing" docs/distribution.md
 contains "cargo owner" docs/distribution.md
 contains "GitHub artifact attestations" docs/release.md
@@ -198,7 +220,8 @@ contains "zero.live_canary_policy.v1" docs/live-canary-operator.md
 contains "/live/canary-policy" docs/live-evidence.md
 contains "scripts/live_canary_policy.py" docs/live-canary-operator.md
 contains "shasum -a 256 -c SHA256SUMS" .github/RELEASE_TEMPLATE.md
-contains "package registry publication remains disabled" .github/RELEASE_TEMPLATE.md
+contains "PyPI \`zero-engine\` release" .github/RELEASE_TEMPLATE.md
+contains "crates.io \`zero-os\` publication" .github/RELEASE_TEMPLATE.md
 contains "gh attestation verify zero-linux" .github/RELEASE_TEMPLATE.md
 contains "scripts/release_evidence.py <tag>" .github/RELEASE_TEMPLATE.md
 contains "scripts/homebrew_formula_check.py" .github/RELEASE_TEMPLATE.md
@@ -330,6 +353,7 @@ python3 -m py_compile scripts/release_evidence.py
 python3 -m py_compile scripts/registry_readiness.py
 python3 -m py_compile scripts/mcp_registry_packet.py
 python3 -m py_compile scripts/mcp_registry_listing_check.py
+python3 -m py_compile scripts/railway_template_packet.py
 python3 -m py_compile scripts/release_provenance.py
 python3 -m py_compile scripts/homebrew_formula.py
 python3 -m py_compile scripts/homebrew_formula_check.py
@@ -361,6 +385,7 @@ rm -rf scripts/__pycache__
 scripts/registry_readiness.py >/dev/null
 scripts/mcp_registry_packet.py --check
 scripts/mcp_registry_listing_check.py --json >/dev/null
+scripts/railway_template_packet.py --check
 PYTHONPATH="$PWD/engine/src" scripts/mcp_transcript.py --check
 scripts/generate_llms_full.py --check
 PYTHONPATH="$PWD/engine/src" scripts/proof_pack.py --check

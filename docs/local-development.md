@@ -10,6 +10,11 @@ accounts, or private deployment access.
 - `just`
 - Git
 
+If you do not want to install local tools, open the repo in GitHub Codespaces
+or another devcontainer-compatible editor. The devcontainer installs Python,
+Rust, `just`, the editable engine package, and CLI dependencies. See
+[`../.devcontainer/README.md`](../.devcontainer/README.md).
+
 ## First Run
 
 ```bash
@@ -68,8 +73,8 @@ Then inspect it from the CLI in another terminal:
 
 ```bash
 cd cli
-cargo run -p zero -- --api http://127.0.0.1:8765 doctor
-cargo run -p zero -- --api http://127.0.0.1:8765 run status
+cargo run -p zero-os -- --api http://127.0.0.1:8765 doctor
+cargo run -p zero-os -- --api http://127.0.0.1:8765 run status
 ```
 
 The same integration check is available as:

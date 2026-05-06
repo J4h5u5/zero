@@ -1,0 +1,103 @@
+{
+  "checks": {
+    "deploy_docs_name_doctor": true,
+    "dockerfile_installs_engine": true,
+    "dockerfile_present": true,
+    "partner_docs_name_application_url": true,
+    "partner_docs_name_support_commitment": true,
+    "partner_docs_name_template_queue": true,
+    "partner_docs_name_template_url": true,
+    "partner_docs_present": true,
+    "railway_healthcheck_configured": true,
+    "railway_start_uses_durable_journal": true,
+    "railway_start_uses_port": true,
+    "railway_toml_present": true,
+    "railway_uses_dockerfile": true,
+    "readme_names_live_demo": true,
+    "readme_names_partner_packet": true,
+    "readme_names_railway_template_docs": true,
+    "readme_names_template_url": true,
+    "schema_version": "zero.railway_template_packet.v1",
+    "start_script_present": true,
+    "template_docs_include_marketplace_overview": true,
+    "template_docs_name_dashboard_generation": true,
+    "template_docs_name_icon": true,
+    "template_docs_name_marketplace_icon": true,
+    "template_docs_name_partner_publish_step": true,
+    "template_docs_name_public_demo": true,
+    "template_docs_name_template_url": true,
+    "template_icon_present": true
+  },
+  "generated_at": "2026-05-05T07:51:46Z",
+  "marketplace": {
+    "create_flow": "Project Settings -> Generate Template from Project",
+    "deploy_button_markdown": "[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/zero-paper-runtime)",
+    "fallback_repo_icon": "docs/assets/zero-template-icon.svg",
+    "partner_application_url": "https://railway.com/partners",
+    "private_docker_images": "reserved for future commercial components; not used by open paper runtime",
+    "publish_flow": "Railway workspace templates page",
+    "service_icon": "https://avatars.githubusercontent.com/u/273590449.png",
+    "support_queue_url": "https://station.railway.com/my-template-queue",
+    "template_icon": "https://avatars.githubusercontent.com/u/273590449.png",
+    "template_url": "https://railway.com/deploy/zero-paper-runtime",
+    "updates": "GitHub main branch template updates"
+  },
+  "publish_steps": [
+    "Published the linked Railway project as a template from the Railway dashboard.",
+    "Used docs/railway-template.md as the marketplace copy and variable map.",
+    "Attached the /data volume before public launch.",
+    "Run scripts/railway_doctor.py against the public URL.",
+    "Run scripts/deployment_evidence.sh with --railway-logs and verify the bundle.",
+    "Keep the README deploy button pointed at Railway's issued template URL."
+  ],
+  "runtime": {
+    "custody_required": false,
+    "exchange_private_keys_required": false,
+    "journal_path": "/data/decisions.jsonl",
+    "journal_volume_mount": "/data",
+    "live_execution": "refused by default",
+    "market_data": "Hyperliquid public mids, read-only",
+    "mode": "paper",
+    "public_networking": true
+  },
+  "schema_version": "zero.railway_template_packet.v1",
+  "summary": {
+    "autodeploy_config": {
+      "builder": "DOCKERFILE",
+      "dockerfile_path": "Dockerfile",
+      "healthcheck_path": "/health",
+      "start_command": "/app/scripts/railway_start.sh"
+    },
+    "doctor_summary": {
+      "fail": 0,
+      "ok": 17,
+      "warn": 1
+    },
+    "environment": "production",
+    "evidence_bundle_at_generation": "artifacts/deployment-evidence/20260504T192122Z",
+    "evidence_verify": {
+      "checks": 60,
+      "fail": 0,
+      "ok": true
+    },
+    "partner_application": "template_published_partner_pending",
+    "partner_application_packet": "docs/railway-partner.md",
+    "project": "fabulous-enchantment",
+    "public_demo_url": "https://zero-production-5214.up.railway.app",
+    "service": "zero",
+    "status": "published_on_marketplace",
+    "template_name": "ZERO Paper Runtime",
+    "template_url": "https://railway.com/deploy/zero-paper-runtime",
+    "verified_deployment_at_generation": "ea8424de-f5e3-4227-84a3-67970f5b0cfd",
+    "workspace": "zero"
+  },
+  "template_variables": {
+    "ZERO_DEPLOYMENT_ID": "zero-railway-public-paper",
+    "ZERO_HYPERLIQUID_LIVE_PRICES": "true",
+    "ZERO_INTELLIGENCE_API_ACCOUNT_ID": "acct_railway",
+    "ZERO_INTELLIGENCE_API_PLAN": "free",
+    "ZERO_INTELLIGENCE_STORE_PATH": "/data/zero/intelligence.jsonl",
+    "ZERO_JOURNAL_PATH": "/data/decisions.jsonl",
+    "ZERO_MODE": "paper"
+  }
+}

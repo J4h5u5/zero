@@ -5,7 +5,7 @@
 To regenerate after editing flag docs or adding a subcommand in `crates/zero/src/main.rs`:
 
 ```bash
-ZERO_REGENERATE_DOCS=1 cargo test -p zero --test commands_doc
+ZERO_REGENERATE_DOCS=1 cargo test -p zero-os --test commands_doc
 ```
 
 The `commands_doc_is_fresh` test runs in the default `cargo test` lane and will fail CI if this file is stale relative to the compiled binary's `--help`.

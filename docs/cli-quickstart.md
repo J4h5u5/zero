@@ -24,7 +24,7 @@ Run doctor against the local paper API:
 
 ```bash
 cd cli
-cargo run -q -p zero -- --api http://127.0.0.1:8765 doctor
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 doctor
 ```
 
 Abbreviated output:
@@ -53,7 +53,7 @@ missing token, or reports `live_preflight` as not ready, see
 Inspect the engine status:
 
 ```bash
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run status
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run status
 ```
 
 Expected output:
@@ -67,7 +67,7 @@ Expected output:
 Inspect the risk line:
 
 ```bash
-cargo run -q -p zero -- --api http://127.0.0.1:8765 run risk
+cargo run -q -p zero-os -- --api http://127.0.0.1:8765 run risk
 ```
 
 Expected output:

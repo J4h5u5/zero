@@ -33,8 +33,16 @@ cargo install --path crates/zero --profile release-small
 
 This builds the size-optimised binary (~4.2 MB on
 darwin-arm64) and puts it on your `PATH` at
-`~/.cargo/bin/zero`. Homebrew and package-registry installs
-are not published yet.
+`~/.cargo/bin/zero`.
+
+**From crates.io:**
+
+```bash
+cargo install zero-os
+```
+
+The crates.io package is `zero-os` because `zero` is already occupied. The
+installed binary is still `zero`.
 
 Rust toolchain: `rustc` 1.88+ (pinned in `rust-toolchain.toml`).
 
@@ -193,7 +201,7 @@ All four must pass. Additional perf and doc gates
 ```bash
 # Perf tripwires — release-mode regression guards.
 cargo test -p zero-operator-state --release classifier_tick_under_budget -- --include-ignored
-cargo test -p zero --test version_startup --release -- --include-ignored
+cargo test -p zero-os --test version_startup --release -- --include-ignored
 
 # Full criterion distribution.
 cargo bench -p zero-operator-state
@@ -202,7 +210,7 @@ cargo bench -p zero-operator-state
 ./scripts/idle_rss_check.sh --profile release-small
 
 # Command-reference regeneration (CI lane enforces freshness).
-ZERO_REGENERATE_DOCS=1 cargo test -p zero --test commands_doc
+ZERO_REGENERATE_DOCS=1 cargo test -p zero-os --test commands_doc
 ```
 
 ### Honesty discipline

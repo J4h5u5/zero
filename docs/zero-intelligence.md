@@ -1,7 +1,11 @@
 # ZERO Intelligence
 
-ZERO Intelligence is the commercial product built from verified autonomous
-behavior.
+ZERO Intelligence is the data product built from verified autonomous behavior.
+During operator growth, realtime Intelligence access is free so ZERO can
+increase operator density, collect better verified behavior, and make public
+profiles and leaderboards more valuable. Future commercial packaging should
+monetize scale, retention, redistribution, support, and SLAs rather than basic
+operator access.
 
 It is not a hosted deployment product. Operators should be able to run ZERO
 locally, through Docker, or on Railway without paying ZERO and without sending
@@ -22,9 +26,16 @@ databases, logs, and billing relationship.
 - Public benchmark pages
 - Delayed or rate-limited public intelligence snapshots
 
-## Commercial Surfaces
+## Growth-Mode Free Surfaces
 
-- Realtime intelligence API
+- Realtime Intelligence API access for verified operators
+- Public profiles and leaderboards
+- Public verification badges
+- Delayed and rate-limited public intelligence snapshots
+- Hosted-compatible Railway/Docker contract testing
+
+## Future Commercial Surfaces
+
 - Historical decision and risk datasets
 - Advanced filters, cohorts, and benchmark analytics
 - Commercial intelligence connectors and enrichment feeds
@@ -66,19 +77,21 @@ operation.
 
 ## Packaging
 
-- Free: runtime, CLI, public profiles, public leaderboards, delayed snapshots,
-  and low API quota.
-- Pro Operator: subscription for higher API quota, alerts, webhooks, longer
-  history, saved views, and profile verification features.
-- Team/Fund: subscription plus usage for team API keys, cohort analytics,
-  realtime feeds, exports, and private benchmarks.
-- Enterprise: contract pricing for SLOs, support, compliance needs, custom
-  retention, and commercial redistribution.
+- Growth mode: runtime, CLI, public profiles, public leaderboards, delayed
+  snapshots, realtime Intelligence API access, hosted-compatible Railway
+  contracts, and onboarding credits are free for verified operators.
+- Future operator plans: higher API quota, alerts, webhooks, longer history,
+  saved views, and profile verification features.
+- Future teams/funds: team API keys, cohort analytics, bulk exports, private
+  benchmarks, and redistribution rights.
+- Future enterprise: SLOs, support, compliance needs, custom retention, and
+  commercial redistribution.
 
 ## Hosted API Shape
 
-The paid hosted API should use bearer API keys, explicit scopes, usage events,
-and standard rate-limit headers. The checked contract fixture lives at
+The hosted API should use bearer API keys, explicit scopes, usage events, and
+standard rate-limit headers even while access is free in growth mode. The
+checked contract fixture lives at
 [contracts/intelligence/commercial.json](../contracts/intelligence/commercial.json).
 
 The public server now includes a reference implementation of the hosted API
@@ -126,11 +139,12 @@ ZERO_INTELLIGENCE_API_TOKEN=...
 ZERO_INTELLIGENCE_API_PLAN=team_fund
 ZERO_INTELLIGENCE_API_ACCOUNT_ID=acct_...
 ZERO_INTELLIGENCE_WEBHOOK_SIGNING_KEY=...
+ZERO_INTELLIGENCE_STORE_PATH=/data/zero/intelligence.jsonl
 ```
 
-The reference implementation enforces paid scopes when a token is configured,
-emits real `x-zero-ratelimit-*` headers, and returns webhook signature fixtures
-with:
+The reference implementation enforces protected scopes when a token is
+configured, emits real `x-zero-ratelimit-*` headers, and returns webhook
+signature fixtures with:
 
 ```text
 x-zero-signature-timestamp
@@ -140,6 +154,27 @@ x-zero-signature-algorithm
 
 The signature payload is `timestamp + "." + canonical_json_body` signed with
 HMAC-SHA256. The signing key is never returned.
+
+## Durable Reference Store
+
+When `ZERO_INTELLIGENCE_STORE_PATH` is configured, the hosted-compatible
+reference API appends public-safe JSONL records for delayed/realtime snapshots,
+usage events, webhook subscription fixtures, and export jobs. History queries
+then read stored snapshot records before falling back to the current runtime
+snapshot.
+
+The store is intentionally aggregate-only:
+
+- API tokens and webhook signing keys are never written.
+- Account IDs and webhook target URLs are persisted as SHA-256 hashes.
+- Raw journals, trace IDs, idempotency keys, symbols, exchange order IDs,
+  wallet identifiers, and strategy labels remain excluded by the same privacy
+  checks that guard public Network and Intelligence packets.
+
+This is not the final commercial warehouse or billing system. It is the
+durable, stdlib, self-hostable persistence boundary that production hosted
+Intelligence can replace with Postgres, ClickHouse, or another append-only
+warehouse without changing the public API contract.
 
 ## Data Rules
 
@@ -162,8 +197,9 @@ HMAC-SHA256. The signing key is never returned.
 - Model gateway costs must come from operator-configured prices or provider
   usage metadata; the public runtime must not bake stale vendor pricing into
   source code.
-- Paid intelligence should monetize speed, scale, history, reliability, and
-  commercial access, not basic runtime use.
+- Growth-mode intelligence should remain free for operator density.
+- Future paid intelligence should monetize scale, history, reliability,
+  redistribution, and support, not basic runtime use.
 - Core runtime and venue adapters should remain public. Commercial connectors
   should exist for intelligence enrichment, partner integrations, redistribution,
   and enterprise data delivery.
@@ -171,8 +207,9 @@ HMAC-SHA256. The signing key is never returned.
 ## Flywheel
 
 ```text
-Open runtime -> verified behavior -> public network proof -> paid intelligence
+Open runtime -> verified behavior -> public network proof -> Intelligence
 ```
 
 The runtime creates behavior. The network verifies behavior. ZERO Intelligence
-turns verified behavior into a commercial API and subscription business.
+turns verified behavior into free operator utility first, then future
+commercial scale, retention, redistribution, and SLA products.
